@@ -23,19 +23,19 @@ public class PostComment {
     // 생성 시간
     private LocalDateTime createDate;
 
-    /*
-     * 게시글 한 개에 댓글 여러 개 달릴 수 있음
-     * Post 1
-     */
-    @ManyToOne
-    private Post post;
-
-    @ManyToOne
-    private Member author;
-
-    // 수정 시간
-    private LocalDateTime modifyDate;
-
-    @ManyToMany
-    Set<Member> voter;
+//    /*
+//     * 게시글 한 개에 댓글 여러 개 달릴 수 있음
+//     * Post 1
+//     */
+//    @ManyToOne
+//    private Post post;
+//
+//    @ManyToOne
+//    private Member author;
+//
+//    // 수정 시간
+//    private LocalDateTime modifyDate;
+//
+//    @ManyToMany
+//    Set<Member> voter;
 }
