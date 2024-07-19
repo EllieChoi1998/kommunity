@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 
@@ -14,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 class MemberServiceImplTest {
 
     @Autowired
@@ -27,8 +29,8 @@ class MemberServiceImplTest {
     public void 회원가입() throws Exception {
         //Given
         Member member = new Member();
-        member.setName("ellie");
-        member.setEmail("ellie@gmail.com");
+        member.setName("spring");
+        member.setEmail("spring@gmail.com");
         //When
         Integer saveId = memberService.join(member);
         //Then
