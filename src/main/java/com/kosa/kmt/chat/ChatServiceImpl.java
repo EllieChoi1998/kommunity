@@ -23,7 +23,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public Chat saveChat(Chat chat, Integer memberId) throws Exception {
+    public Long saveChat(Chat chat, Integer memberId) throws Exception {
         Optional<Member> optionalMember = memberRepository.findById(memberId);
 
         if (optionalMember.isPresent()) {
@@ -32,9 +32,9 @@ public class ChatServiceImpl implements ChatService {
             if(findAllChats().size()>100) {
                 chatRepository.executeCleanup();
             }
-            return savedChat;
+            return savedChat.getChatId();
         } else {
-            throw new Exception("Member not found");
+            return (long) -1;
         }
     }
 
