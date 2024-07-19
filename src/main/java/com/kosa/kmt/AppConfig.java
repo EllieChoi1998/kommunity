@@ -1,5 +1,9 @@
 package com.kosa.kmt;
 
+import com.kosa.kmt.board.BoardRepository;
+import com.kosa.kmt.board.BoardRepositoryImpl;
+import com.kosa.kmt.board.BoardService;
+import com.kosa.kmt.board.BoardServiceImpl;
 import com.kosa.kmt.chat.ChatRepository;
 import com.kosa.kmt.chat.ChatRepositoryImpl;
 import com.kosa.kmt.chat.ChatService;
@@ -42,5 +46,11 @@ public class AppConfig {
     public ChatService chatService() {
         return new ChatServiceImpl(chatRepository(), memberRepository());
     }
+
+    @Bean
+    public BoardRepository boardRepository() { return new BoardRepositoryImpl(em); }
+
+    @Bean
+    public BoardService boardService() { return new BoardServiceImpl(boardRepository()); }
 }
 
