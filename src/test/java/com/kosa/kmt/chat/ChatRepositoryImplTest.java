@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-
+@Transactional
 public class ChatRepositoryImplTest {
 
     @Autowired
@@ -21,6 +21,7 @@ public class ChatRepositoryImplTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
     @Test
     public void 프로시저호출테스트_100개넘는채팅메시지갯수() throws Exception {
         for (int i = 100; i < 220; i++) {

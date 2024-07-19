@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ChatService {
 
-    Chat saveChat(Chat chat, Integer memberId) throws Exception;
+    Long saveChat(Chat chat, Integer memberId) throws Exception;
 
     List<Chat> findAllChats();
 }
