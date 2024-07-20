@@ -1,8 +1,13 @@
 package com.kosa.kmt.member;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+@Service
+@Transactional
 public class MemberServiceImpl implements MemberService {
     private MemberRepository memberRepository;
 
@@ -25,7 +30,7 @@ public class MemberServiceImpl implements MemberService {
             if (password.equals(userPassword)){
                 Member updatedmember = memberRepository.updateLoginTime(currentMember, LocalDateTime.now());
                 if (updatedmember != null){
-                    return 1;
+                    return updatedmember.getMemberId();
                 }
                 return 0;
             }
@@ -48,14 +53,8 @@ public class MemberServiceImpl implements MemberService {
     For signup, there's three stages:
         1. call findSameEmail() -- should return true
         2. call findSameName() -- should return true
-        3. save() -- return new memberId
-     */
 
-    @Override
-    public Integer save(Member member) {
-        memberRepository.save(member);
-        return member.getMemberId();
-    }
+     */
 
     /*
     로그인을 위한 이메일 및 이름 찾기 입니다.
@@ -112,7 +111,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Boolean updatePassword(Member member, String password) {
-        Member updatedMember = memberRepository.update_pssword(member, password);
+        Member updatedMember = memberRepository.update_password(member, password);
         if(updatedMember != null) {
             return true;
         }

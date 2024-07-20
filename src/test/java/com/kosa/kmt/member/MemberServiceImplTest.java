@@ -18,39 +18,46 @@ class MemberServiceImplTest {
     @Autowired
     MemberService memberService;
 
+    Member member;
     @BeforeEach
     void setUp() {
         // tester user
-        Member member = new Member();
-        member.setName("test");
-        member.setEmail("test@test.com");
-        memberRepository.save(member);
+        this.member = new Member();
+        this.member.setName("test1");
+        this.member.setEmail("test1@test.com");
+        this.memberRepository.save(this.member);
     }
 
     @Test
     // @Commit
-    public void 회원가입() throws Exception {
+    public void 회원가입과로그인_valid() throws Exception {
         //Given
 
-        String input_email = "test@test.com";
-        String input_name = "test";
+        String input_email = "test1@test.com";
+        String input_name = "test1";
 
-        Member member = null;
-        Integer savedId = -1;
+        Member newmember = null;
+        Boolean successNickname = false;
+        Boolean successPassword = false;
         //When
         Integer userId = memberService.findSameEmail(input_email);
         if (userId != -1){
-            member = memberRepository.findById(userId).get();
+            newmember = memberRepository.findById(userId).get();
             Integer matchedNameUserId = memberService.findSameName(input_name);
-            if(matchedNameUserId == member.getMemberId()){
-                memberService.updateNickname(member, "tester user");
-                memberService.updatePassword(member, "tester password");
-                savedId = memberService.save(member);
+            if(matchedNameUserId == newmember.getMemberId()){
+                successNickname = memberService.updateNickname(newmember, "user");
+                successPassword = memberService.updatePassword(newmember, "tester password");
+
             }
         }
 
         //Then
-        Member findMember = memberRepository.findById(savedId).get();
-        assertEquals(member.getName(), findMember.getName());
+        assertEquals(true, successNickname);
+        assertEquals(true, successPassword);
+
+        String password = "tester password";
+        Integer loginMemberId = memberService.login(input_email, password);
+        assertEquals(this.member.getMemberId(), loginMemberId);
     }
+
 }

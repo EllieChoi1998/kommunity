@@ -13,7 +13,7 @@ public interface MemberRepository {
     Optional<Member> findByEmail(String name);
     List<Member> findAll();
     Member update_nickname(Member member, String nickname);
-    Member update_pssword(Member member, String password);
+    Member update_password(Member member, String password);
 
     Member updateExtendLogin(Member member, String change);
 
