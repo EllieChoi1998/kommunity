@@ -15,28 +15,28 @@ public class Member {
     @Column(name = "MEMBER_ID", nullable = false)
     private Integer memberId;
 
-    @Column(name = "nickname", length = 10)
+    @Column(name = "NICKNAME", length = 10)
     private String nickname;
 
-    @Column(name = "password", length = 200)
+    @Column(name = "PASSWORD", length = 200)
     private String password;
 
-    @Column(name = "loginTime")
+    @Column(name = "LOGIN_TIME")
     private LocalDateTime loginTime;
 
-    @Column(name = "logoutTime")
+    @Column(name = "LOGOUT_TIME")
     private LocalDateTime logoutTime;
 
-    @Column(name = "name", length = 10, nullable = false)
+    @Column(name = "NAME", length = 10, nullable = false)
     private String name;
 
-    @Column(name = "email", length = 50, nullable = false)
+    @Column(name = "EMAIL", length = 50, nullable = false)
     private String email;
 
-    @Column(name = "extendLogin", length = 1)
+    @Column(name = "EXTENDLOGIN", length = 1)
     private String extendLogin = "F";
 
-    @Column(name = "authEmail", length = 50)
+    @Column(name = "AUTHEMAIL", length = 50)
     private String authEmail;
 
 

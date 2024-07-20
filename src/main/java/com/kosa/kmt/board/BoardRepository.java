@@ -1,7 +1,5 @@
 package com.kosa.kmt.board;
 
-import com.kosa.kmt.member.Member;
-
 import java.util.List;
 import java.util.Optional;
 

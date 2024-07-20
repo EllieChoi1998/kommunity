@@ -1,16 +1,17 @@
 package com.kosa.kmt.member;
 
 public interface MemberService {
-    void login(Member member) throws Exception;
-    void setLoginTime(Member member);
+    Integer login(String email, String password) throws Exception;
+    Boolean logout(Member member);
 
-    Integer join(Member member) throws Exception;
-//    void logout(Member member);
+    Integer save(Member member) throws Exception;
 
-//    void setLogoutTime(Member member);
-//    void ExtendLogin(Member member);
-//    void CancelExtendLogin(Member member);
-//
-//    void updateNickname(Member member, String nickname);
-//    void updatePassword(Member member, String password);
+    Integer findSameName(String name);
+    Integer findSameEmail(String email);
+
+    Boolean ExtendLogin(Member member);
+    Boolean CancelExtendLogin(Member member);
+
+    Boolean updateNickname(Member member, String nickname);
+    Boolean updatePassword(Member member, String password);
 }
