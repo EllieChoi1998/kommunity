@@ -1,6 +1,5 @@
 package com.kosa.kmt.board;
 
-import com.kosa.kmt.chat.Chat;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

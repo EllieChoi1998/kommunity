@@ -2,7 +2,6 @@ package com.kosa.kmt.chat;
 
 import com.kosa.kmt.member.Member;
 import com.kosa.kmt.member.MemberRepository;
-import com.kosa.kmt.member.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

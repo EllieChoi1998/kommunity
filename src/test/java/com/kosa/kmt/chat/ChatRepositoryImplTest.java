@@ -1,7 +1,6 @@
 package com.kosa.kmt.chat;
 
 import com.kosa.kmt.member.MemberRepository;
-import com.kosa.kmt.member.MemberService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

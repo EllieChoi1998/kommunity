@@ -1,7 +1,5 @@
 package com.kosa.kmt.chat;
 
-import com.kosa.kmt.member.Member;
-
 import java.util.List;
 
 public interface ChatService {

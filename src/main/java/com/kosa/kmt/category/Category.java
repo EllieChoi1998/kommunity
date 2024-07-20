@@ -1,7 +1,6 @@
 package com.kosa.kmt.category;
 
 import com.kosa.kmt.board.Board;
-import com.kosa.kmt.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

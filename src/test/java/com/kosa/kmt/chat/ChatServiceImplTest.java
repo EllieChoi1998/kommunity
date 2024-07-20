@@ -1,6 +1,5 @@
 package com.kosa.kmt.chat;
 
-import com.kosa.kmt.member.Member;
 import com.kosa.kmt.member.MemberRepository;
 import com.kosa.kmt.member.MemberService;
 import org.junit.jupiter.api.Test;
@@ -9,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

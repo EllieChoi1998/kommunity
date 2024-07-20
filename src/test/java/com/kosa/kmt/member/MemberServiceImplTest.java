@@ -1,15 +1,10 @@
 package com.kosa.kmt.member;
 
-import jakarta.persistence.EntityManager;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,18 +18,46 @@ class MemberServiceImplTest {
     @Autowired
     MemberService memberService;
 
+    Member member;
+    @BeforeEach
+    void setUp() {
+        // tester user
+        this.member = new Member();
+        this.member.setName("test1");
+        this.member.setEmail("test1@test.com");
+        this.memberRepository.save(this.member);
+    }
 
     @Test
     // @Commit
-    public void 회원가입() throws Exception {
+    public void 회원가입과로그인_valid() throws Exception {
         //Given
-        Member member = new Member();
-        member.setName("spring");
-        member.setEmail("spring@gmail.com");
+
+        String input_email = "test1@test.com";
+        String input_name = "test1";
+
+        Member newmember = null;
+        Boolean successNickname = false;
+        Boolean successPassword = false;
         //When
-        Integer saveId = memberService.join(member);
+        Integer userId = memberService.findSameEmail(input_email);
+        if (userId != -1){
+            newmember = memberRepository.findById(userId).get();
+            Integer matchedNameUserId = memberService.findSameName(input_name);
+            if(matchedNameUserId == newmember.getMemberId()){
+                successNickname = memberService.updateNickname(newmember, "user");
+                successPassword = memberService.updatePassword(newmember, "tester password");
+
+            }
+        }
+
         //Then
-        Member findMember = memberRepository.findById(saveId).get();
-        assertEquals(member.getName(), findMember.getName());
+        assertEquals(true, successNickname);
+        assertEquals(true, successPassword);
+
+        String password = "tester password";
+        Integer loginMemberId = memberService.login(input_email, password);
+        assertEquals(this.member.getMemberId(), loginMemberId);
     }
+
 }
