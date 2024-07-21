@@ -16,5 +16,9 @@ public interface PostService {
     // create non-title post
     public void createPostNonTitle(String content, Long memberId, Long categoryId) throws SQLException;
 
+    // update post
     public void updatePost(Post post, Long id, String title, String content, Long memberId, Long categoryId) throws SQLException;
+
+    // delete post
+    public void deletePost(Long id) throws SQLException;
 }

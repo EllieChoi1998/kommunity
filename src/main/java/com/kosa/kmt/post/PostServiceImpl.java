@@ -37,4 +37,9 @@ public class PostServiceImpl implements PostService{
     public void updatePost(Post post, Long id, String title, String content, Long memberId, Long categoryId) throws SQLException {
 
     }
+
+    @Override
+    public void deletePost(Long id) throws SQLException {
+
+    }
 }
