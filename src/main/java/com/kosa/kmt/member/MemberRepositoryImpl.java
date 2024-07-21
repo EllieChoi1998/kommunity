@@ -92,8 +92,16 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
+    public Member updateAuthEmail(Member member, String authEmail){
+        member.setAuthEmail(authEmail);
+        em.merge(member);
+        return member;
+    }
+
+    @Override
     public Member delete(Member member) {
-        return null;
+        em.remove(member);
+        return member;
     }
 }
 

@@ -21,5 +21,7 @@ public interface MemberRepository {
 
     Member updateLogoutTime(Member member, LocalDateTime logoutTime);
 
+    Member updateAuthEmail(Member member, String authEmail);
+
     Member delete(Member member);
 }

@@ -4,9 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -60,4 +62,24 @@ class MemberServiceImplTest {
         assertEquals(this.member.getMemberId(), loginMemberId);
     }
 
+    @Test
+    public void testExtendLogin(){
+        Boolean result = this.memberService.ExtendLogin(this.member);
+        assertEquals(true, result);
+        assertEquals("T", this.member.getExtendLogin());
+    }
+
+    @Test
+    public void testCancelLogin(){
+        this.memberService.ExtendLogin(this.member);
+        Boolean result = this.memberService.CancelExtendLogin(this.member);
+        assertEquals(true, result);
+        assertEquals("F", this.member.getExtendLogin());
+    }
+
+    @Test
+    public void testLogout(){
+        this.memberService.logout(this.member);
+        assertEquals(LocalDateTime.now().getHour(), this.member.getLogoutTime().getHour());
+    }
 }

@@ -4,6 +4,8 @@ public interface MemberService {
     Integer login(String email, String password) throws Exception;
     Boolean logout(Member member);
 
+    Boolean updateAuthEmail(Member member, String authEmail);
+
     Integer findSameName(String name);
     Integer findSameEmail(String email);
 

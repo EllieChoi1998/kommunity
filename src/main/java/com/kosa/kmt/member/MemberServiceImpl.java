@@ -53,8 +53,18 @@ public class MemberServiceImpl implements MemberService {
     For signup, there's three stages:
         1. call findSameEmail() -- should return true
         2. call findSameName() -- should return true
+        3. call updateAuthEmail() --> call login
 
      */
+
+    @Override
+    public Boolean updateAuthEmail(Member member, String authEmail){
+        Member updatedMember = memberRepository.updateAuthEmail(member, authEmail);
+        if (updatedMember != null){
+            return true;
+        }
+        return false;
+    }
 
     /*
     로그인을 위한 이메일 및 이름 찾기 입니다.
