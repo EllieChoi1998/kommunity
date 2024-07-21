@@ -1,9 +1,7 @@
 package com.kosa.kmt.post;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,12 +9,19 @@ import java.time.LocalDateTime;
 @Entity
 @Setter
 @Getter
-@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "POST_ID")
     private Long id;
+
+    @Column(name = "CATEGORY_ID")
+    private Long categoryId;
+
+    @Column(name = "MEMBER_ID")
+    private Long memberId;
 
     @Column(length = 50)
     private String title;

@@ -13,14 +13,15 @@ public class CreateTests {
     @Autowired
     private PostRepository postRepository;
 
+    // create
     @Test
-    @Disabled
-    public void testCreate() {
+    public void createPost() {
         Post post1 = new Post();
         post1.setTitle("Post 1");
         post1.setContent("Post 1 content");
         postRepository.save(post1);
         assertNotNull(post1);
+
         Post post2 = new Post();
         post2.setTitle("Post 2");
         post2.setContent("Post 2 content");
