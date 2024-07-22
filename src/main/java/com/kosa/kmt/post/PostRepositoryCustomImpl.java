@@ -27,11 +27,4 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
         return query.getResultList();
     }
 
-//    @Override
-//    public LocalDateTime findPostDateById(Long id) {
-//        String jpql = "SELECT p.postDate FROM Post p WHERE p.id = :id";
-//        return em.createQuery(jpql, LocalDateTime.class)
-//                .setParameter("id", id)
-//                .getSingleResult();
-//    }
 }

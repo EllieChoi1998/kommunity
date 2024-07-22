@@ -1,5 +1,6 @@
 package com.kosa.kmt.post;
 
+import com.kosa.kmt.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,10 +18,14 @@ public class Post {
     private Long id;
 
     @Column(name = "CATEGORY_ID")
-    private Long categoryId;
+    private Integer categoryId;
 
     @Column(name = "MEMBER_ID")
-    private Long memberId;
+    private Integer memberId;
+
+//    @ManyToOne
+//    @JoinColumn(name = "MEMBER_ID", nullable = false)
+//    private Member member;
 
     @Column(length = 50)
     private String title;
@@ -31,9 +36,6 @@ public class Post {
 
     @Column(nullable = false)
     private LocalDateTime postDate;
-
-//    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<PostHashTag> postHashtags;
 
     @PrePersist
     protected void onCreate() {

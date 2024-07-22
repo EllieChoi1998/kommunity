@@ -1,5 +1,7 @@
 package com.kosa.kmt.post;
 
+import com.kosa.kmt.member.Member;
+import com.kosa.kmt.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ import java.util.Optional;
 public class PostServiceImpl implements PostService{
 
     private final PostRepository postRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public List<Post> getPostsAll() throws SQLException {
@@ -25,7 +28,8 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Long createPost(String title, String content, Long memberId, Long categoryId) throws SQLException {
+    public Long createPost(String title, String content, Integer memberId, Integer categoryId) throws SQLException {
+
         Post post = new Post();
         post.setTitle(title);
         post.setContent(content);
@@ -36,7 +40,8 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Long createPostNonTitle(String content, Long memberId, Long categoryId) throws SQLException {
+    public Long createPostNonTitle(String content, Integer memberId, Integer categoryId) throws SQLException {
+
         Post post = new Post();
         post.setContent(content);
         post.setMemberId(memberId);
@@ -71,5 +76,15 @@ public class PostServiceImpl implements PostService{
         } else {
             return false;
         }
+    }
+
+    @Override
+    public List<Post> getPostsOrderByPostDateDesc(Post post) throws SQLException {
+        return postRepository.findAllByOrderByPostDateDesc();
+    }
+
+    @Override
+    public List<Post> getPostsOrderByPostDateAsc(Post post) throws SQLException {
+        return postRepository.findAllByOrderByPostDateAsc();
     }
 }
