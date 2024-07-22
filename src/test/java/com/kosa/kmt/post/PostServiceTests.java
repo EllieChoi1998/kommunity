@@ -31,6 +31,7 @@ public class PostServiceTests {
     }
 
     @Test
+    @Transactional
     public void testUpdatePost() throws SQLException {
         Post p = this.postService.getPostById(1L);
         p.setContent("서비스에서 내용을 변경합니다.");
