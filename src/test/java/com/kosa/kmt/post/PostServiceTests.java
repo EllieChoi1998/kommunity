@@ -21,16 +21,17 @@ public class PostServiceTests {
     @Test
     public void testGetPostsAll() throws SQLException {
         List<Post> posts = postService.getPostsAll();
-        assertEquals(4, posts.size());
+        assertEquals(10, posts.size());
     }
 
     @Test
     public void testGetPostById() throws SQLException {
         Post p = postService.getPostById(1L);
-        assertEquals("Post 1", p.getTitle());
+        assertEquals("title : [001]", p.getTitle());
     }
 
     @Test
+    @Transactional
     public void testUpdatePost() throws SQLException {
         Post p = this.postService.getPostById(1L);
         p.setContent("서비스에서 내용을 변경합니다.");
