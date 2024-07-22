@@ -21,4 +21,5 @@ public interface PostService {
 
     // delete post
     public Boolean deletePost(Long id) throws SQLException;
+
 }
