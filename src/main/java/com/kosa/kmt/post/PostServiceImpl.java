@@ -1,12 +1,12 @@
 package com.kosa.kmt.post;
 
-import com.kosa.kmt.member.Member;
+import com.kosa.kmt.hashtag.HashtagService;
+import com.kosa.kmt.hashtag.PostHashtagService;
 import com.kosa.kmt.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,7 +15,7 @@ import java.util.Optional;
 public class PostServiceImpl implements PostService{
 
     private final PostRepository postRepository;
-    private final MemberRepository memberRepository;
+    private final PostHashtagService postHashtagService;
 
     @Override
     public List<Post> getPostsAll() throws SQLException {
@@ -28,7 +28,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Long createPost(String title, String content, Integer memberId, Integer categoryId) throws SQLException {
+    public Long createPost(String title, String content, Integer memberId, Integer categoryId, String strHashtag) throws SQLException {
 
         Post post = new Post();
         post.setTitle(title);
@@ -36,18 +36,26 @@ public class PostServiceImpl implements PostService{
         post.setMemberId(memberId);
         post.setCategoryId(categoryId);
 
-        return postRepository.save(post).getId();
+        Long postId = postRepository.save(post).getId();
+
+        postHashtagService.setHashtag(post, strHashtag);
+
+        return postId;
     }
 
     @Override
-    public Long createPostNonTitle(String content, Integer memberId, Integer categoryId) throws SQLException {
+    public Long createPostNonTitle(String content, Integer memberId, Integer categoryId, String strHashtag) throws SQLException {
 
         Post post = new Post();
         post.setContent(content);
         post.setMemberId(memberId);
         post.setCategoryId(categoryId);
 
-        return postRepository.save(post).getId();
+        Long postId = postRepository.save(post).getId();
+
+        postHashtagService.setHashtag(post, strHashtag);
+
+        return postId;
     }
 
     @Override
