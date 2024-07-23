@@ -12,6 +12,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostHashtagServiceImpl implements PostHashtagService {
 
+    private final HashtagService hashtagService;
+
+    private final PostHashtagRepository postHashtagRepository;
+
     @Override
     public void setHashtag(Post post, String hashtagStr) {
         List<String> hashtagList = Arrays.stream(hashtagStr.split("#"))
@@ -20,8 +24,15 @@ public class PostHashtagServiceImpl implements PostHashtagService {
                 .collect(Collectors.toList());
 
         hashtagList.forEach(hashtag -> {
-
+            saveHashtag(post, hashtag);
         });
+
+    }
+
+    private void saveHashtag(Post post, String hashtagStr) {
+        Hashtag hashtag = hashtagService.save(hashtagStr);
+
+        postHashtagRepository.findByPostAndHashtag(post.getId(), hashtag.getId());
 
     }
 }

@@ -2,5 +2,8 @@ package com.kosa.kmt.hashtag;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface HashtagRepository extends JpaRepository<Hashtag, Long> {
+import java.util.Optional;
+
+public interface HashtagRepository extends JpaRepository<Hashtag, Long>, HashtagRepositoryCustom {
+    Optional<Hashtag> findByName(String hashtagStr);
 }
