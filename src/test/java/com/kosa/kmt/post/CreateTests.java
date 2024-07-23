@@ -39,7 +39,7 @@ public class CreateTests {
         for (int i = 1; i <= 10; i++) {
             String title = String.format("title : [%03d]", i);
             String content = String.format("content : [%03d]", i);
-            this.postService.createPost(title, content, 1, 1);
+            this.postService.createPost(title, content, 1, 1, null);
         }
     }
 }

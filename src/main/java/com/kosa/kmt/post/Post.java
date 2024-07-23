@@ -1,10 +1,12 @@
 package com.kosa.kmt.post;
 
+import com.kosa.kmt.hashtag.PostHashtag;
 import com.kosa.kmt.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Setter
@@ -36,6 +38,9 @@ public class Post {
 
     @Column(nullable = false)
     private LocalDateTime postDate;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostHashtag> postHashtags;
 
     @PrePersist
     protected void onCreate() {

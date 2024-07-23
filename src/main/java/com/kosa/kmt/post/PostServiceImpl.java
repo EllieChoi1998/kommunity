@@ -28,7 +28,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Long createPost(String title, String content, Integer memberId, Integer categoryId) throws SQLException {
+    public Long createPost(String title, String content, Integer memberId, Integer categoryId, String strHashtag) throws SQLException {
 
         Post post = new Post();
         post.setTitle(title);

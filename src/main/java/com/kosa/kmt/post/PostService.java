@@ -11,7 +11,7 @@ public interface PostService {
     public Post getPostById(Long id) throws SQLException;
 
     // create normal post
-    public Long createPost(String title, String content, Integer memberId, Integer categoryId) throws SQLException;
+    public Long createPost(String title, String content, Integer memberId, Integer categoryId, String strHashtag) throws SQLException;
 
     // create non-title post
     public Long createPostNonTitle(String content, Integer memberId, Integer categoryId) throws SQLException;
