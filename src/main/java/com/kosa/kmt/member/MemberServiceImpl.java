@@ -1,5 +1,6 @@
 package com.kosa.kmt.member;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,8 +54,18 @@ public class MemberServiceImpl implements MemberService {
     For signup, there's three stages:
         1. call findSameEmail() -- should return true
         2. call findSameName() -- should return true
+        3. call updateAuthEmail() --> call login
 
      */
+
+    @Override
+    public Boolean updateAuthEmail(Member member, String authEmail){
+        Member updatedMember = memberRepository.updateAuthEmail(member, authEmail);
+        if (updatedMember != null){
+            return true;
+        }
+        return false;
+    }
 
     /*
     로그인을 위한 이메일 및 이름 찾기 입니다.
@@ -118,5 +129,15 @@ public class MemberServiceImpl implements MemberService {
         return false;
     }
 
+    @Override
+    public Member saveMember(String name, String email, String password){
+        Member member = new Member();
+        member.setEmail(email);
+        member.setName(name);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String encodedPassword = encoder.encode(password);
+        member.setPassword(encodedPassword);
+        return member;
+    }
 
 }
