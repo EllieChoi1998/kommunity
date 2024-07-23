@@ -1,5 +1,6 @@
 package com.kosa.kmt.post;
 
+import com.kosa.kmt.hashtag.PostHashtagRepository;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class CreateTests {
     @Autowired
     private PostService postService;
 
+    @Autowired
+    private PostHashtagRepository postHashtagRepository;
+
     // create
 //    @Test
 //    public void createPostRepo() {
@@ -35,11 +39,23 @@ public class CreateTests {
 //    }
 
     @Test
+    public void createPostLittle() throws SQLException {
+        postService.createPost("title", "content", 1, 1, "#java #html");
+    }
+
+    @Test
     public void createPostService() throws SQLException {
         for (int i = 1; i <= 10; i++) {
             String title = String.format("title : [%03d]", i);
             String content = String.format("content : [%03d]", i);
-            this.postService.createPost(title, content, 1, 1, "#자바 #java");
+            String hashtag;
+            if(i % 2 == 0){
+                hashtag = String.format("#자바 #java");
+            } else {
+                hashtag = String.format("#파이썬 #python");
+            }
+
+            this.postService.createPost(title, content, 1, 1, hashtag);
         }
     }
 }

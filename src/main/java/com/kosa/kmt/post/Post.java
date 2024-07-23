@@ -41,7 +41,7 @@ public class Post {
     @Column(nullable = false)
     private LocalDateTime postDate;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<PostHashtag> hashtags;
 
     @PrePersist

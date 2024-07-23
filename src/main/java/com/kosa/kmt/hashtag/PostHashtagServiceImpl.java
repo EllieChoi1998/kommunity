@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,10 +30,21 @@ public class PostHashtagServiceImpl implements PostHashtagService {
 
     }
 
-    private void saveHashtag(Post post, String hashtagStr) {
+    private PostHashtag saveHashtag(Post post, String hashtagStr) {
         Hashtag hashtag = hashtagService.save(hashtagStr);
 
-        postHashtagRepository.findByPostAndHashtag(post.getId(), hashtag.getId());
+        Optional<PostHashtag> optPostHashtag = postHashtagRepository.findByPost_IdAndHashtag_Id(post.getId(), hashtag.getId());
 
+        if(optPostHashtag.isPresent()) {
+            return optPostHashtag.get();
+        }
+
+        PostHashtag postHashtag = new PostHashtag();
+        postHashtag.setPost(post);
+        postHashtag.setHashtag(hashtag);
+
+        postHashtagRepository.save(postHashtag);
+
+        return postHashtag;
     }
 }

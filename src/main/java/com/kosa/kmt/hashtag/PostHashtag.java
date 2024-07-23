@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@Setter
 @Getter
 @Table(name = "POSTHASHTAG")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

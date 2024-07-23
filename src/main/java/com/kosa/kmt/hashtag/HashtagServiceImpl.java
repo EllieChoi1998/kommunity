@@ -17,7 +17,7 @@ public class HashtagServiceImpl implements HashtagService {
 
     @Override
     public Hashtag save(String hashtagStr) {
-        Optional<Hashtag> opHashtag = hashtagRepository.findByContent(hashtagStr);
+        Optional<Hashtag> opHashtag = hashtagRepository.findByName(hashtagStr);
 
         if(opHashtag.isPresent()) {
             return opHashtag.get();

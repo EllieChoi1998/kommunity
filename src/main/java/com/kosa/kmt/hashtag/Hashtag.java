@@ -24,7 +24,7 @@ public class Hashtag {
     @Column(length = 15, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "hashtag", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "hashtag", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<PostHashtag> hashtags;
 
 //    @Override

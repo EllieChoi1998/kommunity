@@ -15,7 +15,6 @@ import java.util.Optional;
 public class PostServiceImpl implements PostService{
 
     private final PostRepository postRepository;
-    private final MemberRepository memberRepository;
     private final PostHashtagService postHashtagService;
 
     @Override
@@ -37,9 +36,11 @@ public class PostServiceImpl implements PostService{
         post.setMemberId(memberId);
         post.setCategoryId(categoryId);
 
+        Long postId = postRepository.save(post).getId();
+
         postHashtagService.setHashtag(post, strHashtag);
 
-        return postRepository.save(post).getId();
+        return postId;
     }
 
     @Override
@@ -50,7 +51,11 @@ public class PostServiceImpl implements PostService{
         post.setMemberId(memberId);
         post.setCategoryId(categoryId);
 
-        return postRepository.save(post).getId();
+        Long postId = postRepository.save(post).getId();
+
+        postHashtagService.setHashtag(post, strHashtag);
+
+        return postId;
     }
 
     @Override
