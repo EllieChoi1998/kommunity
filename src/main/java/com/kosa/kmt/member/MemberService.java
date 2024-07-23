@@ -14,4 +14,6 @@ public interface MemberService {
 
     Boolean updateNickname(Member member, String nickname);
     Boolean updatePassword(Member member, String password);
+
+    Member saveMember(String name, String email, String password);
 }

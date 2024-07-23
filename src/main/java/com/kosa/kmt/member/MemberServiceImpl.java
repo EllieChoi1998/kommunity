@@ -1,5 +1,6 @@
 package com.kosa.kmt.member;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -128,5 +129,15 @@ public class MemberServiceImpl implements MemberService {
         return false;
     }
 
+    @Override
+    public Member saveMember(String name, String email, String password){
+        Member member = new Member();
+        member.setEmail(email);
+        member.setName(name);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String encodedPassword = encoder.encode(password);
+        member.setPassword(encodedPassword);
+        return member;
+    }
 
 }
