@@ -25,7 +25,7 @@ public class Hashtag {
     private String name;
 
     @OneToMany(mappedBy = "hashtag", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<PostHashtag> postHashtags = new LinkedHashSet<>();
+    private List<PostHashtag> hashtags;
 
     @Override
     public boolean equals(Object o) {

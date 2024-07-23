@@ -6,7 +6,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Setter
@@ -40,7 +42,7 @@ public class Post {
     private LocalDateTime postDate;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PostHashtag> postHashtags;
+    private List<PostHashtag> hashtags;
 
     @PrePersist
     protected void onCreate() {
