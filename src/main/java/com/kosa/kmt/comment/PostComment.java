@@ -5,36 +5,35 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
 @Entity
+@Table(name = "postcomment")
 public class PostComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long comment_Id;
 
-    @Column(length = 4000)
-    // 댓글 내용
-    private String content;
+    @Column(name = "post_id", nullable = false)
+    private Long postId;
 
-    // 생성 시간
-    private LocalDateTime createDate;
+    @Column(name = "member_id", nullable = false)
+    private Long memberId;
 
+    @Column(name = "comment_content", nullable = false)
+    private String commentContent;
 
-//    /*
-//     * 게시글 한 개에 댓글 여러 개 달릴 수 있음
-//     * Post 1
-//     */
-//    @ManyToOne
-//    private Post post;
-//
-//    @ManyToOne
-//    private Member author;
-//
-//    // 수정 시간
-//    private LocalDateTime modifyDate;
-//
-//    @ManyToMany
-//    Set<Member> voter;
+    @Column(name = "comment_datetime", nullable = false)
+    private LocalDateTime commentDateTime;
+
+    @OneToMany(mappedBy = "postComment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentLike> likes;
+
+    @OneToMany(mappedBy = "postComment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentHate> hates;
+
+//    @Column(name = "ano_number", nullable = false)
+//    private Long anonnumber;
 }
