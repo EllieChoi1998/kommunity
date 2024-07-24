@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Signup Page</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+<div class="container">
+    <div class="login-box">
+        <div class="small-logo">
+            <img src="small_logo.png" alt="../Small Logo">
+        </div>
+        <h2>회원 가입</h2>
+        <h3>이메일 인증이 성공적으로 완료되었습니다.</h3>
+        <h3>본인 확인을 위해, 소셜을 통한 실명 확인을 진행해 주십시오.</h3>
+
+
+        <div class="social-login">
+            <a href="#" id="naver-login">
+                <img src="../btn_naver.svg" alt="N 로그인">
+            </a>
+            <a href="#" id="kakao-login">
+                <img src="../btn_kakao.svg" alt="카카오 로그인">
+            </a>
+        </div>
+        <div class="signup-prompt">
+            <p>기존 회원정보가 기억 나시나요?</p>
+            <a th:href="@{/}" class="signup-link">로그인 화면으로 돌아가기</a>
+        </div>
+    </div>
+    <div class="logo-box">
+        <img src="../logo-transparent-svg.svg" alt="KOMMUNITY KOSA MSA5 2024">
+    </div>
+</div>
+</body>
+</html>
