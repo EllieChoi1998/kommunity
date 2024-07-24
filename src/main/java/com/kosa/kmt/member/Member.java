@@ -1,10 +1,18 @@
 package com.kosa.kmt.member;
 
+import com.kosa.kmt.chat.Chat;
+import com.kosa.kmt.hashtag.PostHashtag;
+import com.kosa.kmt.post.BookMark;
+import com.kosa.kmt.post.Post;
+import com.kosa.kmt.post.PostHate;
+import com.kosa.kmt.post.PostLike;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.awt.print.Book;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -39,6 +47,15 @@ public class Member {
     @Column(name = "AUTHEMAIL", length = 50)
     private String authEmail;
 
+    @OneToMany(mappedBy = "member", orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<BookMark> bookMarks;
 
+    @OneToMany(mappedBy = "member", orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<PostLike> postLikes;
 
+    @OneToMany(mappedBy = "member", orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<PostHate> postHates;
+
+    @OneToMany(mappedBy = "member", orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Chat> chats;
 }

@@ -1,6 +1,6 @@
-package com.kosa.kmt.hashtag;
+package com.kosa.kmt.post;
 
-import com.kosa.kmt.post.Post;
+import com.kosa.kmt.member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -8,21 +8,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Setter
 @Getter
-@Table(name = "POSTHASHTAG")
+@Setter
+@Table(name = "POSTLIKE")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostHashtag {
-
+public class PostLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "TAG_ID", nullable = false)
-    private Hashtag hashtag;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "POST_ID", nullable = false)
     private Post post;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "MEMBER_ID", nullable = false)
+    private Member member;
 }

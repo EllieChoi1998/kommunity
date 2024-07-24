@@ -1,5 +1,6 @@
 package com.kosa.kmt.post;
 
+import com.kosa.kmt.comment.PostComment;
 import com.kosa.kmt.hashtag.PostHashtag;
 import com.kosa.kmt.member.Member;
 import jakarta.persistence.*;
@@ -43,6 +44,16 @@ public class Post {
 
     @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<PostHashtag> hashtags;
+
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    private List<BookMark> bookMarks;
+
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    private List<PostLike> likes;
+
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    private List<PostHate> hates;
+
 
     @PrePersist
     protected void onCreate() {

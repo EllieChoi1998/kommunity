@@ -49,10 +49,12 @@ public class CreateTests {
             String title = String.format("title : [%03d]", i);
             String content = String.format("content : [%03d]", i);
             String hashtag;
-            if(i % 2 == 0){
+            if(i % 3 == 0){
                 hashtag = String.format("#자바 #java");
-            } else {
+            } else if(i % 3 == 1) {
                 hashtag = String.format("#파이썬 #python");
+            } else {
+                hashtag = String.format("#익명 #대나무숲");
             }
 
             this.postService.createPost(title, content, 1, 1, hashtag);

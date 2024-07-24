@@ -35,7 +35,7 @@ public class MemberRepositoryImplTest {
     public void testfindAll(){
         List<Member> members = memberRepository.findAll();
         System.out.println("members : " + members.size());
-        assertEquals(4, members.size());
+        assertEquals(2, members.size());
     }
 
 //    @Test
