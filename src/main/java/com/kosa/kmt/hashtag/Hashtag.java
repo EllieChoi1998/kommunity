@@ -27,16 +27,4 @@ public class Hashtag {
     @OneToMany(mappedBy = "hashtag", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<PostHashtag> hashtags;
 
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || this.getClass() != o.getClass()) return false;
-//        Hashtag hashtag = (Hashtag) o;
-//        return this.getId() != null && this.getId().equals(hashtag.getId());
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(this.getId());
-//    }
 }

@@ -1,5 +1,7 @@
 package com.kosa.kmt.post;
 
+import com.kosa.kmt.hashtag.PostHashtag;
+import com.kosa.kmt.hashtag.PostHashtagService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,6 +11,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -17,6 +20,9 @@ public class PostServiceTests {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private PostHashtagService postHashtagService;
 
     @Test
     public void testGetPostsAll() throws SQLException {
@@ -41,6 +47,9 @@ public class PostServiceTests {
     @Test
     @Transactional
     public void testDeletePost() throws SQLException {
-        this.postService.deletePost(21L);
+        this.postService.deletePost(12L);
     }
+
+
+
 }
