@@ -16,4 +16,6 @@ public interface MemberService {
     Boolean updatePassword(Member member, String password);
 
     Member saveMember(String name, String email, String password);
+
+    String sendCodeToEmail(String email);
 }

@@ -43,7 +43,7 @@ dependencies {
 	testImplementation 'org.mockito:mockito-core:5.0.0'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '3.0.5'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
 
 
