@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 
@@ -37,10 +38,10 @@ public class CreateTests {
 //        postRepository.save(post2);
 //        assertNotNull(post2);
 //    }
-
     @Test
     public void createPostLittle() throws SQLException {
-        postService.createPost("title", "content", 1, 1, "#java #html");
+        postService.createPost("title1", "content1", 1, 1, "#java #html");
+        postService.createPost("title2", "content2", 1, 1, "#코테 #파이썬");
     }
 
     @Test

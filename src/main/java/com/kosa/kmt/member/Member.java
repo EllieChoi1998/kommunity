@@ -7,7 +7,9 @@ import com.kosa.kmt.post.Post;
 import com.kosa.kmt.post.PostHate;
 import com.kosa.kmt.post.PostLike;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.awt.print.Book;
@@ -17,6 +19,8 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

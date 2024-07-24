@@ -27,7 +27,7 @@ public class HashtagTests {
     // get hashtags in post
     @Test
     public void testGetHashtagByPost() throws SQLException {
-        Post post = this.postService.getPostById(1L);
+        Post post = this.postService.getPostById(24L);
         List<PostHashtag> hashtags = postHashtagService.getPostHashtags(post);
         assertEquals(2, hashtags.size());
     }
@@ -35,10 +35,9 @@ public class HashtagTests {
     // update hashtag
     @Test
     public void testUpdateHashtag() throws SQLException {
-        String hashtagStr = "# ";
-        Post post = this.postService.getPostById(1L);
+        String hashtagStr = "#수정한 #해시태그를 #나눠주세요 ";
+        Post post = this.postService.getPostById(24L);
         postHashtagService.setHashtag(post, hashtagStr);
-
     }
 
 

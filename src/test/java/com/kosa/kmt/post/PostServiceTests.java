@@ -27,7 +27,7 @@ public class PostServiceTests {
     @Test
     public void testGetPostsAll() throws SQLException {
         List<Post> posts = postService.getPostsAll();
-        assertEquals(10, posts.size());
+        assertEquals(13, posts.size());
     }
 
     @Test
