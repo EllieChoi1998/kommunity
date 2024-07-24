@@ -1,5 +1,5 @@
 package com.kosa.kmt.post;
 
-public interface PostLikeOrHateRepository {
+public interface PostLikeOrHateRepository{
 
 }
