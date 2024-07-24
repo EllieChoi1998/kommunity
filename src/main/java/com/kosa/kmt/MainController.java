@@ -27,6 +27,11 @@ public class MainController {
         return "redirect:/kommunity"; // 리디렉션 설정
     }
 
+    @GetMapping("/kommunity/main")
+    public String main() {
+        return "main";
+    }
+
     @GetMapping("/login")
     public String showLoginForm(Model model) {
         model.addAttribute("loginForm", new Member());

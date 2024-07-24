@@ -1,14 +1,18 @@
 package com.kosa.kmt.member;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/kommunity")
@@ -17,8 +21,12 @@ public class MemberSingupController {
     @Autowired
     MemberService memberService;
 
+
     static String emailAddress;
     static String authCode;
+    @Qualifier("memberRepository")
+    @Autowired
+    private MemberRepository memberRepository;
 
     @GetMapping("/signup")
     public String signup() {
@@ -77,5 +85,27 @@ public class MemberSingupController {
     public String validateName(){
 
         return "signup/validateName";
+    }
+
+    @GetMapping("/setInfo")
+    public String setInfo(Model model){
+        Integer memberId = memberService.findSameEmail(emailAddress);
+        Optional<Member> OptionalMember = memberRepository.findById(memberId);
+        if(OptionalMember.isPresent()){
+            Member member = OptionalMember.get();
+            model.addAttribute("member", member);
+        }
+        return "signup/setInfo";
+    }
+
+    @PostMapping("/setInfo")
+    public String setInfo(@RequestParam String nickname, @RequestParam String password, Model model){
+        Member member = (Member) model.getAttribute("member");
+        memberService.updateNickname(member, nickname);
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String encodedPassword = encoder.encode(password);
+        memberService.updatePassword(member, encodedPassword);
+        return "redirect:/";
     }
 }

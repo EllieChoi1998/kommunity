@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="login-box">
+        <div class="small-logo">
+            <img href="/kommunity/signup" src="../small_logo.png" alt="Small Logo">
+        </div>
+        <h2>회원가입</h2>
+        <h3>모든 인증절차가 완료 되었습니다.</h3>
+        닉네임과 비밀번호를 설정하여 회원가입을 마무리하여 주세요.
+        <form class="error" th:action="@{/setInfo}" th:object="${member}" method="post">
+            <div th:if="${param.error}">
+                <div class="alert alert-danger">
+                    중복된 닉네임이 존재합니다.
+                </div>
+            </div>
+            <div class="textbox">
+                <input name="text" type="email" placeholder="닉네임" th:field="*{nickname}" required>
+            </div>
+            <div class="textbox">
+                <input id="password" name="password" type="password" placeholder="비밀번호" th:field="*{password}" required>
+            </div>
+            <div class="textbox">
+                <input id="password-confirm" name="password" type="password" placeholder="비밀번호 확인" th:field="*{password}" required>
+            </div>
+            <div id="password-match-status" style="color: red; display: none;">
+                비밀번호가 일치하지 않습니다.
+            </div>
+            <button type="submit" class="btn">가입하기</button>
+
+        </form>
+    </div>
+    <div class="logo-box">
+        <img href="/kommunity/signup" src="../logo-transparent-svg.svg" alt="KOMMUNITY KOSA MSA5 2024">
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#password, #password-confirm').on('keyup', function() {
+            var password = $('#password').val();
+            var confirmPassword = $('#password-confirm').val();
+
+            if (password === confirmPassword) {
+                $('#password-match-status').hide();
+            } else {
+                $('#password-match-status').show();
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
