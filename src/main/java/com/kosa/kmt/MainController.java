@@ -64,8 +64,5 @@ public class MainController {
         return "redirect:/kommunity";
     }
 
-//    @PostMapping("/signup")
-//    public String processSignup(@ModelAttribute Member member) {
-//
-//    }
+
 }
