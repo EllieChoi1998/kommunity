@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -25,10 +26,10 @@ class PostRepoTests {
     @Test
     public void testFindAll() {
         List<Post> all = this.postRepository.findAll();
-        assertEquals(2, all.size());
+        assertEquals(10, all.size());
 
         Post p = all.get(1);
-        assertEquals("Post 2 content", p.getContent());
+        assertEquals("content : [002]", p.getContent());
     }
 
     // read one
@@ -37,7 +38,7 @@ class PostRepoTests {
         Optional<Post> post = postRepository.findById(1L);
         if (post.isPresent()) {
             Post p = post.get();
-            assertEquals("Post 1 content", p.getContent());
+            assertEquals("content : [001]", p.getContent());
         }
     }
 
@@ -45,12 +46,13 @@ class PostRepoTests {
     @Test
     public void testFindPostDateById(){
         Post p = this.postRepository.findById(1L).get();
-        assertEquals(LocalDate.of(2024, 7, 19).getMonth(), p.getPostDate().getMonth());
-        assertEquals(LocalDate.of(2024, 7, 19).getDayOfMonth(), p.getPostDate().getDayOfMonth());
+        assertEquals(LocalDate.of(2024, 7, 22).getMonth(), p.getPostDate().getMonth());
+        assertEquals(LocalDate.of(2024, 7, 22).getDayOfMonth(), p.getPostDate().getDayOfMonth());
     }
 
     // update by id
     @Test
+    @Transactional
     public void testUpdatePostById(){
         Optional<Post> op = this.postRepository.findById(1L);
         assertTrue(op.isPresent());
@@ -67,5 +69,21 @@ class PostRepoTests {
         assertTrue(op.isPresent());
         Post p = op.get();
         this.postRepository.delete(p);
+    }
+
+    @Test
+    public void testFindAllByOrderByPostDateDesc() {
+        List<Post> posts = postRepository.findAllByOrderByPostDateDesc();
+        assertThat(posts).hasSize(18);
+        assertThat(posts.get(0).getTitle()).isEqualTo("Test Post");
+        assertThat(posts.get(17).getTitle()).isEqualTo("title : [001]");
+    }
+
+    @Test
+    public void testFindAllByOrderByPostDateAsc() {
+        List<Post> posts = postRepository.findAllByOrderByPostDateAsc();
+        assertThat(posts).hasSize(18);
+        assertThat(posts.get(0).getTitle()).isEqualTo("title : [001]");
+        assertThat(posts.get(17).getTitle()).isEqualTo("Test Post");
     }
 }

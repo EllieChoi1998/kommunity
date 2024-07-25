@@ -1,9 +1,12 @@
 package com.kosa.kmt.post;
 
-import com.kosa.kmt.hashtag.PostHashTag;
+import com.kosa.kmt.comment.PostComment;
+import com.kosa.kmt.hashtag.PostHashtag;
+import com.kosa.kmt.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
+import javax.xml.stream.events.Comment;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,10 +22,14 @@ public class Post {
     private Long id;
 
     @Column(name = "CATEGORY_ID")
-    private Long categoryId;
+    private Integer categoryId;
 
-    @Column(name = "MEMBER_ID")
-    private Long memberId;
+//    @Column(name = "MEMBER_ID")
+//    private Integer memberId;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "MEMBER_ID", nullable = false)
+    private Member member;
 
     @Column(length = 50)
     private String title;
@@ -34,8 +41,21 @@ public class Post {
     @Column(nullable = false)
     private LocalDateTime postDate;
 
-//    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<PostHashTag> postHashtags;
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    private List<PostComment> comments;
+
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    private List<PostHashtag> hashtags;
+
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    private List<BookMark> bookMarks;
+
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    private List<PostLike> likes;
+
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    private List<PostHate> hates;
+
 
     @PrePersist
     protected void onCreate() {

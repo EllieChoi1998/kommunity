@@ -1,10 +1,14 @@
 package com.kosa.kmt.post;
 
+import com.kosa.kmt.hashtag.HashtagService;
+import com.kosa.kmt.hashtag.PostHashtagService;
+import com.kosa.kmt.member.Member;
+import com.kosa.kmt.member.MemberRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +17,8 @@ import java.util.Optional;
 public class PostServiceImpl implements PostService{
 
     private final PostRepository postRepository;
+    private final PostHashtagService postHashtagService;
+    private final MemberRepository memberRepository;
 
     @Override
     public List<Post> getPostsAll() throws SQLException {
@@ -21,28 +27,59 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public Post getPostById(Long id) throws SQLException {
-        return postRepository.findById(id).get();
+        Optional<Post> post = postRepository.findById(id);
+        if (post.isPresent()) {
+            return post.get();
+        } else {
+            throw new SQLException("No post found with id: " + id);
+        }
     }
 
     @Override
-    public Long createPost(String title, String content, Long memberId, Long categoryId) throws SQLException {
+    public Long createPost(String title, String content, Integer memberId, Integer categoryId, String strHashtag) throws SQLException {
+
         Post post = new Post();
         post.setTitle(title);
         post.setContent(content);
-        post.setMemberId(memberId);
+
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+        if (optionalMember.isPresent()) {
+            Member member = optionalMember.get();
+            post.setMember(member);
+        } else {
+            throw new EntityNotFoundException("Member not found with id " + memberId);
+        }
+
         post.setCategoryId(categoryId);
 
-        return postRepository.save(post).getId();
+        Long postId = postRepository.save(post).getId();
+
+        postHashtagService.setHashtag(post, strHashtag);
+
+        return postId;
     }
 
     @Override
-    public Long createPostNonTitle(String content, Long memberId, Long categoryId) throws SQLException {
+    public Long createPostNonTitle(String content, Integer memberId, Integer categoryId, String strHashtag) throws SQLException {
+
         Post post = new Post();
         post.setContent(content);
-        post.setMemberId(memberId);
+
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+        if (optionalMember.isPresent()) {
+            Member member = optionalMember.get();
+            post.setMember(member);
+        } else {
+            throw new EntityNotFoundException("Member not found with id " + memberId);
+        }
+
         post.setCategoryId(categoryId);
 
-        return postRepository.save(post).getId();
+        Long postId = postRepository.save(post).getId();
+
+        postHashtagService.setHashtag(post, strHashtag);
+
+        return postId;
     }
 
     @Override
@@ -71,5 +108,15 @@ public class PostServiceImpl implements PostService{
         } else {
             return false;
         }
+    }
+
+    @Override
+    public List<Post> getPostsOrderByPostDateDesc(Post post) throws SQLException {
+        return postRepository.findAllByOrderByPostDateDesc();
+    }
+
+    @Override
+    public List<Post> getPostsOrderByPostDateAsc(Post post) throws SQLException {
+        return postRepository.findAllByOrderByPostDateAsc();
     }
 }
