@@ -25,6 +25,12 @@ public class CommentService {
         return postCommentRepository.findAll();
     }
 
+    // 댓글 조회
+    public PostComment getCommentById(Long commentId) {
+        return postcommentRepository.findById(commentId)
+                .orElseThrow(() -> new RuntimeException("Comment not found"));
+    }
+
     // 댓글 추가
     public PostComment createComment(Long postId, Integer memberId, String content) {
         PostComment comment = new PostComment();
