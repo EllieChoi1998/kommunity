@@ -8,7 +8,11 @@ import com.kosa.kmt.post.Post;
 import com.kosa.kmt.post.PostHate;
 import com.kosa.kmt.post.PostLike;
 import jakarta.persistence.*;
+
+import lombok.Builder;
+
 import lombok.AllArgsConstructor;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -55,6 +59,17 @@ public class Member {
     @OneToMany(mappedBy = "member", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Post> posts;
 
+
+    @Builder
+    public Member(String name, String email) {
+        this.name = name;
+        this.authEmail = email;
+    }
+
+    public Member() {
+
+    }
+
     @OneToMany(mappedBy = "member", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<BookMark> bookMarks;
 
@@ -69,4 +84,5 @@ public class Member {
 
     @OneToMany(mappedBy = "member", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<PostComment> comments;
+
 }
