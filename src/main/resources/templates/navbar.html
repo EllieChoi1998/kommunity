@@ -1,0 +1,33 @@
+<nav th:fragment="navbarFragment" class="navbar navbar-expand-lg navbar-light bg-light justify-content-between">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+            <img src="/images/logo.png" alt="SBB Logo" style="max-height: 60px;">
+        </a>
+        <div class="d-flex order-lg-2">
+            <div class="user-profile me-2">
+                <button id="profileBtn">
+                    <img src="/images/defaultuser.png" alt="User" class="profile-logo">
+                    닉네임
+                </button>
+                <div id="profileMenuContainer" class="profile-menu hidden"></div>
+            </div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse justify-content-center order-lg-1" id="navbarNav">
+            <ul class="nav nav-pills mb-3 flex-column flex-lg-row" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" id="pills-danamusup-tab" href="/category/danamusup" role="tab" aria-controls="pills-danamusup" aria-selected="true">대나무숲</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="pills-codingtest-tab" href="/category/codingtest" role="tab" aria-controls="pills-codingtest" aria-selected="false">코딩 테스트 연습</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="pills-jobtips-tab" href="/category/jobtips" role="tab" aria-controls="pills-jobtips" aria-selected="false">취업 꿀팁</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

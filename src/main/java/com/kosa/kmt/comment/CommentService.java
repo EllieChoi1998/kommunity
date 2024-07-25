@@ -27,7 +27,7 @@ public class CommentService {
 
     // 댓글 조회
     public PostComment getCommentById(Long commentId) {
-        return postcommentRepository.findById(commentId)
+        return postCommentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
     }
 
