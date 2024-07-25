@@ -29,7 +29,7 @@ public class MainController {
 
     @GetMapping("/kommunity/main")
     public String main() {
-        return "main";
+        return "danamusup";
     }
 
     @GetMapping("/login")
