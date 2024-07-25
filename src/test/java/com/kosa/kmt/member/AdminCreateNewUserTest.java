@@ -31,11 +31,9 @@ public class AdminCreateNewUserTest {
 //        Optional<Member> memberls = memberRepository.findByName("admin");
 //        if (memberls.isPresent() == false) {
         Member member = new Member();
-        member.setEmail("one@email.com");
-        member.setName("one");
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String encodedPassword = encoder.encode("one");
-        member.setPassword(encodedPassword);
+        member.setEmail("onestone1380@email.com");
+        member.setName("장원석");
+
         memberRepository.save(member);
 //        }
     }

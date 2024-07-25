@@ -66,10 +66,6 @@ public class Member {
         this.authEmail = email;
     }
 
-    public Member() {
-
-    }
-
     @OneToMany(mappedBy = "member", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<BookMark> bookMarks;
 
