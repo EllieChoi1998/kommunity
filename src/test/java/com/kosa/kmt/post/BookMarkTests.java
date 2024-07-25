@@ -40,6 +40,7 @@ public class BookMarkTests {
         post = new Post();
         post.setTitle("Test Post");
         post.setContent("This is a test post.");
+        post.setMember(member);
         postRepository.save(post);
     }
 

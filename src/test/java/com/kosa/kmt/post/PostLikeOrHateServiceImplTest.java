@@ -34,16 +34,18 @@ public class PostLikeOrHateServiceImplTest {
 
     @BeforeEach
     public void setUp() {
-        post = new Post();
-        post.setTitle("Test Post");
-        post.setContent("This is a test post");
-        post = postRepository.save(post);
-
         member = new Member();
         member.setName("Test");
         member.setEmail("test@example.com");
         member.setPassword("password");
         member = memberRepository.save(member);
+
+        post = new Post();
+        post.setTitle("Test Post");
+        post.setContent("This is a test post");
+        post.setMember(member);
+        post = postRepository.save(post);
+
     }
 
     @Test
