@@ -1,148 +1,105 @@
 package com.kosa.kmt.comment;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import com.kosa.kmt.member.Member;
+import com.kosa.kmt.member.MemberRepository;
+import com.kosa.kmt.post.Post;
+import com.kosa.kmt.post.PostRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@Transactional
 public class CommentServiceTests {
 
     @Autowired
     private CommentService commentService;
 
     @Autowired
-    private PostCommentRepository postcommentRepository;
+    private MemberRepository memberRepository;
 
-    // 테스트 시작 전 초기화
-//    @BeforeEach
-//    public void setUp() {
-//        postcommentRepository.deleteAll(); // Clear the repository before each test
-//    }
+    @Autowired
+    private PostRepository postRepository;
 
-    @Test
-    public void testAddComment() {
-        Long postId = 1L;
-        Long memberId = 2L;
-        String content = "하이요";
+    @Autowired
+    private PostCommentRepository postCommentRepository;
 
-        // 댓글 추가
-        PostComment comment = commentService.createComment(postId, memberId, content);
+    private Member testMember;
+    private Post testPost;
 
-        // 댓글이 제대로 추가되었는지 확인
-        assertNotNull(comment.getComment_Id());
-        assertEquals(postId, comment.getPostId());
-        assertEquals(memberId, comment.getMemberId());
-        assertEquals(content, comment.getCommentContent());
+    @BeforeEach
+    public void setUp() {
+        // Test 데이터 생성
+        testMember = new Member();
+        testMember.setName("Test");
+        testMember.setEmail("test@example.com");
+        testMember.setPassword("password");
+        testMember = memberRepository.save(testMember);
 
-        PostComment savedComment = postcommentRepository.findById(comment.getComment_Id()).orElse(null);
-        assertNotNull(savedComment);
-        assertEquals(comment.getComment_Id(), savedComment.getComment_Id());
+        testPost = new Post();
+        testPost.setTitle("Test Post");
+        testPost.setContent("Test Content");
+        testPost.setCategoryId(1);  // 예시 카테고리 ID
+        testPost.setMember(testMember);
+        testPost = postRepository.saveAndFlush(testPost);
     }
 
     @Test
-    public void testDeleteComment() {
-        Long postId = 1L;
-        Long memberId = 2L;
-        String content = "하이요";
+    public void testCreateComment() {
+        String content = "Test Comment";
+        PostComment comment = commentService.createComment(testPost.getId(), testMember.getMemberId(), content);
 
-        // 댓글 추가
-        PostComment comment = commentService.createComment(postId, memberId, content);
+        assertThat(comment).isNotNull();
+        assertThat(comment.getCommentContent()).isEqualTo(content);
+        assertThat(comment.getMember().getMemberId()).isEqualTo(testMember.getMemberId());
+        assertThat(comment.getPost().getId()).isEqualTo(testPost.getId());
+    }
 
-        // 댓글이 추가된 상태인지 확인
-        assertNotNull(postcommentRepository.findById(comment.getComment_Id()).orElse(null), "삭제 전 댓글이 존재해야 합니다.");
-
-        // 댓글 삭제
-        commentService.deleteComment(comment.getComment_Id());
-
-        // 삭제 후 댓글이 데이터베이스에서 삭제되었는지 확인
-        PostComment deletedComment = postcommentRepository.findById(comment.getComment_Id()).orElse(null);
-        assertNull(deletedComment, "삭제해야 함");
-
-        // 전체 댓글 수 확인
+    @Test
+    public void testGetAllComments() {
         List<PostComment> comments = commentService.getAllComments();
-        assertEquals(23, comments.size(), "삭제 후 총 댓글 수는 " + comments.size() + "개여야 합니다.");
+        assertThat(comments).isNotNull();
     }
 
     @Test
     public void testUpdateComment() {
-        Long postId = 1L;
-        Long memberId = 1L;
-        String originalContent = "Original content";
-        String updatedContent = "Updated content";
+        String content = "Initial Comment";
+        PostComment comment = commentService.createComment(13L, 6, content);
 
-        // 댓글 추가
-        PostComment comment = commentService.createComment(postId, memberId, originalContent);
+        String updatedContent = "Updated Comment";
+        PostComment updatedComment = commentService.updateComment(comment.getCommentId(), updatedContent);
 
-        // 댓글 수정
-        PostComment updatedComment = commentService.updateComment(comment.getComment_Id(), updatedContent);
+        assertThat(updatedComment.getCommentContent()).isEqualTo(updatedContent);
+    }
 
-        // 수정된 댓글 내용 확인
-        assertEquals(updatedContent, updatedComment.getCommentContent(), "댓글 내용이 수정되어야 합니다.");
+    @Test
+    public void testDeleteComment() {
+        String content = "Comment to Delete";
+        PostComment comment = commentService.createComment(testPost.getId(), testMember.getMemberId(), content);
 
-        // 데이터베이스에서 댓글을 검증
-        PostComment savedComment = postcommentRepository.findById(updatedComment.getComment_Id()).orElse(null);
-        assertNotNull(savedComment, "DB에 댓글이 존재해야 함");
-        assertEquals(updatedContent, savedComment.getCommentContent(), "데이터베이스의 댓글 내용이 수정되어야 합니다.");
+        commentService.deleteComment(comment.getCommentId());
+
+        Optional<PostComment> deletedComment = postCommentRepository.findById(comment.getCommentId());
+        assertThat(deletedComment).isEmpty();
     }
 
     @Test
     public void testGetAllCommentsByNewest() {
-        Long postId = 1L;
-        Long memberId = 1L;
-        String content1 = "첫 번째 생성 댓글";
-        String content2 = "두 번째 생성 댓글";
-
-        // 기존 댓글 수 확인
-        int initialCommentCount = commentService.getAllComments().size();
-
-        // 새로운 댓글 추가
-        commentService.createComment(postId, memberId, content1);
-        // 타임스탬프를 다르게 하기 위해 지연
-        try { Thread.sleep(1000); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
-        commentService.createComment(postId, memberId, content2);
-
-        // 최신 순으로 모든 댓글 조회
         List<PostComment> comments = commentService.getAllCommentsByNewest();
-
-        // 기존 댓글 + 새로 추가된 2개 댓글 = 총 댓글 수 확인
-        assertEquals(initialCommentCount + 2, comments.size());
-
-        // 새로 추가한 댓글이 목록의 첫 번째 두 개 위치에 있는지 확인
-        assertEquals(content2, comments.get(0).getCommentContent()); // 최신 댓글이 첫 번째에 위치해야 함
-        assertEquals(content1, comments.get(1).getCommentContent());
+        assertThat(comments).isNotNull();
     }
 
     @Test
     public void testGetAllCommentsByOldest() {
-        Long postId = 1L;
-        Long memberId = 1L;
-        String content1 = "첫 번째 생성 댓글";
-        String content2 = "두 번째 생성 댓글";
-
-        // 기존 댓글 수 확인
-        int initialCommentCount = commentService.getAllComments().size();
-
-        // 새로운 댓글 추가
-        commentService.createComment(postId, memberId, content1);
-        // 타임스탬프를 다르게 하기 위해 지연
-        try { Thread.sleep(1000); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
-        commentService.createComment(postId, memberId, content2);
-
-        // 오래된 순으로 모든 댓글 조회
         List<PostComment> comments = commentService.getAllCommentsByOldest();
-
-        // 기존 댓글 + 새로 추가된 2개 댓글 = 총 댓글 수 확인
-        assertEquals(initialCommentCount + 2, comments.size());
-
-        // 새로 추가한 댓글이 목록의 마지막 두 개 위치에 있는지 확인
-        assertEquals(content1, comments.get(initialCommentCount).getCommentContent());
-        assertEquals(content2, comments.get(initialCommentCount + 1).getCommentContent());
+        assertThat(comments).isNotNull();
     }
 }

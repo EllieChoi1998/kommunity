@@ -1,5 +1,8 @@
 package com.kosa.kmt.comment;
 
+import com.kosa.kmt.hashtag.Hashtag;
+import com.kosa.kmt.member.Member;
+import com.kosa.kmt.post.Post;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,19 +17,20 @@ import java.util.List;
 public class PostComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long comment_Id;
-
-    @Column(name = "post_id", nullable = false)
-    private Long postId;
-
-    @Column(name = "member_id", nullable = false)
-    private Long memberId;
+    private Long commentId;
 
     @Column(name = "comment_content", nullable = false)
     private String commentContent;
 
     @Column(name = "comment_datetime", nullable = false)
     private LocalDateTime commentDateTime;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "MEMBER_ID", nullable = false)
+    private Member member;
+
+    @ManyToOne(optional = false)
+    private Post post;
 
     @OneToMany(mappedBy = "postComment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommentLike> likes;

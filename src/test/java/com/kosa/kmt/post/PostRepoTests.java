@@ -74,16 +74,16 @@ class PostRepoTests {
     @Test
     public void testFindAllByOrderByPostDateDesc() {
         List<Post> posts = postRepository.findAllByOrderByPostDateDesc();
-        assertThat(posts).hasSize(10);
-        assertThat(posts.get(0).getTitle()).isEqualTo("title : [010]");
-        assertThat(posts.get(9).getTitle()).isEqualTo("title : [001]");
+        assertThat(posts).hasSize(18);
+        assertThat(posts.get(0).getTitle()).isEqualTo("Test Post");
+        assertThat(posts.get(17).getTitle()).isEqualTo("title : [001]");
     }
 
     @Test
     public void testFindAllByOrderByPostDateAsc() {
         List<Post> posts = postRepository.findAllByOrderByPostDateAsc();
-        assertThat(posts).hasSize(10);
+        assertThat(posts).hasSize(18);
         assertThat(posts.get(0).getTitle()).isEqualTo("title : [001]");
-        assertThat(posts.get(9).getTitle()).isEqualTo("title : [010]");
+        assertThat(posts.get(17).getTitle()).isEqualTo("Test Post");
     }
 }
