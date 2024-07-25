@@ -1,54 +1,71 @@
 package com.kosa.kmt.comment;
 
+import com.kosa.kmt.member.Member;
+import com.kosa.kmt.member.MemberRepository;
+import com.kosa.kmt.post.Post;
+import com.kosa.kmt.post.PostRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class CommentService {
 
-    private final PostCommentRepository postcommentRepository;
+    private final PostCommentRepository postCommentRepository;
+    private final MemberRepository memberRepository;
+    private final PostRepository postRepository;
 
     public List<PostComment> getAllComments() {
-        return postcommentRepository.findAll();
+        return postCommentRepository.findAll();
     }
 
     // 댓글 추가
-    public PostComment createComment(Long postId, Long memberId, String content) {
+    public PostComment createComment(Long postId, Integer memberId, String content) {
         PostComment comment = new PostComment();
-        comment.setPostId(postId);
-        comment.setMemberId(memberId);
+
+        // post와 member를 설정하는 부분
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("Post not found with id " + postId));
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("Member not found with id " + memberId));
+
+        comment.setPost(post);
+        comment.setMember(member);
         comment.setCommentContent(content);
         comment.setCommentDateTime(LocalDateTime.now());
-        return postcommentRepository.save(comment);
+
+        return postCommentRepository.save(comment);
     }
 
     // 댓글 삭제
     public void deleteComment(Long commentId) {
-        postcommentRepository.deleteById(commentId);
+        postCommentRepository.deleteById(commentId);
     }
 
     // 댓글 수정
     public PostComment updateComment(Long commentId, String newContent) {
-        PostComment comment = postcommentRepository.findById(commentId)
+        PostComment comment = postCommentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid comment ID: " + commentId));
         comment.setCommentContent(newContent);
 
         // 수정 시 현재 시간으로 업데이트
         comment.setCommentDateTime(LocalDateTime.now());
-        return postcommentRepository.save(comment);
+        return postCommentRepository.save(comment);
     }
 
     // 최신 순 정렬
     public List<PostComment> getAllCommentsByNewest() {
-        return postcommentRepository.findAllByOrderByCommentDateTimeDesc();
+        return postCommentRepository.findAllByOrderByCommentDateTimeDesc();
     }
 
     // 오래된 순 정렬
     public List<PostComment> getAllCommentsByOldest() {
-        return postcommentRepository.findAllByOrderByCommentDateTimeAsc();
+        return postCommentRepository.findAllByOrderByCommentDateTimeAsc();
     }
 }

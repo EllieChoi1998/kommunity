@@ -1,6 +1,7 @@
 package com.kosa.kmt.member;
 
 import com.kosa.kmt.chat.Chat;
+import com.kosa.kmt.comment.PostComment;
 import com.kosa.kmt.hashtag.PostHashtag;
 import com.kosa.kmt.post.BookMark;
 import com.kosa.kmt.post.Post;
@@ -52,6 +53,9 @@ public class Member {
     private String authEmail;
 
     @OneToMany(mappedBy = "member", orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Post> posts;
+
+    @OneToMany(mappedBy = "member", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<BookMark> bookMarks;
 
     @OneToMany(mappedBy = "member", orphanRemoval = true, fetch = FetchType.LAZY)
@@ -62,4 +66,7 @@ public class Member {
 
     @OneToMany(mappedBy = "member", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Chat> chats;
+
+    @OneToMany(mappedBy = "member", orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<PostComment> comments;
 }

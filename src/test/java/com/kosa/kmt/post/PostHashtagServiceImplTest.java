@@ -4,6 +4,7 @@ import com.kosa.kmt.hashtag.HashtagRepository;
 import com.kosa.kmt.hashtag.PostHashtag;
 import com.kosa.kmt.hashtag.PostHashtagRepository;
 import com.kosa.kmt.hashtag.PostHashtagServiceImpl;
+import com.kosa.kmt.member.MemberRepository;
 import com.kosa.kmt.post.Post;
 import com.kosa.kmt.post.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,6 +33,9 @@ public class PostHashtagServiceImplTest {
     @Autowired
     private PostHashtagRepository postHashtagRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
     private Post post;
 
     @BeforeEach
@@ -39,7 +43,7 @@ public class PostHashtagServiceImplTest {
         post = new Post();
         post.setTitle("Test Title");
         post.setContent("Test Content");
-        post.setMemberId(1);
+        post.setMember(memberRepository.findById(1).get());
         post.setCategoryId(1);
         postRepository.save(post);
     }

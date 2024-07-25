@@ -17,7 +17,7 @@ public class CommentController {
     private CommentLikeOrHateService commentLikeOrHateService;
 
     @PostMapping("/create/{postId}")
-    public PostComment addComment(@PathVariable Long postId, @RequestParam Long memberId, @RequestParam String content) {
+    public PostComment addComment(@PathVariable Long postId, @RequestParam Integer memberId, @RequestParam String content) {
         return commentService.createComment(postId, memberId, content);
     }
 

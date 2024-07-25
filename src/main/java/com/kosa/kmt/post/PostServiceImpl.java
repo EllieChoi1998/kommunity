@@ -2,7 +2,9 @@ package com.kosa.kmt.post;
 
 import com.kosa.kmt.hashtag.HashtagService;
 import com.kosa.kmt.hashtag.PostHashtagService;
+import com.kosa.kmt.member.Member;
 import com.kosa.kmt.member.MemberRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ public class PostServiceImpl implements PostService{
 
     private final PostRepository postRepository;
     private final PostHashtagService postHashtagService;
+    private final MemberRepository memberRepository;
 
     @Override
     public List<Post> getPostsAll() throws SQLException {
@@ -38,7 +41,15 @@ public class PostServiceImpl implements PostService{
         Post post = new Post();
         post.setTitle(title);
         post.setContent(content);
-        post.setMemberId(memberId);
+
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+        if (optionalMember.isPresent()) {
+            Member member = optionalMember.get();
+            post.setMember(member);
+        } else {
+            throw new EntityNotFoundException("Member not found with id " + memberId);
+        }
+
         post.setCategoryId(categoryId);
 
         Long postId = postRepository.save(post).getId();
@@ -53,7 +64,15 @@ public class PostServiceImpl implements PostService{
 
         Post post = new Post();
         post.setContent(content);
-        post.setMemberId(memberId);
+
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+        if (optionalMember.isPresent()) {
+            Member member = optionalMember.get();
+            post.setMember(member);
+        } else {
+            throw new EntityNotFoundException("Member not found with id " + memberId);
+        }
+
         post.setCategoryId(categoryId);
 
         Long postId = postRepository.save(post).getId();
