@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.sql.SQLOutput;
 import java.util.Optional;
 
 @Controller
@@ -21,6 +22,7 @@ public class MemberSingupController {
     @Autowired
     MemberService memberService;
 
+    Member member;
 
     static String emailAddress;
     static String authCode;
@@ -89,23 +91,37 @@ public class MemberSingupController {
 
     @GetMapping("/setInfo")
     public String setInfo(Model model){
+        member = currentMember();
+        model.addAttribute("member", member);
+        return "signup/setInfo";
+    }
+
+    private Member currentMember(){
         Integer memberId = memberService.findSameEmail(emailAddress);
         Optional<Member> OptionalMember = memberRepository.findById(memberId);
-        if(OptionalMember.isPresent()){
+        if(OptionalMember.isPresent()) {
             Member member = OptionalMember.get();
-            model.addAttribute("member", member);
+
+            return member;
         }
-        return "signup/setInfo";
+        return null;
     }
 
     @PostMapping("/setInfo")
     public String setInfo(@RequestParam String nickname, @RequestParam String password, Model model){
-        Member member = (Member) model.getAttribute("member");
+        member = currentMember();
         memberService.updateNickname(member, nickname);
 
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String encodedPassword = encoder.encode(password);
-        memberService.updatePassword(member, encodedPassword);
-        return "redirect:/";
+        System.out.println("password: " + password);
+
+        memberService.updatePassword(member, password);
+
+        model.addAttribute("member", member);
+        return "signup/finish";
+    }
+
+    @GetMapping("/finish")
+    public String finish (Model model){
+        return "signup/finish";
     }
 }

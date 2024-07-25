@@ -2,6 +2,8 @@ package com.kosa.kmt;
 
 import com.kosa.kmt.member.CustomOAuth2LoginSuccessHandler;
 import com.kosa.kmt.member.CustomOAuth2UserService;
+import com.kosa.kmt.member.UserRole;
+import com.kosa.kmt.member.UserSecurityService; // UserSecurityService 추가
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @RequiredArgsConstructor
@@ -21,25 +24,32 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final UserSecurityService userSecurityService; // UserSecurityService 추가
+
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
+                        .requestMatchers(new AntPathRequestMatcher("/login"), new AntPathRequestMatcher("/**")).permitAll()
+                        .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .usernameParameter("email")
-                        .defaultSuccessUrl("/kommunity/main"))
+                        .passwordParameter("password") // passwordParameter 추가
+                        .successHandler(customAuthenticationSuccessHandler())
+                        .permitAll())
+                .logout(logout -> logout
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                        .logoutSuccessUrl("/").invalidateHttpSession(true))
+
                 .oauth2Login((oauth2) -> oauth2
                         .loginPage("/kommunity/validateName")
                         .successHandler(new CustomOAuth2LoginSuccessHandler())
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
                                 .userService(customOAuth2UserService)));
-                ;
+
         return http.build();
     }
-
-
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -50,8 +60,18 @@ public class SecurityConfig {
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-//    @Bean
-//    public CustomOAuth2UserService customOAuth2UserService() {
-//        return new CustomOAuth2UserService();
-//    }
+
+    @Bean
+    public AuthenticationSuccessHandler customAuthenticationSuccessHandler() {
+        return (request, response, authentication) -> {
+            // 권한에 따라 리디렉션 URL 설정
+            if (authentication.getAuthorities().stream()
+                    .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(UserRole.ADMIN.getValue()))) {
+                response.sendRedirect("/kommunity/main");
+            } else if (authentication.getAuthorities().stream()
+                    .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(UserRole.USER.getValue()))) {
+                response.sendRedirect("/kommunity/main");
+            }
+        };
+    }
 }

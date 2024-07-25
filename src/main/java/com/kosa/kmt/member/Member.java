@@ -1,6 +1,7 @@
 package com.kosa.kmt.member;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -40,5 +41,13 @@ public class Member {
     private String authEmail;
 
 
+    @Builder
+    public Member(String name, String email) {
+        this.name = name;
+        this.authEmail = email;
+    }
 
+    public Member() {
+
+    }
 }

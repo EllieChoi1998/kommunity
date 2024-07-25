@@ -130,7 +130,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Boolean updatePassword(Member member, String password) {
-        Member updatedMember = memberRepository.update_password(member, password);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String pwd = encoder.encode(password);
+        Member updatedMember = memberRepository.update_password(member, pwd);
         if(updatedMember != null) {
             return true;
         }
