@@ -16,6 +16,7 @@ public class CommentService {
         return postcommentRepository.findAll();
     }
 
+    // 댓글 조회
     public PostComment getCommentById(Long commentId) {
         return postcommentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
@@ -33,12 +34,15 @@ public class CommentService {
 
     // 댓글 삭제
     public void deleteComment(Long commentId) {
-        this.postcommentRepository.deleteById(commentId);
+        postcommentRepository.deleteById(commentId);
     }
 
     // 댓글 수정
-    public PostComment updateComment(PostComment comment, String content) {
-        comment.setCommentContent(content);
+    public PostComment updateComment(Long commentId, String newContent) {
+        PostComment comment = postcommentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid comment ID: " + commentId));
+        comment.setCommentContent(newContent);
+
         // 수정 시 현재 시간으로 업데이트
         comment.setCommentDateTime(LocalDateTime.now());
         return postcommentRepository.save(comment);

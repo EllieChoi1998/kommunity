@@ -28,8 +28,10 @@ public class CommentController {
 
     @PutMapping("/update/{commentId}")
     public PostComment updateComment(@PathVariable Long commentId, @RequestParam String newContent) {
+        // 기존 댓글을 가져옵니다.
         PostComment comment = commentService.getCommentById(commentId);
-        return commentService.updateComment(comment, newContent);
+        // 댓글을 수정합니다.
+        return commentService.updateComment(commentId, newContent);
     }
 
     @GetMapping

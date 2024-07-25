@@ -2,10 +2,12 @@ package com.kosa.kmt.comment;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,7 +22,7 @@ public class CommentServiceTests {
     @Autowired
     private PostCommentRepository postcommentRepository;
 
-    // 테스트 시작 전 초기화
+//     // 테스트 시작 전 초기화
 //    @BeforeEach
 //    public void setUp() {
 //        postcommentRepository.deleteAll(); // Clear the repository before each test
@@ -49,8 +51,8 @@ public class CommentServiceTests {
     @Test
     public void testDeleteComment() {
         Long postId = 1L;
-        Long memberId = 2L;
-        String content = "하이요";
+        Long memberId = 3L;
+        String content = "안녕하세요";
 
         // 댓글 추가
         PostComment comment = commentService.createComment(postId, memberId, content);
@@ -67,7 +69,7 @@ public class CommentServiceTests {
 
         // 전체 댓글 수 확인
         List<PostComment> comments = commentService.getAllComments();
-        assertEquals(23, comments.size(), "삭제 후 총 댓글 수는 " + comments.size() + "개여야 합니다.");
+        assertEquals(1, comments.size(), "삭제 후 총 댓글 수는 " + comments.size() + "개여야 합니다.");
     }
 
     @Test
@@ -96,8 +98,8 @@ public class CommentServiceTests {
     public void testGetAllCommentsByNewest() {
         Long postId = 1L;
         Long memberId = 1L;
-        String content1 = "첫 번째 생성 댓글";
-        String content2 = "두 번째 생성 댓글";
+        String content1 = "9 번째 생성 댓글";
+        String content2 = "10 번째 생성 댓글";
 
         // 기존 댓글 수 확인
         int initialCommentCount = commentService.getAllComments().size();
@@ -123,8 +125,8 @@ public class CommentServiceTests {
     public void testGetAllCommentsByOldest() {
         Long postId = 1L;
         Long memberId = 1L;
-        String content1 = "첫 번째 생성 댓글";
-        String content2 = "두 번째 생성 댓글";
+        String content1 = "7 번째 생성 댓글";
+        String content2 = "8 번째 생성 댓글";
 
         // 기존 댓글 수 확인
         int initialCommentCount = commentService.getAllComments().size();

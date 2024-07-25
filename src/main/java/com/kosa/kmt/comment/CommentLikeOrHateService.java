@@ -8,48 +8,39 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CommentLikeOrHateService {
 
-    private final CommentLikeRepository commentLikeRepository;
-    private final CommentHateRepository commentHateRepository;
+    private final CommentLikeOrHateRepository commentLikeOrHateRepository;
 
+    // 댓글 좋아요 추가
     @Transactional
     public void addLikeToComment(Long commentId, Long memberId) {
-        if (commentHateRepository.existsByPostCommentIdAndMemberId(commentId, memberId)) {
-            removeHateFromComment(commentId, memberId);
-        }
-        CommentLike like = new CommentLike();
-        like.setPostComment(new PostComment());
-        like.getPostComment().setComment_Id(commentId);
-        like.setMemberId(memberId);
-        commentLikeRepository.save(like);
+        commentLikeOrHateRepository.addLike(commentId, memberId);
     }
 
+    // 댓글 싫어요 추가
     @Transactional
     public void addHateToComment(Long commentId, Long memberId) {
-        if (commentLikeRepository.existsByPostCommentIdAndMemberId(commentId, memberId)) {
-            removeLikeFromComment(commentId, memberId);
-        }
-        CommentHate hate = new CommentHate();
-        hate.setPostComment(new PostComment());
-        hate.getPostComment().setComment_Id(commentId);
-        hate.setMemberId(memberId);
-        commentHateRepository.save(hate);
+        commentLikeOrHateRepository.addHate(commentId, memberId);
     }
 
+    // 댓글 좋아요 제거
     @Transactional
     public void removeLikeFromComment(Long commentId, Long memberId) {
-        commentLikeRepository.deleteByPostCommentIdAndMemberId(commentId, memberId);
+        commentLikeOrHateRepository.removeLike(commentId, memberId);
     }
 
+    // 댓글 싫어요 제거
     @Transactional
     public void removeHateFromComment(Long commentId, Long memberId) {
-        commentHateRepository.deleteByPostCommentIdAndMemberId(commentId, memberId);
+        commentLikeOrHateRepository.removeHate(commentId, memberId);
     }
 
+    // 댓글 좋아요 수 카운트
     public long countLikesByCommentId(Long commentId) {
-        return commentLikeRepository.countByPostCommentId(commentId);
+        return commentLikeOrHateRepository.countLikesByCommentId(commentId);
     }
 
+    // 댓글 싫어요 수 카운트
     public long countHatesByCommentId(Long commentId) {
-        return commentHateRepository.countByPostCommentId(commentId);
+        return commentLikeOrHateRepository.countHatesByCommentId(commentId);
     }
 }
