@@ -1,4 +1,4 @@
-package com.kosa.kmt.chat;
+package com.kosa.kmt.nonController.chat;
 
 import com.kosa.kmt.nonController.chat.Chat;
 import com.kosa.kmt.nonController.member.Member;

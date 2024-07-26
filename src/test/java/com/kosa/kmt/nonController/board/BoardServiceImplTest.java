@@ -1,4 +1,4 @@
-package com.kosa.kmt.board;
+package com.kosa.kmt.nonController.board;
 
 import com.kosa.kmt.nonController.board.Board;
 import com.kosa.kmt.nonController.board.BoardRepository;

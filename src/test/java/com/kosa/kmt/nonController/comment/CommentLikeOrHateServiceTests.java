@@ -1,4 +1,4 @@
-package com.kosa.kmt.comment;
+package com.kosa.kmt.nonController.comment;
 
 import com.kosa.kmt.nonController.comment.CommentLikeOrHateService;
 import com.kosa.kmt.nonController.comment.PostComment;

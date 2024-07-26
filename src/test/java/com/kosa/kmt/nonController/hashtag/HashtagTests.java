@@ -1,4 +1,4 @@
-package com.kosa.kmt.hashtag;
+package com.kosa.kmt.nonController.hashtag;
 
 import com.kosa.kmt.nonController.hashtag.PostHashtag;
 import com.kosa.kmt.nonController.hashtag.PostHashtagService;

@@ -1,4 +1,4 @@
-package com.kosa.kmt.category;
+package com.kosa.kmt.nonController.category;
 
 import com.kosa.kmt.nonController.board.Board;
 import com.kosa.kmt.nonController.category.Category;

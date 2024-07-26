@@ -1,4 +1,4 @@
-package com.kosa.kmt.hashtag;
+package com.kosa.kmt.nonController.hashtag;
 
 import org.springframework.boot.test.context.SpringBootTest;
 

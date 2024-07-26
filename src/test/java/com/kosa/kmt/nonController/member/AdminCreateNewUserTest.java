@@ -1,4 +1,4 @@
-package com.kosa.kmt.member;
+package com.kosa.kmt.nonController.member;
 
 import com.kosa.kmt.nonController.member.Member;
 import com.kosa.kmt.nonController.member.MemberRepository;
