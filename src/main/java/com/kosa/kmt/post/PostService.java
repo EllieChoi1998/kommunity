@@ -27,4 +27,10 @@ public interface PostService {
 
     // order by date asc post
     public List<Post> getPostsOrderByPostDateAsc(Post post) throws SQLException;
+
+    // order by bookmarks count desc post
+    public List<Post> getPostsOrderByBookmarksDesc() throws SQLException;
+
+    // order by like comment count desc post
+    public List<Post> getPostsOrderByCommetsDesc() throws SQLException;
 }

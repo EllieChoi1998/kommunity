@@ -9,8 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +21,7 @@ public class PostServiceImpl implements PostService{
     private final PostRepository postRepository;
     private final PostHashtagService postHashtagService;
     private final MemberRepository memberRepository;
+    private final BookMarkRepository bookMarkRepository;
 
     @Override
     public List<Post> getPostsAll() throws SQLException {
@@ -119,4 +122,21 @@ public class PostServiceImpl implements PostService{
     public List<Post> getPostsOrderByPostDateAsc(Post post) throws SQLException {
         return postRepository.findAllByOrderByPostDateAsc();
     }
+
+    @Override
+    public List<Post> getPostsOrderByBookmarksDesc() throws SQLException {
+        List<Post> posts = postRepository.findAll();
+        return posts.stream()
+                .map(post -> new PostBookmarkCountDTO(post, bookMarkRepository.countBookMarksByPost(post)))
+                .sorted(Comparator.comparing(PostBookmarkCountDTO::getBookmarkCount).reversed())
+                .map(PostBookmarkCountDTO::getPost)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Post> getPostsOrderByCommetsDesc() throws SQLException {
+        return List.of();
+    }
+
+
 }
