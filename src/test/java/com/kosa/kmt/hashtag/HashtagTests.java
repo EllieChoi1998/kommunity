@@ -1,13 +1,12 @@
 package com.kosa.kmt.hashtag;
 
-import com.kosa.kmt.post.Post;
-import com.kosa.kmt.post.PostRepository;
-import com.kosa.kmt.post.PostService;
+import com.kosa.kmt.non_controller.hashtag.PostHashtag;
+import com.kosa.kmt.non_controller.hashtag.PostHashtagService;
+import com.kosa.kmt.non_controller.post.Post;
+import com.kosa.kmt.non_controller.post.PostService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.List;

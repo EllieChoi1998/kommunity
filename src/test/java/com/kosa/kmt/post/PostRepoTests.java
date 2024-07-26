@@ -1,5 +1,7 @@
 package com.kosa.kmt.post;
 
+import com.kosa.kmt.non_controller.post.Post;
+import com.kosa.kmt.non_controller.post.PostRepository;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 

@@ -1,14 +1,13 @@
 package com.kosa.kmt.post;
 
-import com.kosa.kmt.member.Member;
-import com.kosa.kmt.member.MemberRepository;
-import org.junit.jupiter.api.BeforeEach;
+import com.kosa.kmt.non_controller.member.Member;
+import com.kosa.kmt.non_controller.member.MemberRepository;
+import com.kosa.kmt.non_controller.post.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -1,6 +1,7 @@
 package com.kosa.kmt.chat;
 
-import com.kosa.kmt.member.Member;
+import com.kosa.kmt.non_controller.chat.Chat;
+import com.kosa.kmt.non_controller.member.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

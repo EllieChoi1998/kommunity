@@ -1,7 +1,8 @@
 package com.kosa.kmt.post;
 
-import com.kosa.kmt.hashtag.PostHashtag;
-import com.kosa.kmt.hashtag.PostHashtagService;
+import com.kosa.kmt.non_controller.hashtag.PostHashtagService;
+import com.kosa.kmt.non_controller.post.Post;
+import com.kosa.kmt.non_controller.post.PostService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;

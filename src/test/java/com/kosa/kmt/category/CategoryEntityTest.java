@@ -1,6 +1,7 @@
 package com.kosa.kmt.category;
 
-import com.kosa.kmt.board.Board;
+import com.kosa.kmt.non_controller.board.Board;
+import com.kosa.kmt.non_controller.category.Category;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,10 +1,12 @@
 package com.kosa.kmt.member;
 
+import com.kosa.kmt.non_controller.member.Member;
+import com.kosa.kmt.non_controller.member.MemberRepository;
+import com.kosa.kmt.non_controller.member.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;

@@ -1,11 +1,11 @@
 package com.kosa.kmt.member;
 
+import com.kosa.kmt.non_controller.member.Member;
+import com.kosa.kmt.non_controller.member.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import java.util.Optional;
 
 @SpringBootTest
 public class AdminCreateNewUserTest {

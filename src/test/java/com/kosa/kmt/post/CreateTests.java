@@ -1,11 +1,11 @@
 package com.kosa.kmt.post;
 
-import com.kosa.kmt.hashtag.PostHashtagRepository;
-import org.junit.jupiter.api.Disabled;
+import com.kosa.kmt.non_controller.hashtag.PostHashtagRepository;
+import com.kosa.kmt.non_controller.post.PostRepository;
+import com.kosa.kmt.non_controller.post.PostService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 
