@@ -13,23 +13,24 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "postcomment")
+@Table(name = "POSTCOMMENT")
 public class PostComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
-    @Column(name = "comment_content", nullable = false)
+    @Column(name = "COMMENT_CONTENT", nullable = false)
     private String commentContent;
 
-    @Column(name = "comment_datetime", nullable = false)
+    @Column(name = "COMMENT_DATETIME", nullable = false)
     private LocalDateTime commentDateTime;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "MEMBER_ID", nullable = false)
     private Member member;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "POST_ID", nullable = false)
     private Post post;
 
     @OneToMany(mappedBy = "postComment", cascade = CascadeType.ALL, orphanRemoval = true)

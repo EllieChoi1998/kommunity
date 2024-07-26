@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -16,7 +16,9 @@
 <nav th:replace="~{navbar :: navbarFragment}"></nav>
 
 <!-- 카테고리 컨테이너 -->
-<div id="category-container" class="center-container"></div>
+<div id="category-container" class="center-container">
+    <th:block layout:fragment="category"></th:block>
+</div>
 
 <div class="container-fluid">
     <div class="row">
