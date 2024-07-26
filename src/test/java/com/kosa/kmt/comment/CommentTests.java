@@ -1,6 +1,6 @@
 package com.kosa.kmt.comment;
 
-import com.kosa.kmt.non_controller.comment.CommentService;
+import com.kosa.kmt.nonController.comment.CommentService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,7 +1,7 @@
 package com.kosa.kmt.post;
 
-import com.kosa.kmt.non_controller.post.Post;
-import com.kosa.kmt.non_controller.post.PostRepository;
+import com.kosa.kmt.nonController.post.Post;
+import com.kosa.kmt.nonController.post.PostRepository;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,12 +1,12 @@
 package com.kosa.kmt.comment;
 
-import com.kosa.kmt.non_controller.comment.CommentService;
-import com.kosa.kmt.non_controller.comment.PostComment;
-import com.kosa.kmt.non_controller.comment.PostCommentRepository;
-import com.kosa.kmt.non_controller.member.Member;
-import com.kosa.kmt.non_controller.member.MemberRepository;
-import com.kosa.kmt.non_controller.post.Post;
-import com.kosa.kmt.non_controller.post.PostRepository;
+import com.kosa.kmt.nonController.comment.CommentService;
+import com.kosa.kmt.nonController.comment.PostComment;
+import com.kosa.kmt.nonController.comment.PostCommentRepository;
+import com.kosa.kmt.nonController.member.Member;
+import com.kosa.kmt.nonController.member.MemberRepository;
+import com.kosa.kmt.nonController.post.Post;
+import com.kosa.kmt.nonController.post.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

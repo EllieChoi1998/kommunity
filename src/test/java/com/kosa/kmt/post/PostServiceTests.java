@@ -1,8 +1,8 @@
 package com.kosa.kmt.post;
 
-import com.kosa.kmt.non_controller.hashtag.PostHashtagService;
-import com.kosa.kmt.non_controller.post.Post;
-import com.kosa.kmt.non_controller.post.PostService;
+import com.kosa.kmt.nonController.hashtag.PostHashtagService;
+import com.kosa.kmt.nonController.post.Post;
+import com.kosa.kmt.nonController.post.PostService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

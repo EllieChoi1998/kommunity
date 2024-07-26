@@ -1,8 +1,8 @@
 package com.kosa.kmt.board;
 
-import com.kosa.kmt.non_controller.board.Board;
-import com.kosa.kmt.non_controller.board.BoardRepository;
-import com.kosa.kmt.non_controller.board.BoardService;
+import com.kosa.kmt.nonController.board.Board;
+import com.kosa.kmt.nonController.board.BoardRepository;
+import com.kosa.kmt.nonController.board.BoardService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

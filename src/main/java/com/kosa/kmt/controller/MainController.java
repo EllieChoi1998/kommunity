@@ -1,7 +1,7 @@
 package com.kosa.kmt.controller;
 
-import com.kosa.kmt.non_controller.member.Member;
-import com.kosa.kmt.non_controller.member.MemberService;
+import com.kosa.kmt.nonController.member.Member;
+import com.kosa.kmt.nonController.member.MemberService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

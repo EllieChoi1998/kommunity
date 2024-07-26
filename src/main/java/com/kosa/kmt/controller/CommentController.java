@@ -1,8 +1,8 @@
 package com.kosa.kmt.controller;
 
-import com.kosa.kmt.non_controller.comment.CommentLikeOrHateService;
-import com.kosa.kmt.non_controller.comment.CommentService;
-import com.kosa.kmt.non_controller.comment.PostComment;
+import com.kosa.kmt.nonController.comment.CommentLikeOrHateService;
+import com.kosa.kmt.nonController.comment.CommentService;
+import com.kosa.kmt.nonController.comment.PostComment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

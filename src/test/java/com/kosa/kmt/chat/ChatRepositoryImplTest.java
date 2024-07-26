@@ -1,8 +1,8 @@
 package com.kosa.kmt.chat;
 
-import com.kosa.kmt.non_controller.chat.Chat;
-import com.kosa.kmt.non_controller.chat.ChatRepository;
-import com.kosa.kmt.non_controller.member.MemberRepository;
+import com.kosa.kmt.nonController.chat.Chat;
+import com.kosa.kmt.nonController.chat.ChatRepository;
+import com.kosa.kmt.nonController.member.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

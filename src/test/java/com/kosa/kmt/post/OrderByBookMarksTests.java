@@ -1,8 +1,8 @@
 package com.kosa.kmt.post;
 
-import com.kosa.kmt.non_controller.member.Member;
-import com.kosa.kmt.non_controller.member.MemberRepository;
-import com.kosa.kmt.non_controller.post.*;
+import com.kosa.kmt.nonController.member.Member;
+import com.kosa.kmt.nonController.member.MemberRepository;
+import com.kosa.kmt.nonController.post.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

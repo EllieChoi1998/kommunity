@@ -1,9 +1,9 @@
 package com.kosa.kmt.config;
 
-import com.kosa.kmt.non_controller.member.signup.oAuth.CustomOAuth2LoginSuccessHandler;
-import com.kosa.kmt.non_controller.member.signup.oAuth.CustomOAuth2UserService;
-import com.kosa.kmt.non_controller.member.signup.UserRole;
-import com.kosa.kmt.non_controller.member.signup.UserSecurityService; // UserSecurityService 추가
+import com.kosa.kmt.nonController.member.signup.oAuth.CustomOAuth2LoginSuccessHandler;
+import com.kosa.kmt.nonController.member.signup.oAuth.CustomOAuth2UserService;
+import com.kosa.kmt.nonController.member.signup.UserRole;
+import com.kosa.kmt.nonController.member.signup.UserSecurityService; // UserSecurityService 추가
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

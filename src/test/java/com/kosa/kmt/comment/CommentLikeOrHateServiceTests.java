@@ -1,9 +1,9 @@
 package com.kosa.kmt.comment;
 
-import com.kosa.kmt.non_controller.comment.CommentLikeOrHateService;
-import com.kosa.kmt.non_controller.comment.PostComment;
-import com.kosa.kmt.non_controller.member.Member;
-import com.kosa.kmt.non_controller.post.Post;
+import com.kosa.kmt.nonController.comment.CommentLikeOrHateService;
+import com.kosa.kmt.nonController.comment.PostComment;
+import com.kosa.kmt.nonController.member.Member;
+import com.kosa.kmt.nonController.post.Post;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
