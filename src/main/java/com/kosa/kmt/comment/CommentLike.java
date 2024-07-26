@@ -1,5 +1,6 @@
 package com.kosa.kmt.comment;
 
+import com.kosa.kmt.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,16 +8,17 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "commentlike")
+@Table(name = "COMMENTLIKE")
 public class CommentLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    @ManyToOne
-    @JoinColumn(name = "comment_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "COMMENT_ID", nullable = false)
     private PostComment postComment;
 
-    @Column(name = "member_id", nullable = false)
-    private Long memberId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "MEMBER_ID", nullable = false)
+    private Member member;
 }
