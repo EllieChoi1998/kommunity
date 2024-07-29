@@ -8,7 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class PostLikeOrHateServiceImpl implements PostLikeOrHateService {
+public class
+
+
+PostLikeOrHateServiceImpl implements PostLikeOrHateService {
 
     private final PostLikeRepository postLikeRepository;
     private final PostHateRepository postHateRepository;

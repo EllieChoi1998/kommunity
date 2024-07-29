@@ -1,5 +1,8 @@
 package com.kosa.kmt.nonController.post;
 
+import com.kosa.kmt.nonController.category.Category;
+import com.kosa.kmt.nonController.category.CategoryRepository;
+import com.kosa.kmt.nonController.comment.PostCommentRepository;
 import com.kosa.kmt.nonController.hashtag.PostHashtagService;
 import com.kosa.kmt.nonController.member.Member;
 import com.kosa.kmt.nonController.member.MemberRepository;
@@ -15,12 +18,14 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PostServiceImpl implements PostService{
+public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final PostHashtagService postHashtagService;
     private final MemberRepository memberRepository;
     private final BookMarkRepository bookMarkRepository;
+    private final PostCommentRepository postCommentRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public List<Post> getPostsAll() throws SQLException {
@@ -52,7 +57,13 @@ public class PostServiceImpl implements PostService{
             throw new EntityNotFoundException("Member not found with id " + memberId);
         }
 
-        post.setCategoryId(categoryId);
+        Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+        if (optionalCategory.isPresent()) {
+            Category category = optionalCategory.get();
+            post.setCategory(category);
+        } else {
+            throw new EntityNotFoundException("Category not found with id " + categoryId);
+        }
 
         Long postId = postRepository.save(post).getId();
 
@@ -75,7 +86,13 @@ public class PostServiceImpl implements PostService{
             throw new EntityNotFoundException("Member not found with id " + memberId);
         }
 
-        post.setCategoryId(categoryId);
+        Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+        if (optionalCategory.isPresent()) {
+            Category category = optionalCategory.get();
+            post.setCategory(category);
+        } else {
+            throw new EntityNotFoundException("Category not found with id " + categoryId);
+        }
 
         Long postId = postRepository.save(post).getId();
 
@@ -133,9 +150,18 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<Post> getPostsOrderByCommetsDesc() throws SQLException {
-        return List.of();
+    public List<Post> getPostsOrderByCommentsDesc() throws SQLException {
+        List<Post> posts = postRepository.findAll();
+        return posts.stream()
+                .map(post -> new PostCommentCountDTO(post, postCommentRepository.countCommentsByPost(post)))
+                .sorted(Comparator.comparing(PostCommentCountDTO::getCommentCount).reversed())
+                .map(PostCommentCountDTO::getPost)
+                .collect(Collectors.toList());
     }
 
+    @Override
+    public List<Post> getPostsWithMoreHatesThanLikes() {
+        return postRepository.findPostsWithMoreHatesThanLikes();
+    }
 
 }

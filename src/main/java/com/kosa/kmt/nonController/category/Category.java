@@ -1,9 +1,12 @@
 package com.kosa.kmt.nonController.category;
 
 import com.kosa.kmt.nonController.board.Board;
+import com.kosa.kmt.nonController.post.Post;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -11,7 +14,7 @@ import lombok.Setter;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CATEGORY_ID", nullable = false)
+    @Column(name = "CATEGORY_ID")
     private Long categoryId;
 
     @Column(name = "NAME", nullable = false)
@@ -20,4 +23,7 @@ public class Category {
     @ManyToOne
     @JoinColumn(name = "BOARD_ID", nullable = false)
     private Board board;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> posts;
 }

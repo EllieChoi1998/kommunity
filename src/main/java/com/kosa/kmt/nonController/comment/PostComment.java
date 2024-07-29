@@ -2,7 +2,10 @@ package com.kosa.kmt.nonController.comment;
 
 import com.kosa.kmt.nonController.member.Member;
 import com.kosa.kmt.nonController.post.Post;
+import groovyjarjarantlr4.v4.runtime.misc.NotNull;
+import groovyjarjarantlr4.v4.runtime.misc.Nullable;
 import jakarta.persistence.*;
+import jdk.jfr.Name;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,6 +27,10 @@ public class PostComment {
     @Column(name = "COMMENT_DATETIME", nullable = false)
     private LocalDateTime commentDateTime;
 
+    @Column(name = "ANON_NUMBER")
+    @Nullable
+    private String anonNumber;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "MEMBER_ID", nullable = false)
     private Member member;
@@ -38,6 +45,4 @@ public class PostComment {
     @OneToMany(mappedBy = "postComment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommentHate> hates;
 
-//    @Column(name = "ano_number", nullable = false)
-//    private Long anonnumber;
 }
