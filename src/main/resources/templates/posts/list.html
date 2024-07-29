@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout">
+<head>
+    <title>Posts</title>
+</head>
+<body>
+<h1 class="mt-4">All Posts</h1>
+<ul class="list-group">
+    <li class="list-group-item" th:each="post : ${posts}">
+        <a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}">Post Title</a>
+    </li>
+</ul>
+</body>
+</html>

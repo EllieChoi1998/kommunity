@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface PostCommentRepository extends JpaRepository<PostComment, Long> {
+public interface PostCommentRepository extends JpaRepository<PostComment, Long>, PostCommentRepositoryCustom {
     // 최신 순 정렬
     List<PostComment> findAllByOrderByCommentDateTimeDesc();
 

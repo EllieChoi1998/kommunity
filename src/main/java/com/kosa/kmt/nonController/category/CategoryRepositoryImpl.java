@@ -60,7 +60,11 @@ public class CategoryRepositoryImpl implements CategoryRepository {
                 .getResultList();
     }
 
-
+    @Override
+    public Optional<Category> findById(Integer categoryId) {
+        Category category = em.find(Category.class, categoryId);
+        return Optional.ofNullable(category);
+    }
 
     /*
     모든 카테고리 목록 가져오기

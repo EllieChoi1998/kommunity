@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Setter
 @Getter
@@ -25,4 +27,12 @@ public class PostHashtag {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "POST_ID", nullable = false)
     private Post post;
+
+    @Column(name = "CREATED_AT", nullable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 }

@@ -1,5 +1,6 @@
 package com.kosa.kmt.nonController.post;
 
+import com.kosa.kmt.nonController.category.Category;
 import com.kosa.kmt.nonController.comment.PostComment;
 import com.kosa.kmt.nonController.hashtag.PostHashtag;
 import com.kosa.kmt.nonController.member.Member;
@@ -20,8 +21,8 @@ public class Post {
     @Column(name = "POST_ID")
     private Long id;
 
-    @Column(name = "CATEGORY_ID")
-    private Integer categoryId;
+//    @Column(name = "CATEGORY_ID")
+//    private Integer categoryId;
 
 //    @Column(name = "MEMBER_ID")
 //    private Integer memberId;
@@ -29,6 +30,10 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "MEMBER_ID", nullable = false)
     private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "CATEGORY_ID", nullable = false)
+    private Category category;
 
     @Column(length = 50)
     private String title;
@@ -54,7 +59,6 @@ public class Post {
 
     @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<PostHate> hates;
-
 
     @PrePersist
     protected void onCreate() {

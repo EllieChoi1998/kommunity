@@ -32,5 +32,8 @@ public interface PostService {
     public List<Post> getPostsOrderByBookmarksDesc() throws SQLException;
 
     // order by like comment count desc post
-    public List<Post> getPostsOrderByCommetsDesc() throws SQLException;
+    public List<Post> getPostsOrderByCommentsDesc() throws SQLException;
+
+    // find all post hates > likes
+    public List<Post> getPostsWithMoreHatesThanLikes();
 }
