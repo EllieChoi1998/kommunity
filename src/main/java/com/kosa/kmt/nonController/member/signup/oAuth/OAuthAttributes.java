@@ -30,6 +30,8 @@ public class OAuthAttributes {
         if ("naver".equals(registrationId)) {
 
             return ofNaver(registrationId, userNameAttributeName, attributes);
+        } else if ("kakao".equals(registrationId)) {
+            return ofKakao(registrationId, userNameAttributeName, attributes);
         }
 
         return ofGoogle(registrationId, userNameAttributeName, attributes);
@@ -45,6 +47,21 @@ public class OAuthAttributes {
                 .email((String) response.get("email"))
                 .nameAttributeKey(userNameAttributeName)
                 .provider(registrationId)
+                .build();
+    }
+
+    private static OAuthAttributes ofKakao(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
+        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+        Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
+
+        return OAuthAttributes.builder()
+                .name((String) profile.get("nickname"))
+                .email((String) kakaoAccount.get("email"))
+                .picture((String) profile.get("profile_image_url"))
+                .attributes(attributes)
+                .provider(registrationId)
+                .providerId(String.valueOf(attributes.get("id")))
+                .nameAttributeKey(userNameAttributeName)
                 .build();
     }
 
