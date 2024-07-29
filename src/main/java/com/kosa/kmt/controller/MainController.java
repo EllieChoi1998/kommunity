@@ -1,17 +1,31 @@
 package com.kosa.kmt.controller;
 
+import com.kosa.kmt.nonController.board.Board;
+import com.kosa.kmt.nonController.board.BoardService;
+import com.kosa.kmt.nonController.category.Category;
+import com.kosa.kmt.nonController.category.CategoryService;
 import com.kosa.kmt.nonController.member.Member;
 import com.kosa.kmt.nonController.member.MemberService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Controller
 public class MainController {
     private final MemberService memberService;
 
+    @Autowired
+    private BoardService boardService;
+
+    @Autowired
+    private CategoryService categoryService;
     public MainController(MemberService memberService) {
         this.memberService = memberService;
     }
@@ -27,7 +41,15 @@ public class MainController {
     }
 
     @GetMapping("/kommunity/main")
-    public String main() {
+    public String main(Model model) {
+        List<Board> boards = boardService.findAllBoards();
+        Map<Long, List<Category>> boardCategories = boards.stream()
+                .collect(Collectors.toMap(Board::getBoardId, categoryService::findCategoriesByBoard));
+
+        System.out.println("boardCategories: " + boardCategories);
+
+        model.addAttribute("boards", boards);
+        model.addAttribute("boardCategories", boardCategories);
         return "danamusup";
     }
 
