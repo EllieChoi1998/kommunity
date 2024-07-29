@@ -6,6 +6,9 @@ import com.kosa.kmt.nonController.category.Category;
 import com.kosa.kmt.nonController.category.CategoryService;
 import com.kosa.kmt.nonController.member.Member;
 import com.kosa.kmt.nonController.member.MemberService;
+import com.kosa.kmt.nonController.post.Post;
+import com.kosa.kmt.nonController.post.PostService;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,8 +16,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -25,10 +30,15 @@ public class MainController {
     private BoardService boardService;
 
     @Autowired
+    private PostService postService;
+
+    @Autowired
     private CategoryService categoryService;
+
     public MainController(MemberService memberService) {
         this.memberService = memberService;
     }
+
     @GetMapping("/kommunity")
     public String index(Model model) {
         model.addAttribute("loginForm", new Member()); // 폼 객체 추가
@@ -40,18 +50,48 @@ public class MainController {
         return "redirect:/kommunity"; // 리디렉션 설정
     }
 
+//    @GetMapping("/kommunity/main")
+//    public String main(Model model) {
+//        List<Board> boards = boardService.findAllBoards();
+//        Map<Long, List<Category>> boardCategories = boards.stream()
+//                .collect(Collectors.toMap(Board::getBoardId, categoryService::findCategoriesByBoard));
+//
+//        System.out.println("boardCategories: " + boardCategories);
+//
+//        model.addAttribute("boards", boards);
+//        model.addAttribute("boardCategories", boardCategories);
+//        return "danamusup";
+//    }
+
     @GetMapping("/kommunity/main")
-    public String main(Model model) {
+    public String main(@RequestParam(value = "categoryId", required = false) Long categoryId, Model model) throws SQLException {
         List<Board> boards = boardService.findAllBoards();
         Map<Long, List<Category>> boardCategories = boards.stream()
                 .collect(Collectors.toMap(Board::getBoardId, categoryService::findCategoriesByBoard));
 
-        System.out.println("boardCategories: " + boardCategories);
+        Long boardId = 1L; // 익명 게시판의 ID
+        Optional<Board> optionalBoard = boards.stream().filter(board -> board.getBoardId().equals(boardId)).findFirst();
+
+        List<Post> posts;
+        if (categoryId != null) {
+            posts = postService.getPostsByCategory(categoryId);
+        } else {
+            List<Category> categories = categoryService.findCategoriesByBoardId(boardId);
+            if (!categories.isEmpty()) {
+                posts = postService.getPostsByCategory(categories.get(0).getCategoryId());
+            } else {
+                posts = List.of(); // 카테고리가 없으면 빈 리스트 반환
+            }
+        }
 
         model.addAttribute("boards", boards);
         model.addAttribute("boardCategories", boardCategories);
+        model.addAttribute("posts", posts);
+        optionalBoard.ifPresent(board -> model.addAttribute("board", board)); // 모델에 board 객체 추가
         return "danamusup";
     }
+
+
 
     @GetMapping("/login")
     public String showLoginForm(Model model) {

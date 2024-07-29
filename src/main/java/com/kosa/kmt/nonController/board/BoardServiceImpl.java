@@ -42,4 +42,9 @@ public class BoardServiceImpl implements BoardService {
     public List<Board> findAllBoards() {
         return boardRepository.findAll();
     }
+
+    @Override
+    public Board findBoardById(Long boardId) {
+        return boardRepository.findBoardById(boardId);
+    }
 }

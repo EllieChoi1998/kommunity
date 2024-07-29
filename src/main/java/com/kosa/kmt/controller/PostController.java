@@ -1,5 +1,9 @@
 package com.kosa.kmt.controller;
 
+import com.kosa.kmt.nonController.board.Board;
+import com.kosa.kmt.nonController.board.BoardService;
+import com.kosa.kmt.nonController.category.Category;
+import com.kosa.kmt.nonController.category.CategoryService;
 import com.kosa.kmt.nonController.post.Post;
 import com.kosa.kmt.nonController.post.PostForm;
 import com.kosa.kmt.nonController.post.PostService;
@@ -10,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -17,6 +23,10 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+
+    private final BoardService boardService;
+
+    private final CategoryService categoryService;
 
     @GetMapping
     public String getAllPosts(Model model) throws SQLException {
@@ -67,4 +77,39 @@ public class PostController {
         return "redirect:/posts";
     }
 
+    @GetMapping("/board/{boardId}")
+    public String getPostsByBoard(@PathVariable Long boardId, Model model) throws SQLException {
+        addCommonAttributes(model, boardId);
+
+        List<Post> posts = postService.getPostsByBoard(boardId);
+        model.addAttribute("posts", posts);
+        model.addAttribute("isAllCategories", true);
+        return "posts/boardPosts";
+    }
+
+    @GetMapping("/board/{boardId}/category/{categoryId}")
+    public String getPostsByCategory(@PathVariable Long boardId, @PathVariable Long categoryId, Model model) throws SQLException {
+        addCommonAttributes(model, boardId);
+
+        Category category = categoryService.findCategoryById(categoryId);
+        List<Post> posts = postService.getPostsByCategory(categoryId);
+        model.addAttribute("category", category);
+        model.addAttribute("posts", posts);
+        model.addAttribute("isAllCategories", false);
+        return "posts/boardPosts";
+    }
+
+    private void addCommonAttributes(Model model, Long boardId) throws SQLException {
+        List<Board> boards = boardService.findAllBoards();
+        Board board = boardService.findBoardById(boardId);
+        List<Category> categories = categoryService.findCategoriesByBoardId(boardId);
+
+        Map<Long, List<Category>> boardCategories = boards.stream()
+                .collect(Collectors.toMap(Board::getBoardId, b -> categoryService.findCategoriesByBoardId(b.getBoardId())));
+
+        model.addAttribute("boards", boards);
+        model.addAttribute("board", board);
+        model.addAttribute("categories", categories);
+        model.addAttribute("boardCategories", boardCategories);
+    }
 }

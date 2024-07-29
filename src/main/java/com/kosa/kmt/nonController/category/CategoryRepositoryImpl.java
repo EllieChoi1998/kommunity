@@ -61,7 +61,14 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     }
 
     @Override
-    public Optional<Category> findById(Integer categoryId) {
+    public List<Category> findByBoardId(Long boardId){
+        return em.createQuery("SELECT c FROM Category c WHERE c.board.boardId = :boardId", Category.class)
+                .setParameter("boardId", boardId)
+                .getResultList();
+    }
+
+    @Override
+    public Optional<Category> findById(Long categoryId) {
         Category category = em.find(Category.class, categoryId);
         return Optional.ofNullable(category);
     }

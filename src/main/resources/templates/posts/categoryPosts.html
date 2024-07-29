@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Category Posts</title>
+</head>
+<body>
+<h1 th:text="${category.name}">Category Name</h1>
+<ul>
+    <li th:each="post : ${posts}">
+        <h3>
+            <a th:href="@{'/posts/' + ${post.id}}" th:text="${post.title}">Post Title</a>
+        </h3>
+        <p th:text="${post.content}">Post Content</p>
+        <p th:text="${post.postDate}">Post Date</p>
+    </li>
+</ul>
+</body>
+</html>

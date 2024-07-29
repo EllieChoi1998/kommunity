@@ -1,0 +1,48 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <title>Board Posts</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--&lt;!&ndash; 네비게이션 바 포함 &ndash;&gt;-->
+<!--<div th:replace="~{nav :: navFragment}"></div>-->
+
+<!--<h1 th:text="${board.name}">Board Name</h1>-->
+<!--<h2 th:if="${isAllCategories}" th:text="'전체 게시판'"></h2>-->
+<!--<h2 th:if="${category != null}" th:text="'Category: ' + ${category.name}"></h2>-->
+<!--<ul>-->
+<!--    <li th:each="post : ${posts}">-->
+<!--        <h3>-->
+<!--            <a th:href="@{'/posts/' + ${post.id}}" th:text="${post.title}">Post Title</a>-->
+<!--        </h3>-->
+<!--        <p th:text="${post.content}">Post Content</p>-->
+<!--        <p th:text="${post.postDate}">Post Date</p>-->
+<!--    </li>-->
+<!--</ul>-->
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Board Posts</title>
+</head>
+<body>
+<!-- 네비게이션 바 포함 -->
+<div th:replace="~{nav :: navbarFragment(${boards}, ${boardCategories})}"></div>
+
+<h1 th:text="${board.name}">Board Name</h1>
+<h2 th:if="${isAllCategories}" th:text="'전체 게시판'"></h2>
+<h2 th:if="${category != null}" th:text="'Category: ' + ${category.name}"></h2>
+<ul>
+    <li th:each="post : ${posts}">
+        <h3>
+            <a th:href="@{'/posts/' + ${post.id}}" th:text="${post.title}">Post Title</a>
+        </h3>
+        <p th:text="${post.content}">Post Content</p>
+        <p th:text="${post.postDate}">Post Date</p>
+    </li>
+</ul>
+</body>
+</html>
+

@@ -6,9 +6,14 @@ import java.util.List;
 
 public interface CategoryService {
     Long addNewCategory(Category category, Board board);
+
     Long deleteCategory(Category category, Board board);
 
     List<Category> findCategoriesByBoard(Board board);
 
     List<Category> findAllCategories();
+
+    List<Category> findCategoriesByBoardId(Long boardId);
+
+    Category findCategoryById(Long categoryId);
 }

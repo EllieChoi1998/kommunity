@@ -1,5 +1,6 @@
 package com.kosa.kmt.nonController.post;
 
+import com.kosa.kmt.nonController.board.Board;
 import com.kosa.kmt.nonController.category.Category;
 import com.kosa.kmt.nonController.category.CategoryRepository;
 import com.kosa.kmt.nonController.comment.PostCommentRepository;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +45,21 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public List<Post> getPostsByCategory(Long categoryId) throws SQLException {
+        return postRepository.findByCategoryCategoryId(categoryId);
+    }
+
+    @Override
+    public List<Post> getPostsByBoard(Long boardId) {
+        List<Category> categories = categoryRepository.findByBoardId(boardId);
+        List<Post> posts = new ArrayList<>();
+        for (Category category : categories) {
+            posts.addAll(postRepository.findByCategoryCategoryId(category.getCategoryId()));
+        }
+        return posts;
+    }
+
+    @Override
     public Long createPost(String title, String content, Integer memberId, Integer categoryId, String strHashtag) throws SQLException {
 
         Post post = new Post();
@@ -57,7 +74,7 @@ public class PostServiceImpl implements PostService {
             throw new EntityNotFoundException("Member not found with id " + memberId);
         }
 
-        Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+        Optional<Category> optionalCategory = categoryRepository.findById(Long.valueOf(categoryId));
         if (optionalCategory.isPresent()) {
             Category category = optionalCategory.get();
             post.setCategory(category);
@@ -86,7 +103,7 @@ public class PostServiceImpl implements PostService {
             throw new EntityNotFoundException("Member not found with id " + memberId);
         }
 
-        Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+        Optional<Category> optionalCategory = categoryRepository.findById(Long.valueOf(categoryId));
         if (optionalCategory.isPresent()) {
             Category category = optionalCategory.get();
             post.setCategory(category);

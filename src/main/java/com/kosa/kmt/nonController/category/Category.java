@@ -23,7 +23,4 @@ public class Category {
     @ManyToOne
     @JoinColumn(name = "BOARD_ID", nullable = false)
     private Board board;
-
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Post> posts;
 }
