@@ -225,6 +225,22 @@
 /*    height: 140px; !* 최소 높이 설정 *!*/
 /*}*/
 
+.chat-container {
+    position: fixed;
+    bottom: 20px;
+    right: 5px;
+    width: 300px;
+    height: 140px; /* 기본 높이 설정 */
+    border: 1px solid #ccc;
+    border-radius: 10px 10px 0 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: height 0.5s ease; /* 크기 변경 애니메이션 */
+}
+
 .chat-container.expanded {
     height: 300px; /* 확장된 높이 */
 }
@@ -242,7 +258,6 @@
     background-color: #f1f1f1;
     display: flex;
     flex-direction: column;
-    align-items: flex-end; /* 오른쪽 정렬 */
 }
 .chat-input {
     display: flex;
@@ -262,14 +277,24 @@
     cursor: pointer;
 }
 .chat-message {
-    background-color: #e1e1e1;
     padding: 5px 10px;
     border-radius: 5px;
     margin-bottom: 5px;
     max-width: 80%;
     word-wrap: break-word;
-    align-self: flex-end; /* 오른쪽 정렬 */
 }
+
+.chat-message.current-user {
+    background-color: #e1e1e1 !important;
+    align-self: flex-end !important; /* 오른쪽 정렬 */
+}
+
+.chat-message.other-user {
+    background-color: #d1e7dd !important;
+    align-self: flex-start !important; /* 왼쪽 정렬 */
+}
+
+
 
 /*해쉬태그*/
 .inp_tag {
