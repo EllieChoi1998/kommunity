@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>채팅</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="chat.js"></script>
+</head>
 <body>
-<div th:fragment="chatFragment">
-    <div class="chat-container" id="chat-container">
-        <div class="chat-header">채팅</div>
-        <div class="chat-messages" id="chat-messages">
-            <!-- 채팅 메시지가 여기에 추가됩니다 -->
-        </div>
-        <div class="chat-input">
-            <input type="text" id="chat-input" placeholder="메시지를 입력하세요...">
-            <button id="chat-send">전송 <img src="/images/chat-text.svg"/></button>
-        </div>
+<div class="chat-container" id="chat-container" th:fragment="chatFragment">
+    <div class="chat-header">채팅</div>
+    <div class="chat-messages" id="chat-messages">
+        <!-- 채팅 메시지가 여기에 추가됩니다 -->
+    </div>
+    <div class="chat-input">
+        <input type="text" id="chat-input" placeholder="메시지를 입력하세요...">
+        <button id="chat-send">전송 <img src="/images/chat-text.svg"/></button>
     </div>
 </div>
 </body>
 </html>
+

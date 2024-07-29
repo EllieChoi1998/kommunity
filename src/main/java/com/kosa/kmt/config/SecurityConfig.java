@@ -30,18 +30,34 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .requestMatchers(new AntPathRequestMatcher("/login"), new AntPathRequestMatcher("/**")).permitAll()
+                        .requestMatchers(
+                                "/login",
+                                "/kommunity/signup",
+                                "/kommunity/validateEmail",
+                                "/kommunity/validateName",
+                                "/kommunity/setInfo",
+                                "/kommunity/finish",
+                                "/kommunity/sendEmail",
+                                "/css/**",
+                                "/js/**",
+                                "/images/**",
+                                "/*.css",
+                                "/*.js",
+                                "/*.png",
+                                "/*.jpg",
+                                "/*.jpeg",
+                                "/*.svg"
+                        ).permitAll()
                         .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .usernameParameter("email")
-                        .passwordParameter("password") // passwordParameter 추가
+                        .passwordParameter("password")
                         .successHandler(customAuthenticationSuccessHandler())
                         .permitAll())
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .logoutSuccessUrl("/").invalidateHttpSession(true))
-
                 .oauth2Login((oauth2) -> oauth2
                         .loginPage("/kommunity/validateName")
                         .successHandler(new CustomOAuth2LoginSuccessHandler())
@@ -50,6 +66,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 
     @Bean
     PasswordEncoder passwordEncoder() {
