@@ -58,11 +58,11 @@ public class BoardRepositoryImpl implements BoardRepository {
     }
 
     @Override
-    public Board findBoardById(Long boardId) {
+    public Optional<Board> findBoardById(Long boardId) {
         Board board = em.find(Board.class, boardId);
         if (board == null) {
             throw new EntityNotFoundException("Board not found with id " + boardId);
         }
-        return board;
+        return Optional.of(board);
     }
 }

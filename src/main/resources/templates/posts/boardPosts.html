@@ -108,18 +108,21 @@
 <div layout:fragment="content" class="container mt-4">
     <h1 th:text="${board.name}">Board Name</h1>
     <div class="card-container">
-        <a th:each="post : ${posts}" th:href="@{'/posts/' + ${post.id}}" class="card-link">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${post.title}">Post Title</h5>
-                    <p class="card-text" th:text="${post.content}">Post Content</p>
-                    <small class="text-muted post-date" th:text="${post.postDate}">Post Date</small>
+        <div th:each="post : ${posts}">
+            <a th:href="@{'/posts/' + ${post.id}}" class="card-link">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${post.title}">Post Title</h5>
+                        <p class="card-text" th:text="${post.content}">Post Content</p>
+                        <small class="text-muted post-date" th:text="${post.postDate}">Post Date</small>
+                    </div>
                 </div>
-            </div>
-        </a>
+            </a>
+        </div>
     </div>
 </div>
 <!-- 메인 컨텐츠 부분 끝 -->
 </body>
 </html>
+
 

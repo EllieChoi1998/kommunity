@@ -4,6 +4,8 @@ import com.kosa.kmt.nonController.board.Board;
 import com.kosa.kmt.nonController.board.BoardService;
 import com.kosa.kmt.nonController.category.Category;
 import com.kosa.kmt.nonController.category.CategoryService;
+import com.kosa.kmt.nonController.member.Member;
+import com.kosa.kmt.nonController.member.MemberService;
 import com.kosa.kmt.nonController.post.Post;
 import com.kosa.kmt.nonController.post.PostForm;
 import com.kosa.kmt.nonController.post.PostService;
@@ -29,6 +31,8 @@ public class PostController {
     private final BoardService boardService;
 
     private final CategoryService categoryService;
+
+    private final MainController mainController;
 
     @GetMapping
     public String getAllPosts(Model model) throws SQLException {
@@ -79,14 +83,83 @@ public class PostController {
         return "redirect:/posts";
     }
 
+//    private void addCommonAttributes(Model model, Long boardId) throws SQLException {
+//        List<Board> boards = boardService.findAllBoards();
+//        Board board = boardService.findBoardById(boardId);
+//        List<Category> categories = categoryService.findCategoriesByBoardId(boardId);
+//
+//        Map<Long, List<Category>> boardCategories = boards.stream()
+//                .collect(Collectors.toMap(Board::getBoardId, b -> categoryService.findCategoriesByBoardId(b.getBoardId())));
+//
+//        model.addAttribute("boards", boards);
+//        model.addAttribute("board", board);
+//        model.addAttribute("categories", categories);
+//        model.addAttribute("boardCategories", boardCategories);
+//    }
+//
+//    @GetMapping("/board/{boardId}")
+//    public String getPostsByBoard(@PathVariable Long boardId, Model model) throws SQLException {
+//        Optional<Board> optionalBoard = Optional.ofNullable(boardService.findBoardById(boardId));
+//
+//        if (!optionalBoard.isPresent()) {
+//            return "error/404";
+//        }
+//
+//        Board board = optionalBoard.get();
+//        List<Post> posts = postService.getPostsByBoard(boardId);
+//
+//        addCommonAttributes(model, boardId);
+//
+//        model.addAttribute("board", board);
+//        model.addAttribute("posts", posts);
+//        model.addAttribute("isAllCategories", true);
+//        return "posts/boardPosts";
+////        return "posts/posts";
+//    }
+//    @GetMapping("category/{boardId}/{categoryId}")
+//    public String getPostsByCategory(@PathVariable Long boardId, @PathVariable Long categoryId, Model model) throws SQLException {
+//        Optional<Board> optionalBoard = Optional.ofNullable(boardService.findBoardById(boardId));
+//        if (!optionalBoard.isPresent()) {
+//            return "error/404";
+//        }
+//
+//        Board board = optionalBoard.get();
+//        Optional<Category> optionalCategory = categoryService.findCategoryByIdAndBoard(categoryId, board);
+//        if (!optionalCategory.isPresent()) {
+//            return "error/404";
+//        }
+//
+//        Category category = optionalCategory.get();
+//        List<Post> posts = postService.getPostsByCategory(categoryId);
+//
+//        List<Board> boards = boardService.findAllBoards();
+//        Map<Long, List<Category>> boardCategories = boards.stream()
+//                .collect(Collectors.toMap(Board::getBoardId, b -> categoryService.findCategoriesByBoardId(b.getBoardId())));
+//
+//        List<Category> categories = categoryService.findCategoriesByBoard(board);
+//
+//        model.addAttribute("boards", boards);
+//        model.addAttribute("boardCategories", boardCategories);
+//
+//        model.addAttribute("board", board);
+//        model.addAttribute("categories", categories);
+//        model.addAttribute("category", category);
+//        model.addAttribute("posts", posts);
+//        model.addAttribute("isAllCategories", false);
+////        return "posts/posts";
+//        return "posts/categoryPosts";
+//    }
+
+
     private void addCommonAttributes(Model model, Long boardId) throws SQLException {
         List<Board> boards = boardService.findAllBoards();
-        Board board = boardService.findBoardById(boardId);
-        List<Category> categories = categoryService.findCategoriesByBoardId(boardId);
+        Board board = boardId != null ? boardService.findBoardById(boardId).orElse(null) : null;
+        List<Category> categories = boardId != null ? categoryService.findCategoriesByBoardId(boardId) : List.of();
 
         Map<Long, List<Category>> boardCategories = boards.stream()
                 .collect(Collectors.toMap(Board::getBoardId, b -> categoryService.findCategoriesByBoardId(b.getBoardId())));
 
+        model.addAttribute("member", mainController.getCurrentMember());
         model.addAttribute("boards", boards);
         model.addAttribute("board", board);
         model.addAttribute("categories", categories);
@@ -95,31 +168,42 @@ public class PostController {
 
     @GetMapping("/board/{boardId}")
     public String getPostsByBoard(@PathVariable Long boardId, Model model) throws SQLException {
-        Optional<Board> optionalBoard = Optional.ofNullable(boardService.findBoardById(boardId));
-
-        if (!optionalBoard.isPresent()) {
+        Optional<Board> optionalBoard = boardService.findBoardById(boardId);
+        if (optionalBoard.isEmpty()) {
             return "error/404";
         }
 
         Board board = optionalBoard.get();
         List<Post> posts = postService.getPostsByBoard(boardId);
-
         addCommonAttributes(model, boardId);
 
         model.addAttribute("board", board);
         model.addAttribute("posts", posts);
         model.addAttribute("isAllCategories", true);
-        return "posts/boardPosts";
+        return "posts/posts";
     }
 
-    @GetMapping("/board/{boardId}/category/{categoryId}")
+    @GetMapping("/category/{boardId}/{categoryId}")
     public String getPostsByCategory(@PathVariable Long boardId, @PathVariable Long categoryId, Model model) throws SQLException {
-        Category category = categoryService.findCategoryById(categoryId);
+        Optional<Board> optionalBoard = boardService.findBoardById(boardId);
+        if (optionalBoard.isEmpty()) {
+            return "error/404";
+        }
+
+        Board board = optionalBoard.get();
+        Optional<Category> optionalCategory = categoryService.findCategoryByIdAndBoard(categoryId, board);
+        if (optionalCategory.isEmpty()) {
+            return "error/404";
+        }
+
+        Category category = optionalCategory.get();
         List<Post> posts = postService.getPostsByCategory(categoryId);
+
         addCommonAttributes(model, boardId);
+
         model.addAttribute("category", category);
         model.addAttribute("posts", posts);
         model.addAttribute("isAllCategories", false);
-        return "posts/categoryPosts";
+        return "posts/posts";
     }
 }
