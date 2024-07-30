@@ -38,10 +38,56 @@
         .profile-content .row a {
             display: flex;
         }
+
+        .drop-zone {
+            width: 100px;
+            height: 50px;
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-left: 60px
+        }
+
+        .draggable {
+            width: 50px;
+            height: 50px;
+            background-color: #007bff;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            cursor: grab;
+            margin-left: 25px;
+        }
+
+        .drag-over {
+            border-color: #007bff;
+        }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
 <div class="profile-content">
+    <!-- 드래그 앤 드롭 영역 -->
+    <div class="row">
+        <div class="draggable" id="draggable" draggable="true">
+            Drag
+        </div>
+        <div class="drop-zone" id="drop-zone-late">
+            야근
+        </div>
+        <div class="drop-zone hidden" id="drop-zone-early">
+            정시 퇴근
+        </div>
+    </div>
+
     <div class="row">
         <button id="mypageButton">
             프로필 관리
@@ -54,5 +100,72 @@
     <button>내 댓글 관리</button>
     <button>내 좋아요 관리</button>
 </div>
+
+<script>
+    let autoLogoutDisabled = false;
+
+    function initDragAndDrop() {
+        const draggable = document.getElementById('draggable');
+        const dropZoneLate = document.getElementById('drop-zone-late');
+        const dropZoneEarly = document.getElementById('drop-zone-early');
+
+        let draggedElement = null;
+
+        // 드래그 시작 시 실행
+        draggable.addEventListener('dragstart', (e) => {
+            draggedElement = e.target;
+        });
+
+        // 야근 드롭존에 드래그 오버 시 실행
+        dropZoneLate.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZoneLate.classList.add('drag-over');
+        });
+
+        // 야근 드롭존에서 드래그가 떠날 시 실행
+        dropZoneLate.addEventListener('dragleave', () => {
+            dropZoneLate.classList.remove('drag-over');
+        });
+
+        // 야근 드롭존에 드랍 시 실행
+        dropZoneLate.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZoneLate.classList.remove('drag-over');
+            if (draggedElement) {
+                dropZoneLate.classList.add('hidden');
+                dropZoneEarly.classList.remove('hidden');
+                autoLogoutDisabled = true;
+                alert('6시 이후 퇴근 예정, 조금 더 힘내세요! \n' +
+                    '자동 로그아웃이 비활성화되었습니다.');
+            }
+        });
+
+        // 정시 퇴근 드롭존에 드래그 오버 시 실행
+        dropZoneEarly.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZoneEarly.classList.add('drag-over');
+        });
+
+        // 정시 퇴근 드롭존에서 드래그가 떠날 시 실행
+        dropZoneEarly.addEventListener('dragleave', () => {
+            dropZoneEarly.classList.remove('drag-over');
+        });
+
+        // 정시 퇴근 드롭존에 드랍 시 실행
+        dropZoneEarly.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZoneEarly.classList.remove('drag-over');
+            if (draggedElement) {
+                dropZoneEarly.classList.add('hidden');
+                dropZoneLate.classList.remove('hidden');
+                autoLogoutDisabled = false;
+                alert('6시 퇴근 예정, 오늘 하루도 고생 하셨습니다. \n' +
+                    '자동 로그아웃이 다시 활성화되었습니다.');
+            }
+        });
+    }
+
+    initDragAndDrop();
+</script>
 </body>
 </html>

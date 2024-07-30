@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,6 +48,9 @@
             text-align: center;
         }
     </style>
+    <title>My Page</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
 <div class="mypage-content">
@@ -59,12 +62,12 @@
     </div>
     <div id="nickname-change" class="hidden center">
         <p>새 닉네임을 입력하세요:</p>
-        <input type="text" id="new-nickname">
+        <input type="text" id="new-nickname" autocomplete="off" onfocus="clearInput(this)">
         <button onclick="submitNicknameChange()">닉네임 변경</button>
     </div>
     <div id="password-change" class="hidden center">
         <p>새 비밀번호를 입력하세요:</p>
-        <input type="password" id="new-password">
+        <input type="password" id="new-password" autocomplete="off" onfocus="clearInput(this)">
         <button onclick="submitPasswordChange()">비밀번호 변경</button>
     </div>
     <script>
@@ -79,8 +82,16 @@
             }
         }
 
+        function clearInput(input) {
+            input.value = '';
+        }
+
         async function submitNicknameChange() {
             const nickname = document.getElementById('new-nickname').value;
+
+            // CSRF 토큰 가져오기
+            const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
             // 닉네임 변경 전 확인 메시지
             const confirmed = confirm('정말로 닉네임을 변경하시겠습니까?');
@@ -91,7 +102,8 @@
             const response = await fetch('/update-nickname', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    [csrfHeader]: csrfToken // CSRF 토큰 포함
                 },
                 body: new URLSearchParams({
                     nickname: nickname
@@ -109,6 +121,10 @@
         async function submitPasswordChange() {
             const newPassword = document.getElementById('new-password').value;
 
+            // CSRF 토큰 가져오기
+            const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
             // 비밀번호 변경 전 확인 메시지
             const confirmed = confirm('정말로 비밀번호를 변경하시겠습니까?');
             if (!confirmed) {
@@ -118,7 +134,8 @@
             const response = await fetch('/update-password', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    [csrfHeader]: csrfToken // CSRF 토큰 포함
                 },
                 body: new URLSearchParams({
                     newPassword: newPassword
@@ -131,7 +148,8 @@
                 await fetch('/logout', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        [csrfHeader]: csrfToken // CSRF 토큰 포함
                     }
                 });
                 window.location.href = '/login'; // 로그아웃 후 로그인 페이지로 리디렉션
