@@ -1,27 +1,3 @@
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <title>Navigation</title>-->
-<!--</head>-->
-<!--<body>-->
-<!--<div th:fragment="navFragment">-->
-<!--    <nav>-->
-<!--        <ul>-->
-<!--            <li th:each="b : ${boards}">-->
-<!--                <a th:href="@{'/posts/board/' + ${b.boardId}}" th:text="${b.name}">Board Name</a>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--        <ul>-->
-<!--            <li th:each="category : ${categories}">-->
-<!--                <a th:href="@{'/posts/board/' + ${board.boardId} + '/category/' + ${category.categoryId}}" th:text="${category.name}">Category Name</a>-->
-<!--            </li>-->
-<!--            <li><a th:href="@{'/posts/board/' + ${board.boardId}}">전체</a></li>-->
-<!--        </ul>-->
-<!--    </nav>-->
-<!--</div>-->
-<!--</body>-->
-<!--</html>-->
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -37,7 +13,8 @@
             <div class="user-profile me-2">
                 <button id="profileBtn">
                     <img src="/images/defaultuser.png" alt="User" class="profile-logo">
-                    닉네임
+                    <!--닉네임-->
+                    <span id="navbar-nickname" th:text="${member.nickname}"></span>
                 </button>
                 <div id="profileMenuContainer" class="profile-menu hidden"></div>
             </div>
@@ -49,22 +26,26 @@
         <div class="collapse navbar-collapse justify-content-center order-lg-1" id="navbarNav">
             <ul class="nav nav-pills mb-3 flex-column flex-lg-row" id="pills-tab" role="tablist">
                 <!-- 보드 목록을 반복하여 각 보드에 대한 드롭다운 메뉴를 생성 -->
-                <li th:each="board : ${boards}" class="nav-item dropdown" role="presentation">
+                <li th:each="board : ${boards}" class="nav-item" role="presentation">
                     <!-- 보드 이름을 클릭할 수 있는 링크로 설정 -->
-                    <a th:href="@{/category/{boardId}(boardId=${board.boardId})}" class="nav-link dropdown-toggle"
-                       id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" th:text="${board.name}"></a>
-                    <!-- 드롭다운 메뉴 -->
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <!-- 전체 카테고리를 선택할 수 있는 항목 -->
-                        <li>
-                            <a th:href="@{/category/{boardId}(boardId=${board.boardId})}" class="dropdown-item">전체</a>
-                        </li>
-                        <!-- 해당 보드의 각 카테고리 목록을 반복하여 생성 -->
-                        <li th:each="category : ${boardCategories[board.boardId]}" class="dropdown-item">
-                            <a th:href="@{/category/{boardId}/{categoryId}(boardId=${board.boardId}, categoryId=${category.categoryId})}"
-                               th:text="${category.name}"></a>
-                        </li>
-                    </ul>
+                    <a th:href="@{/category/{boardId}(boardId=${board.boardId})}"
+                       class="nav-link"
+                       th:classappend="${board.name == '대나무숲'} ? 'active' : ''"
+                       th:text="${board.name}"
+                       role="tab">
+                    </a>
+                    <!--                    &lt;!&ndash; 드롭다운 메뉴 &ndash;&gt;
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            &lt;!&ndash; 전체 카테고리를 선택할 수 있는 항목 &ndash;&gt;
+                                            <li>
+                                                <a th:href="@{/category/{boardId}(boardId=${board.boardId})}" class="dropdown-item">전체</a>
+                                            </li>
+                                            &lt;!&ndash; 해당 보드의 각 카테고리 목록을 반복하여 생성 &ndash;&gt;
+                                            <li th:each="category : ${boardCategories[board.boardId]}" class="dropdown-item">
+                                                <a th:href="@{/category/{boardId}/{categoryId}(boardId=${board.boardId}, categoryId=${category.categoryId})}"
+                                                   th:text="${category.name}"></a>
+                                            </li>
+                                        </ul>-->
                 </li>
             </ul>
         </div>
@@ -72,4 +53,3 @@
 </nav>
 </body>
 </html>
-

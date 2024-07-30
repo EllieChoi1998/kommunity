@@ -26,8 +26,24 @@ $(document).ready(function() {
 
     // 프로필 메뉴 외부 클릭 시 숨기기
     $(document).click(function(event) {
-        if (!$(event.target).closest('#profileMenuContainer, #profileBtn').length) {
+        if (!$(event.target).closest('#profileMenuContainer, #profileBtn, #mypageButton').length) {
             $('#profileMenuContainer').addClass('hidden').removeClass('visible');
+            $('#mypage-menu').hide(); // 마이페이지 메뉴도 숨기기
         }
+    });
+
+    // 프로필 관리 버튼 클릭 시 마이페이지 메뉴 로드 및 표시
+    $(document).on('click', '#mypageButton', function() {
+        $.get('/mypage-menu', function(data) {
+            $('#profileMenuContainer').html(data).slideDown(); // 메뉴를 항상 보이도록
+        });
+    });
+
+    // 보드 클릭 시 카테고리 로드
+    $('#pills-tab a[data-board-id]').on('click', function () {
+        var boardId = $(this).data('board-id');
+        $.get('/categories/' + boardId, function (data) {
+            $('#category-container').html(data);
+        });
     });
 });
