@@ -73,37 +73,4 @@ public class CategoryController {
         return "category";
     }
 
-//    @GetMapping("/{boardId}/{categoryId}")
-//    public String getPostsByCategory(@PathVariable Long boardId, @PathVariable Long categoryId, Model model) throws SQLException {
-//        Optional<Board> optionalBoard = Optional.ofNullable(boardService.findBoardById(boardId));
-//        if (!optionalBoard.isPresent()) {
-//            return "error/404";
-//        }
-//
-//        Board board = optionalBoard.get();
-//        Optional<Category> optionalCategory = categoryService.findCategoryByIdAndBoard(categoryId, board);
-//        if (!optionalCategory.isPresent()) {
-//            return "error/404";
-//        }
-//
-//        Category category = optionalCategory.get();
-//        List<Post> posts = postService.getPostsByCategory(categoryId);
-//
-//        List<Board> boards = boardService.findAllBoards();
-//        Map<Long, List<Category>> boardCategories = boards.stream()
-//                .collect(Collectors.toMap(Board::getBoardId, b -> categoryService.findCategoriesByBoardId(b.getBoardId())));
-//
-//        List<Category> categories = categoryService.findCategoriesByBoard(board);
-//
-//        model.addAttribute("boards", boards);
-//        model.addAttribute("boardCategories", boardCategories);
-//
-//        model.addAttribute("board", board);
-//        model.addAttribute("categories", categories);
-//        model.addAttribute("category", category);
-//        model.addAttribute("posts", posts);
-//        model.addAttribute("isAllCategories", false);
-//        return "posts/categoryPosts";
-//    }
-
 }
