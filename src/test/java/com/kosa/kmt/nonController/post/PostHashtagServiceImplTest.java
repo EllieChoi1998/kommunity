@@ -60,7 +60,7 @@ public class PostHashtagServiceImplTest {
         post.setContent("Test Content");
 
         post.setMember(memberRepository.findById(1).get());
-        post.setCategory(categoryRepository.findById(1).get());  // 예시 카테고리 ID
+        post.setCategory(categoryRepository.findById(1L).get());  // 예시 카테고리 ID
 
         postRepository.save(post);
     }
