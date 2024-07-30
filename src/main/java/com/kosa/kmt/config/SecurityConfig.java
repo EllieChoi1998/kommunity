@@ -30,8 +30,6 @@ public class SecurityConfig {
 
     private final UserSecurityService userSecurityService;
     private final WebConfig webConfig;
-//    private CustomFilter filter = new CustomFilter();
-
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -39,7 +37,6 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 )
-//                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .cors(cors -> cors.configurationSource(webConfig.getCorsConfiguration()))
                 .addFilterAfter(new CsrfCookieGeneratorFilter(), org.springframework.security.web.csrf.CsrfFilter.class)
 
@@ -74,15 +71,14 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .logoutSuccessUrl("/").invalidateHttpSession(true))
-                .oauth2Login((oauth2) -> oauth2
+                .oauth2Login(oauth2 -> oauth2
                         .loginPage("/kommunity/validateName")
                         .successHandler(new CustomOAuth2LoginSuccessHandler())
-                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
+                        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                                 .userService(customOAuth2UserService)));
 
         return http.build();
     }
-
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -108,4 +104,3 @@ public class SecurityConfig {
         };
     }
 }
-
