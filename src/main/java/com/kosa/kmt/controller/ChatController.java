@@ -1,21 +1,23 @@
 package com.kosa.kmt.controller;
 
-
 import com.kosa.kmt.nonController.chat.Chat;
 import com.kosa.kmt.nonController.chat.ChatDTO;
 import com.kosa.kmt.nonController.chat.ChatService;
 import com.kosa.kmt.nonController.member.Member;
 import com.kosa.kmt.nonController.member.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -28,25 +30,28 @@ public class ChatController {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+    private static Member currentMember;
+
     @GetMapping("/kommunity/chat/getAllChats")
     public ResponseEntity<Map<String, Object>> getAllChats() {
         List<Chat> chats = chatService.findAllChats();
-        Member currentMember = getCurrentMember();
+        currentMember = getCurrentMember();
+        System.out.println("Current member: " + currentMember.getName());
         List<ChatDTO> chatDTOs = new ArrayList<>();
 
         for (Chat chat : chats) {
             boolean isCurrentUser = chat.getMember().equals(currentMember);
-            System.out.println("isCurrentUser: " + isCurrentUser);
             ChatDTO chatDTO = new ChatDTO(
                     chat.getChatContent(),
                     chat.getChatDateTime(),
                     chat.getMember().getMemberId(),
-                    chat.getMember().getName(), // 보낸 유저의 이름 설정
+                    chat.getMember().getName(),
                     isCurrentUser
             );
             chatDTOs.add(chatDTO);
-
-            System.out.println(chatDTO.getIsCurrentUser());
         }
 
         chatDTOs.sort(Comparator.comparing(ChatDTO::getChatDateTime));
@@ -57,47 +62,48 @@ public class ChatController {
         return ResponseEntity.ok(response);
     }
 
-
-
-    @PostMapping("/kommunity/chat/sendChat")
-    public ResponseEntity<Map<String, Object>> sendChat(@RequestBody Map<String, String> chatRequest) throws Exception {
-        String content = chatRequest.get("content");
+    public ChatDTO sendChat(ChatDTO chatDTO, Member member) throws Exception {
+        String content = chatDTO.getChatContent();
 
         if (content != null && !content.trim().isEmpty()) {
-            Member currentMember = getCurrentMember();
 
-            if (currentMember == null) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("error", "Unauthorized"));
-            }
+            if(member != null) {
+                System.out.println(member.getEmail());
+                System.out.println(member.getName());
+                System.out.println(member.getNickname());
 
-            Chat chat = new Chat();
-            chat.setChatContent(content);
-            chat.setChatDateTime(LocalDateTime.now());
-            chat.setMember(currentMember);
+                Chat chat = new Chat();
+                chat.setChatContent(content);
+                chat.setChatDateTime(LocalDateTime.now());
+                chat.setMember(member);
 
-            Long savedChatId = chatService.saveChat(chat, currentMember.getMemberId());
-            System.out.println("Saved: " + savedChatId);
-            if (savedChatId != -1) {
-                ChatDTO chatDTO = new ChatDTO(
-                        chat.getChatContent(),
-                        chat.getChatDateTime(),
-                        chat.getMember().getMemberId(),
-                        chat.getMember().getName(),
-                        true
-                );
-
-                Map<String, Object> response = new HashMap<>();
-                response.put("chatContent", chatDTO);
-
-                return ResponseEntity.ok(response);
+                Long savedChatId = chatService.saveChat(chat, currentMember.getMemberId());
+                if (savedChatId != -1) {
+                    chatDTO.setChatWriterName(member.getName());
+                    chatDTO.setChatWriterId(member.getMemberId());
+                    chatDTO.setCurrentUser(true);
+                    chatDTO.setChatDateTime(LocalDateTime.now());
+                    sendMessageToWebSocket(chatDTO);
+                }
             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("error", "Failed to save chat"));
+                System.out.println("NO MEMBER FOUND");
             }
-        } else {
-            return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Invalid content"));
+
+
         }
+        return chatDTO;
     }
 
+    @MessageMapping("/chat.sendMessage")
+    @SendTo("/topic/public")
+    public ChatDTO sendMessage(@Payload ChatDTO chatMessage, Principal principal) throws Exception {
+        String username = principal.getName();
+        Member member = memberRepository.findByEmail(username).get();
+        System.out.println("===========================================");
+        System.out.println(username);
+        System.out.println("===========================================");
+        return this.sendChat(chatMessage, member);
+    }
 
     private Member getCurrentMember() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -109,5 +115,9 @@ public class ChatController {
             }
         }
         return null;
+    }
+
+    private void sendMessageToWebSocket(ChatDTO chatDTO) {
+        messagingTemplate.convertAndSend("/topic/public", chatDTO);
     }
 }

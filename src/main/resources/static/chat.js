@@ -1,114 +1,118 @@
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", function() {
+    var stompClient = null;
+    var isConnected = false; // WebSocket 연결 상태 추적
+    var messageIds = new Set(); // 메시지 ID 집합
 
-    var header = $("meta[name='_csrf_header']").attr('content');
-    var token = $("meta[name='_csrf']").attr('content');
+    function connect() {
+        if (isConnected) return; // 이미 연결된 경우 반환
 
-    // function getCsrfToken() {
-    //     var name = 'X-CSRF-TOKEN=';
-    //     var decodedCookie = decodeURIComponent(document.cookie);
-    //     var ca = decodedCookie.split(';');
-    //     for (var i = 0; i < ca.length; i++) {
-    //         var c = ca[i];
-    //         while (c.charAt(0) == ' ') {
-    //             c = c.substring(1);
-    //         }
-    //         if (c.indexOf(name) == 0) {
-    //             return c.substring(name.length, c.length);
-    //         }
-    //     }
-    //     return "";
-    // }
-    //
-    // $.ajaxSetup({
-    //     headers: {
-    //         'X-CSRF-TOKEN': getCsrfToken()
-    //     }
-    // });
+        var socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
 
-    $('.chat-header').on('click', function() {
-        $('#chat-container').toggleClass('expanded');
+        stompClient.connect({}, function(frame) {
+            console.log('Connected: ' + frame);
 
-        // 채팅 데이터를 비동기적으로 가져오기
-        $.ajax({
-            url: '/kommunity/chat/getAllChats',
-            method: 'GET',
-            success: function(response) {
-                // AJAX 호출이 성공하면 채팅 데이터를 업데이트합니다.
+            stompClient.subscribe('/topic/public', function(message) {
+                var msg = JSON.parse(message.body);
+                if (!messageIds.has(msg.chatDateTime)) {
+                    showMessage(msg);
+                    messageIds.add(msg.chatDateTime); // 메시지 ID 저장
+                }
+            });
+
+            // Load existing messages
+            $.get('/kommunity/chat/getAllChats', function(response) {
                 updateChatMessages(response);
-            },
-            error: function(xhr, status, error) {
-                console.error('채팅 데이터를 가져오는 데 실패했습니다:', error);
-            }
-        });
-    });
+            });
 
-    // 채팅 메시지를 업데이트하는 함수
+            isConnected = true; // WebSocket 연결 상태 업데이트
+        });
+    }
+
+    function sendMessage() {
+        var messageContent = $('#chat-input').val().trim();
+        if (messageContent && stompClient) {
+            var chatMessage = {
+                chatContent: messageContent,
+                isCurrentUser: false
+            };
+            stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
+            $('#chat-input').val('');
+        }
+    }
+
+    function showMessage(message) {
+        var chatMessagesDiv = $('#chat-messages');
+        var chatElement = $('<div>').addClass('chat-message');
+        var messageText = message.chatWriterName + ' (' + new Date(message.chatDateTime).toLocaleString() + '): ' + message.chatContent;
+
+        if (message.isCurrentUser) {
+            chatElement.addClass('current-user'); // 현재 사용자의 메시지
+        } else if (!message.isCurrentUser) {
+            chatElement.addClass('other-user'); // 다른 사용자의 메시지
+        }
+
+        chatElement.text(messageText);
+        chatMessagesDiv.append(chatElement);
+
+        scrollToBottom(); // 새 메시지가 추가되면 맨 아래로 스크롤
+    }
+
     function updateChatMessages(data) {
         var chatMessagesDiv = $('#chat-messages');
-        chatMessagesDiv.empty(); // 기존 메시지 삭제
-
+        chatMessagesDiv.empty();
         if (data && data.chatContents) {
             data.chatContents.forEach(function(chat) {
-                var chatElement = $('<div>').addClass('chat-message');
-
-                // 추가: 유저 이름과 시각을 포함한 텍스트 구성
-                var messageText = chat.chatWriterName + ' (' + new Date(chat.chatDateTime).toLocaleString() + '): ' + chat.chatContent;
-                chatElement.text(messageText);
-
-                // 콘솔 로그로 클래스 확인
-                console.log(chat.chatContent, chat.isCurrentUser ? 'current-user' : 'other-user');
-
-                if (chat.isCurrentUser) {
-                    chatElement.addClass('current-user'); // 현재 사용자의 메시지
-                } else {
-                    chatElement.addClass('other-user'); // 다른 사용자의 메시지
+                if (!messageIds.has(chat.chatDateTime)) {
+                    showMessage(chat);
+                    messageIds.add(chat.chatDateTime); // 메시지 ID 저장
                 }
-                chatMessagesDiv.append(chatElement);
             });
         }
     }
 
     $('#chat-send').on('click', function() {
-        var messageInput = $('#chat-input');
-        var message = messageInput.val();
+        sendMessage();
+    });
 
-        if (message) {
-            $.ajax({
-                url: '/kommunity/chat/sendChat',
-
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ content: message }),
-                xhrFields: {
-                    withCredentials: true
-                },
-                beforeSend: function(xhr){
-                    xhr.setRequestHeader(header, token);
-                },
-                success: function(response) {
-                    if (response && response.chatContent) {
-                        var chatElement = $('<div>').addClass('chat-message');
-                        var messageText = response.chatContent.chatWriterName + ' (' + new Date(response.chatContent.chatDateTime).toLocaleString() + '): ' + response.chatContent.chatContent;
-                        chatElement.text(messageText);
-
-                        if (response.chatContent.isCurrentUser) {
-                            chatElement.addClass('current-user');
-                        } else {
-                            chatElement.addClass('other-user');
-                        }
-
-                        $('#chat-messages').append(chatElement);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('채팅 데이터를 보내는 데 실패했습니다:', error);
-                    console.error('응답 상태:', status);
-                    console.error('응답 본문:', xhr.responseText);
-                    console.error('전체 요청 객체:', xhr);
-                }
-            });
-            messageInput.val('');
+    $('#chat-input').on('keypress', function(e) {
+        if (e.which === 13) {
+            sendMessage();
         }
     });
 
+    // 채팅창 열리고 닫히고 + 맨 아래 채팅으로 이동
+    let isExpanded = localStorage.getItem('chatExpanded') === 'true';
+
+    // 채팅창 상태를 적용
+    if (isExpanded) {
+        $('#chat-container').addClass('expanded');
+        scrollToBottom(); // 채팅창이 확장된 상태라면 맨 아래로 스크롤
+    } else {
+        $('#chat-container').removeClass('expanded');
+    }
+
+    // 채팅창 높이 조절
+    $('.chat-header').on('click', function() {
+        if (!isExpanded) {
+            $('#chat-container').addClass('expanded');
+            isExpanded = true; // 상태 업데이트
+            $('#chat-container').on('transitionend', function() {
+                scrollToBottom(); // 애니메이션이 끝난 후 맨 아래로 스크롤
+                $('#chat-container').off('transitionend');
+            });
+        } else {
+            $('#chat-container').removeClass('expanded');
+            isExpanded = false; // 상태 업데이트
+        }
+        localStorage.setItem('chatExpanded', isExpanded); // 로컬 스토리지에 상태 저장
+    });
+
+    // 채팅창을 맨 아래로 스크롤하는 함수
+    function scrollToBottom() {
+        let chatMessages = $('.chat-messages');
+        chatMessages.scrollTop(chatMessages.prop("scrollHeight"));
+    }
+
+    connect();
 });
