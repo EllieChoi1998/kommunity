@@ -1,0 +1,50 @@
+/* custom.css */
+
+/* 카테고리 리스트 스타일 */
+.categories-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.category-item {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.category-name {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+/* 게시글 리스트 스타일 */
+.posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.post-item {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.post-title {
+    margin-top: 0;
+    font-size: 1.5em;
+    color: #343a40;
+}
+
+.post-content {
+    margin: 15px 0;
+}
+
+.post-date {
+    font-size: 0.9em;
+    color: #6c757d;
+}

@@ -1,9 +1,138 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="ko" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    &lt;!&ndash; Required meta tags &ndash;&gt;-->
+<!--    <meta charset="utf-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
+<!--    &lt;!&ndash; Bootstrap CSS &ndash;&gt;-->
+<!--    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">-->
+<!--    &lt;!&ndash; sbb CSS &ndash;&gt;-->
+<!--    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">-->
+<!--    <title>Hello, sbb!</title>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--&lt;!&ndash; 네비게이션바 &ndash;&gt;-->
+<!--<nav th:replace="~{navbar :: navbarFragment}"></nav>-->
+
+<!--&lt;!&ndash; 카테고리 컨테이너 &ndash;&gt;-->
+<!--<div id="category-container" class="center-container">-->
+<!--    <th:block layout:fragment="category"></th:block>-->
+<!--</div>-->
+
+<!--<div class="container-fluid">-->
+<!--    <div class="row">-->
+<!--        &lt;!&ndash; 왼쪽 사이드바 &ndash;&gt;-->
+<!--        <div class="col-md-2" id="sidebar-container" th:if="${leftSidebar != false}">-->
+<!--            <div th:replace="~{sidebars/left-sidebar :: leftSidebarFragment}"></div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; 메인 컨텐츠 &ndash;&gt;-->
+<!--        <div class="col-md" id="content-container" th:classappend="${leftSidebar == false} ? 'col-md-12' : ''">-->
+<!--            <th:block layout:fragment="content"></th:block>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; 오른쪽 사이드바 &ndash;&gt;-->
+<!--        <div class="col-md-2" id="sidebar-right-container" th:if="${rightSidebar != false}">-->
+<!--            <div th:replace="~{sidebars/right-sidebar :: rightSidebarFragment}"></div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; Bootstrap JS &ndash;&gt;-->
+<!--<script th:src="@{/bootstrap.bundle.min.js}"></script>-->
+<!--<script th:src="@{/bootstrap.min.js}"></script>-->
+<!--&lt;!&ndash; jQuery &ndash;&gt;-->
+<!--<script th:src="@{/jquery-3.7.1.min.js}"></script>-->
+
+<!--&lt;!&ndash; JavaScript Start &ndash;&gt;-->
+<!--<script>-->
+<!--    $(document).ready(function() {-->
+<!--        $('#pills-tab a').on('click', function(e) {-->
+<!--            e.preventDefault();-->
+<!--            var url = $(this).attr('href');-->
+
+<!--            // 모든 nav-link에서 active 클래스 제거-->
+<!--            $('#pills-tab a').removeClass('active');-->
+
+<!--            // 클릭된 nav-link에 active 클래스 추가-->
+<!--            $(this).addClass('active');-->
+
+<!--            $.get(url, function(data) {-->
+<!--                $('#category-container').html(data);-->
+<!--            });-->
+<!--        });-->
+
+<!--        // 초기 로드-->
+<!--        $('#pills-tab a.nav-link.active').trigger('click');-->
+
+<!--        // 닉네임 버튼 클릭 시 프로필 메뉴 로드 및 표시-->
+<!--        $('#profileBtn').on('click', function() {-->
+<!--            $.get('/profile-menu', function(data) {-->
+<!--                $('#profileMenuContainer').html(data).toggleClass('visible').removeClass('hidden');-->
+<!--            });-->
+<!--        });-->
+
+<!--        // 프로필 메뉴 외부 클릭 시 숨기기-->
+<!--        $(document).click(function(event) {-->
+<!--            if (!$(event.target).closest('#profileMenuContainer, #profileBtn').length) {-->
+<!--                $('#profileMenuContainer').addClass('hidden').removeClass('visible');-->
+<!--            }-->
+<!--        });-->
+<!--    });-->
+
+<!--    $(document).ready(function() {-->
+<!--        $('#chat-send').on('click', function() {-->
+<!--            var message = $('#chat-input').val();-->
+<!--            if (message.trim() !== '') {-->
+<!--                $('#chat-messages').append('<div>' + message + '</div>');-->
+<!--                $('#chat-input').val('');-->
+<!--            }-->
+<!--        });-->
+
+<!--        $('#chat-input').on('keypress', function(e) {-->
+<!--            if (e.which === 13) { // Enter key pressed-->
+<!--                $('#chat-send').click();-->
+<!--            }-->
+<!--        });-->
+<!--    });-->
+
+<!--    // 채팅창 토글-->
+<!--    $('.chat-header').on('click', function() {-->
+<!--        $('#chat-container').toggleClass('expanded');-->
+<!--    });-->
+
+<!--    // 채팅 jQuery-->
+<!--    $('#chat-send').on('click', function() {-->
+<!--        var message = $('#chat-input').val(); // #chat-input 입력 필드의 값을 가져옴-->
+<!--        if (message.trim() !== '') { // 메시지가 공백이 아닌 경우-->
+<!--            $('#chat-messages').append('<div class="chat-message">' + message + '</div>');-->
+<!--            $('#chat-input').val('');-->
+<!--        }-->
+<!--    });-->
+
+<!--    $('#chat-input').on('keypress', function(e) {-->
+<!--        if (e.which === 13) { // Enter 키(키 코드 13)를 눌렀을 때-->
+<!--            $('#chat-send').click(); // #chat-send 버튼의 클릭 이벤트를 트리거-->
+<!--        }-->
+<!--    });-->
+<!--</script>-->
+<!--&lt;!&ndash; JavaScript End &ndash;&gt;-->
+
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <meta name="_csrf" th:content="${_csrf.token}">
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
     <!-- sbb CSS -->
@@ -13,7 +142,7 @@
 <body>
 
 <!-- 네비게이션바 -->
-<nav th:replace="~{navbar :: navbarFragment}"></nav>
+<nav th:replace="~{nav :: navbarFragment(${boards}, ${boardCategories})}"></nav>
 
 <!-- 카테고리 컨테이너 -->
 <div id="category-container" class="center-container">
@@ -43,84 +172,17 @@
 <div id="profileMenuContainer" class="profile-menu hidden"></div>
 
 <!-- Bootstrap JS -->
-<script th:src="@{/bootstrap.bundle.min.js}"></script>
+
 <script th:src="@{/bootstrap.min.js}"></script>
 <!-- jQuery -->
 <script th:src="@{/jquery-3.7.1.min.js}"></script>
 
-<!-- JavaScript Start -->
-<script>
-    $(document).ready(function() {
-        $('#pills-tab a').on('click', function(e) {
-            e.preventDefault();
-            var url = $(this).attr('href');
 
-            // 모든 nav-link에서 active 클래스 제거
-            $('#pills-tab a').removeClass('active');
+<!-- layout JS -->
+<script th:src="@{/layout.js}"></script>
 
-            // 클릭된 nav-link에 active 클래스 추가
-            $(this).addClass('active');
 
-            $.get(url, function(data) {
-                $('#category-container').html(data);
-            });
-        });
-
-        // 초기 로드
-        $('#pills-tab a.nav-link.active').trigger('click');
-
-        // 닉네임 버튼 클릭 시 프로필 메뉴 로드 및 표시
-        $('#profileBtn').on('click', function() {
-            $.get('/profile-menu', function(data) {
-                $('#profileMenuContainer').html(data).toggleClass('visible').removeClass('hidden');
-            });
-        });
-
-        // 프로필 메뉴 외부 클릭 시 숨기기
-        $(document).click(function(event) {
-            if (!$(event.target).closest('#profileMenuContainer, #profileBtn, #mypageButton').length) {
-                $('#profileMenuContainer').addClass('hidden').removeClass('visible');
-                $('#mypage-menu').hide(); // 마이페이지 메뉴도 숨기기
-            }
-        });
-
-        // 프로필 관리 버튼 클릭 시 마이페이지 메뉴 로드 및 표시
-        $(document).on('click', '#mypageButton', function() {
-            $.get('/mypage-menu', function(data) {
-                $('#profileMenuContainer').html(data).slideDown(); // 메뉴를 항상 보이도록
-            });
-        });
-
-        // 보드 클릭 시 카테고리 로드
-        $('#pills-tab a[data-board-id]').on('click', function () {
-            var boardId = $(this).data('board-id');
-            $.get('/categories/' + boardId, function (data) {
-                $('#category-container').html(data);
-            });
-        });
-
-        // 채팅창 토글
-        $('.chat-header').on('click', function() {
-            $('#chat-container').toggleClass('expanded');
-        });
-
-        // 채팅 jQuery
-        $('#chat-send').on('click', function() {
-            var message = $('#chat-input').val(); // #chat-input 입력 필드의 값을 가져옴
-            if (message.trim() !== '') { // 메시지가 공백이 아닌 경우
-                $('#chat-messages').append('<div class="chat-message">' + message + '</div>');
-                $('#chat-input').val('');
-            }
-        });
-
-        $('#chat-input').on('keypress', function(e) {
-            if (e.which === 13) { // Enter 키(키 코드 13)를 눌렀을 때
-                $('#chat-send').click(); // #chat-send 버튼의 클릭 이벤트를 트리거
-            }
-        });
-    });
-</script>
-<!-- JavaScript End -->
-
+<!--chat JS-->
+<script th:src="@{/chat.js}"></script>
 </body>
 </html>

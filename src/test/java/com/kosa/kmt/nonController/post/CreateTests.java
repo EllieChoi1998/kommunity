@@ -55,10 +55,10 @@ public class CreateTests {
             } else if(i % 3 == 1) {
                 hashtag = String.format("#파이썬 #python");
             } else {
-                hashtag = String.format("#익명 #대나무숲");
+                hashtag = String.format("#코테 #질문");
             }
 
-            this.postService.createPost(title, content, 1, 1, hashtag);
+            this.postService.createPost(title, content, 1, 4, hashtag);
         }
     }
 }

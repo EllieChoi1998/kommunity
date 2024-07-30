@@ -11,6 +11,7 @@ public interface CategoryRepository {
     Optional<Category> findByName(String name, Long boardId);
     List<Category> findAll();
     List<Category> findByBoard(Board board);
-
-    Optional<Category> findById(Integer categoryId);
+    List<Category> findByBoardId(Long boardId);
+    Optional<Category> findById(Long categoryId);
+    Optional<Category> findByIdAndBoard(Long id, Board board);
 }

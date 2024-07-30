@@ -1,7 +1,11 @@
 package com.kosa.kmt.nonController.post;
 
+import com.kosa.kmt.nonController.board.Board;
+
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public interface PostService {
     // find all
@@ -9,6 +13,10 @@ public interface PostService {
 
     // find by id
     public Post getPostById(Long id) throws SQLException;
+
+    public List<Post> getPostsByCategory(Long categoryId) throws SQLException;
+
+    public List<Post> getPostsByBoard(Long boardId) throws SQLException;
 
     // create normal post
     public Long createPost(String title, String content, Integer memberId, Integer categoryId, String strHashtag) throws SQLException;

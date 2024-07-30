@@ -5,7 +5,14 @@ import java.util.Optional;
 
 public interface BoardRepository {
     Board saveBoard(Board board);
+
     Board deleteBoard(Board board);
+
     Optional<Board> findByName(String name);
+
     List<Board> findAll();
+
+    Board findBoardById(Long boardId);
+
+
 }

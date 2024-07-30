@@ -2,6 +2,7 @@ package com.kosa.kmt.nonController.category;
 
 import com.kosa.kmt.nonController.board.Board;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,9 +62,30 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     }
 
     @Override
-    public Optional<Category> findById(Integer categoryId) {
+    public List<Category> findByBoardId(Long boardId){
+        return em.createQuery("SELECT c FROM Category c WHERE c.board.boardId = :boardId", Category.class)
+                .setParameter("boardId", boardId)
+                .getResultList();
+    }
+
+    @Override
+    public Optional<Category> findById(Long categoryId) {
         Category category = em.find(Category.class, categoryId);
         return Optional.ofNullable(category);
+    }
+
+    @Override
+    public Optional<Category> findByIdAndBoard(Long id, Board board) {
+        String query = "SELECT c FROM Category c WHERE c.categoryId = :categoryId AND c.board = :board";
+        TypedQuery<Category> typedQuery = em.createQuery(query, Category.class);
+        typedQuery.setParameter("categoryId", id);
+        typedQuery.setParameter("board", board);
+        try {
+            Category category = typedQuery.getSingleResult();
+            return Optional.ofNullable(category);
+        } catch (jakarta.persistence.NoResultException e) {
+            return Optional.empty();
+        }
     }
 
     /*

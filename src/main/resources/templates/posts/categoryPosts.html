@@ -1,0 +1,118 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"-->
+<!--      layout:decorate="~{layout}">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Category Posts</title>-->
+<!--    &lt;!&ndash; Bootstrap CSS 추가 &ndash;&gt;-->
+<!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">-->
+<!--</head>-->
+<!--<body>-->
+<!--&lt;!&ndash; 메인 컨텐츠 부분 시작 &ndash;&gt;-->
+<!--<div layout:fragment="content" class="container">-->
+<!--    <h1 th:text="${board.name}">Board Name</h1>-->
+<!--    <h2 th:text="'Category: ' + ${category.name}"></h2>-->
+<!--    <div class="row">-->
+<!--        <div th:each="post : ${posts}" class="col-md-4 mb-4">-->
+<!--            <div class="card">-->
+<!--                <div class="card-body">-->
+<!--                    <h5 class="card-title">-->
+<!--                        <a th:href="@{'/posts/' + ${post.id}}" th:text="${post.title}">Post Title</a>-->
+<!--                    </h5>-->
+<!--                    <p class="card-text" th:text="${post.content}">Post Content</p>-->
+<!--                    <p class="card-text text-muted" th:text="${post.postDate}">Post Date</p>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+<!--&lt;!&ndash; 메인 컨텐츠 부분 끝 &ndash;&gt;-->
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Category Posts</title>
+    <!-- Bootstrap CSS 추가 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        .card {
+            transition: transform 0.2s;
+            cursor: pointer;
+            margin-bottom: 1rem; /* 카드 사이의 거리 조절 */
+            width: 100%; /* 카드의 너비 조절 */
+            border-radius: 15px; /* 둥근 테두리 추가 */
+            height: 200px; /* 카드의 고정 높이 설정 */
+            overflow: hidden; /* 내용이 넘칠 경우 숨김 */
+        }
+
+        .card:hover {
+            transform: scale(1.02);
+        }
+
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
+        }
+
+        .card-text {
+            flex: 1;
+            overflow: hidden; /* 내용이 넘칠 경우 숨김 */
+            text-overflow: ellipsis; /* 내용이 넘칠 경우 말줄임표 표시 */
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* 최대 줄 수 설정 */
+            -webkit-box-orient: vertical;
+        }
+
+        .post-date {
+            white-space: nowrap;
+        }
+
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block; /* 카드 전체를 클릭할 수 있게 설정 */
+        }
+
+        .card-container {
+            display: flex;
+            flex-direction: column; /* 카드를 세로로 배치 */
+            row-gap: 1rem; /* 카드 사이의 거리 조절 */
+        }
+    </style>
+</head>
+<body>
+<!-- 메인 컨텐츠 부분 시작 -->
+<div layout:fragment="content" class="container mt-4">
+    <h1>Category: <span th:text="${category.name}">Category Name</span></h1>
+    <div class="card-container">
+        <a th:each="post : ${posts}" th:href="@{'/posts/' + ${post.id}}" class="card-link">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${post.title}">Post Title</h5>
+                    <p class="card-text" th:text="${post.content}">Post Content</p>
+                    <small class="text-muted post-date" th:text="${post.postDate}">Post Date</small>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+<!-- 메인 컨텐츠 부분 끝 -->
+</body>
+</html>
+
+
+

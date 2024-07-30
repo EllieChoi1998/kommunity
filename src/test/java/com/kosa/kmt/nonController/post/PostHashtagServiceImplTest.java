@@ -1,6 +1,8 @@
 package com.kosa.kmt.nonController.post;
 
+
 import com.kosa.kmt.nonController.category.Category;
+
 import com.kosa.kmt.nonController.category.CategoryRepository;
 import com.kosa.kmt.nonController.hashtag.HashtagRepository;
 import com.kosa.kmt.nonController.hashtag.PostHashtag;
@@ -56,8 +58,10 @@ public class PostHashtagServiceImplTest {
         post = new Post();
         post.setTitle("Test Title");
         post.setContent("Test Content");
-        post.setMember(member);  // Member 설정
-        post.setCategory(category);  // Category 설정
+
+        post.setMember(memberRepository.findById(1).get());
+        post.setCategory(categoryRepository.findById(1).get());  // 예시 카테고리 ID
+
         postRepository.save(post);
     }
 
