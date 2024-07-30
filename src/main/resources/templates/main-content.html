@@ -1,0 +1,14 @@
+<!-- main-content.html -->
+<div layout:fragment="mainContent" xmlns:layout="http://www.w3.org/1999/xhtml">
+    <div class="board">
+        <h1 th:text="${board != null ? board.name : '게시판 이름 없음'}"></h1>
+    </div>
+    <div class="posts">
+        <ul>
+            <li th:each="post : ${posts}">
+                <h2 th:text="${post.title}"></h2>
+                <p th:text="${post.content}"></p>
+            </li>
+        </ul>
+    </div>
+</div>

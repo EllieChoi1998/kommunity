@@ -1,5 +1,6 @@
 package com.kosa.kmt.nonController.comment;
 
+import com.kosa.kmt.nonController.category.CategoryRepository;
 import com.kosa.kmt.nonController.comment.CommentService;
 import com.kosa.kmt.nonController.comment.PostComment;
 import com.kosa.kmt.nonController.comment.PostCommentRepository;
@@ -35,6 +36,9 @@ public class CommentServiceTests {
     @Autowired
     private PostCommentRepository postCommentRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     private Member testMember;
     private Post testPost;
 
@@ -50,7 +54,7 @@ public class CommentServiceTests {
         testPost = new Post();
         testPost.setTitle("Test Post");
         testPost.setContent("Test Content");
-        testPost.setCategoryId(1);  // 예시 카테고리 ID
+        testPost.setCategory(categoryRepository.findById(1L).get());  // 예시 카테고리 ID
         testPost.setMember(testMember);
         testPost = postRepository.saveAndFlush(testPost);
     }

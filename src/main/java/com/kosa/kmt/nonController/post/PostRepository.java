@@ -6,5 +6,9 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long>, PostRepositoryCustom {
     List<Post> findAllByOrderByPostDateDesc();
+
     List<Post> findAllByOrderByPostDateAsc();
+
+    List<Post> findByCategoryCategoryId(Long categoryId);
+
 }

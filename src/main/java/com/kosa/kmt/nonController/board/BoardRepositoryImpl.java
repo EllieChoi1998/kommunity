@@ -1,6 +1,7 @@
 package com.kosa.kmt.nonController.board;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,5 +55,14 @@ public class BoardRepositoryImpl implements BoardRepository {
     @Override
     public List<Board> findAll() {
         return em.createQuery("SELECT b FROM Board b", Board.class).getResultList();
+    }
+
+    @Override
+    public Board findBoardById(Long boardId) {
+        Board board = em.find(Board.class, boardId);
+        if (board == null) {
+            throw new EntityNotFoundException("Board not found with id " + boardId);
+        }
+        return board;
     }
 }

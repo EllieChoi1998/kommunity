@@ -6,4 +6,6 @@ public interface BoardService {
     Long addNewBoard(Board board);
     Long deleteBoard(Board board);
     List<Board> findAllBoards();
+
+    Board findBoardById(Long boardId);
 }
