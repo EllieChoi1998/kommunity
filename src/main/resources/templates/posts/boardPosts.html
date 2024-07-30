@@ -1,36 +1,3 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"-->
-<!--      layout:decorate="~{layout}">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>Board Posts</title>-->
-<!--    &lt;!&ndash; Bootstrap CSS 추가 &ndash;&gt;-->
-<!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">-->
-<!--</head>-->
-<!--<body>-->
-<!--&lt;!&ndash; 메인 컨텐츠 부분 시작 &ndash;&gt;-->
-<!--<div layout:fragment="content" class="container">-->
-<!--    <h1 th:text="${board.name}">Board Name</h1>-->
-<!--    <h2 th:if="${isAllCategories}" th:text="'전체 게시판'"></h2>-->
-<!--    <h2 th:if="${category != null}" th:text="'Category: ' + ${category.name}"></h2>-->
-<!--    <div class="row">-->
-<!--        <div th:each="post : ${posts}" class="col-md-4 mb-4">-->
-<!--            <div class="card">-->
-<!--                <div class="card-body">-->
-<!--                    <h5 class="card-title">-->
-<!--                        <a th:href="@{'/posts/' + ${post.id}}" th:text="${post.title}">Post Title</a>-->
-<!--                    </h5>-->
-<!--                    <p class="card-text" th:text="${post.content}">Post Content</p>-->
-<!--                    <p class="card-text text-muted" th:text="${post.postDate}">Post Date</p>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-<!--&lt;!&ndash; 메인 컨텐츠 부분 끝 &ndash;&gt;-->
-<!--</body>-->
-<!--</html>-->
-
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
@@ -108,18 +75,21 @@
 <div layout:fragment="content" class="container mt-4">
     <h1 th:text="${board.name}">Board Name</h1>
     <div class="card-container">
-        <a th:each="post : ${posts}" th:href="@{'/posts/' + ${post.id}}" class="card-link">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${post.title}">Post Title</h5>
-                    <p class="card-text" th:text="${post.content}">Post Content</p>
-                    <small class="text-muted post-date" th:text="${post.postDate}">Post Date</small>
+        <div th:each="post : ${posts}">
+            <a th:href="@{'/posts/' + ${post.id}}" class="card-link">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${post.title}">Post Title</h5>
+                        <p class="card-text" th:text="${post.content}">Post Content</p>
+                        <small class="text-muted post-date" th:text="${post.postDate}">Post Date</small>
+                    </div>
                 </div>
-            </div>
-        </a>
+            </a>
+        </div>
     </div>
 </div>
 <!-- 메인 컨텐츠 부분 끝 -->
 </body>
 </html>
+
 

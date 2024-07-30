@@ -3,7 +3,7 @@
       layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
-    <title>Category Posts</title>
+    <title>Posts</title>
     <!-- Bootstrap CSS 추가 -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <style>
@@ -74,7 +74,8 @@
 <!-- 메인 컨텐츠 부분 시작 -->
 <div layout:fragment="content" class="container mt-4">
     <h1 th:text="${board.name}">Board Name</h1>
-    <h2 th:text="'Category: ' + ${category.name}"></h2>
+    <h2 th:if="${isAllCategories}" th:text="'전체 게시판'"></h2>
+    <h2 th:if="${category != null}" th:text="'Category: ' + ${category.name}"></h2>
     <div class="card-container">
         <div th:each="post : ${posts}">
             <a th:href="@{'/posts/' + ${post.id}}" class="card-link">
@@ -92,5 +93,3 @@
 <!-- 메인 컨텐츠 부분 끝 -->
 </body>
 </html>
-
-

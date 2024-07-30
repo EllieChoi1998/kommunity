@@ -97,7 +97,7 @@ public class MainController {
         return "danamusup";
     }
 
-    private Member getCurrentMember() {
+    protected Member getCurrentMember() {
         // Get the authentication object
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

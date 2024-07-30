@@ -12,7 +12,7 @@ public interface BoardRepository {
 
     List<Board> findAll();
 
-    Board findBoardById(Long boardId);
+    Optional<Board> findBoardById(Long boardId);
 
 
 }

@@ -12,7 +12,7 @@
         <a class="list-group-category-item list-group-item-action"
            th:href="@{/posts/board/{boardId}(boardId=${board.boardId})}">전체</a>
         <a class="list-group-category-item list-group-item-action" th:each="category : ${categories}"
-           th:href="@{/category/{boardId}/{categoryId}(boardId=${board.boardId}, categoryId=${category.categoryId})}"
+           th:href="@{/posts/category/{boardId}/{categoryId}(boardId=${board.boardId}, categoryId=${category.categoryId})}"
            th:text="${category.name}"></a>
     </div>
 </div>
