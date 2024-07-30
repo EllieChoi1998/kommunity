@@ -17,18 +17,11 @@
 </div>
 
 <!-- 메인 컨텐츠  -->
-<div layout:fragment="mainContent" xmlns:layout="http://www.w3.org/1999/xhtml">
-    <div class="board">
-        <h1 th:text="${board != null ? board.name : '게시판 이름 없음'}"></h1>
-    </div>
-    <div class="posts">
-        <ul>
-            <li th:each="post : ${posts}">
-                <h2 th:text="${post.title}"></h2>
-                <p th:text="${post.content}"></p>
-            </li>
-        </ul>
-    </div>
+
+<div layout:fragment="content" class="container my-3">
+    <h1 class="text-center">Post 작성 중</h1>
+    <a href="/comment">Go to Comment List</a>
+
 </div>
 
 </body>

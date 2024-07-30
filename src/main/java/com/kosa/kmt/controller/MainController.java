@@ -1,31 +1,32 @@
 package com.kosa.kmt.controller;
-
 import com.kosa.kmt.nonController.board.Board;
 import com.kosa.kmt.nonController.board.BoardService;
 import com.kosa.kmt.nonController.category.Category;
 import com.kosa.kmt.nonController.category.CategoryService;
 import com.kosa.kmt.nonController.member.Member;
+import com.kosa.kmt.nonController.member.MemberRepository;
 import com.kosa.kmt.nonController.member.MemberService;
 import com.kosa.kmt.nonController.post.Post;
 import com.kosa.kmt.nonController.post.PostService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 @Controller
 public class MainController {
     private final MemberService memberService;
-
     @Autowired
     private BoardService boardService;
 
@@ -34,6 +35,10 @@ public class MainController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
 
     public MainController(MemberService memberService) {
         this.memberService = memberService;
@@ -64,7 +69,8 @@ public class MainController {
 //    }
 
     @GetMapping("/kommunity/main")
-    public String main(@RequestParam(value = "categoryId", required = false) Long categoryId, Model model) throws SQLException {
+    public String main(@RequestParam(value = "categoryId", required = false) Long categoryId, Model model) throws 
+    {
         List<Board> boards = boardService.findAllBoards();
         Map<Long, List<Category>> boardCategories = boards.stream()
                 .collect(Collectors.toMap(Board::getBoardId, categoryService::findCategoriesByBoard));
@@ -86,11 +92,35 @@ public class MainController {
 
         model.addAttribute("boards", boards);
         model.addAttribute("boardCategories", boardCategories);
-        model.addAttribute("posts", posts);
-        optionalBoard.ifPresent(board -> model.addAttribute("board", board)); // 모델에 board 객체 추가
+
+        model.addAttribute("member", getCurrentMember());
         return "danamusup";
     }
 
+    private Member getCurrentMember() {
+        // Get the authentication object
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // Check if the authentication object is not null and is authenticated
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetails) {
+                UserDetails userDetails = (UserDetails) principal;
+                String username = userDetails.getUsername();
+
+                Member member = memberRepository.findByEmail(username).orElse(null);
+                if (member != null) {
+                    System.out.println(member.getMemberId());
+                    System.out.println(member.getEmail());
+                    System.out.println(member.getName());
+                    System.out.println(member.getNickname()); // 닉네임 출력
+                    return member;
+                }
+
+            }
+        }
+        return null;
+    }
 
 
     @GetMapping("/login")
