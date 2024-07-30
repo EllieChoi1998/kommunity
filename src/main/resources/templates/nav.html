@@ -13,7 +13,8 @@
             <div class="user-profile me-2">
                 <button id="profileBtn">
                     <img src="/images/defaultuser.png" alt="User" class="profile-logo">
-                    닉네임
+                    <!--닉네임-->
+                    <span id="navbar-nickname" th:text="${member.nickname}"></span>
                 </button>
                 <div id="profileMenuContainer" class="profile-menu hidden"></div>
             </div>
@@ -25,7 +26,7 @@
         <div class="collapse navbar-collapse justify-content-center order-lg-1" id="navbarNav">
             <ul class="nav nav-pills mb-3 flex-column flex-lg-row" id="pills-tab" role="tablist">
                 <!-- 보드 목록을 반복하여 각 보드에 대한 드롭다운 메뉴를 생성 -->
-                <li th:each="board : ${boards}" class="nav-item dropdown" role="presentation">
+                <li th:each="board : ${boards}" class="nav-item" role="presentation">
                     <!-- 보드 이름을 클릭할 수 있는 링크로 설정 -->
                     <a th:href="@{/category/{boardId}(boardId=${board.boardId})}" class="nav-link dropdown-toggle"
                        id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" th:text="${board.name}"></a>
@@ -48,4 +49,3 @@
 </nav>
 </body>
 </html>
-

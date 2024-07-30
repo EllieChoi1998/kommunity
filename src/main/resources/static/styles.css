@@ -10,9 +10,12 @@ body {
 .error{
     color: red;
 }
+
 .container {
     display: flex;
-    width: 70%;
+    width: 900px;
+    /*max-width: 800px; !* 최대 너비를 설정하여 너무 커지지 않도록 함 *!*/
+    margin: 100px; /* 가운데 정렬 */
     background-color: white;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     flex-wrap: wrap;
@@ -30,9 +33,25 @@ body {
     flex-direction: column;
     justify-content: center;
     width: 100%;
-    max-width: 400px;
+    max-width: 500px;
     position: relative;
 }
+
+/* 미디어 쿼리를 사용하여 일정 화면 크기 이하에서는 logo-box를 숨기고 login-box만 보이도록 설정 */
+@media (max-width: 400px) {
+    .container {
+        justify-content: center; /* 중앙 정렬 */
+    }
+
+    .logo-box {
+        display: none; /* logo-box를 숨김 */
+    }
+
+    .login-box {
+        max-width: 100%; /* login-box가 전체 너비를 차지하도록 설정 */
+    }
+}
+
 
 .small-logo {
     display: none;
