@@ -70,6 +70,7 @@ public class MainController {
             if (principal instanceof UserDetails) {
                 UserDetails userDetails = (UserDetails) principal;
                 String username = userDetails.getUsername();
+
                 Member member = memberRepository.findByEmail(username).orElse(null);
                 if (member != null) {
                     System.out.println(member.getMemberId());
@@ -78,6 +79,7 @@ public class MainController {
                     System.out.println(member.getNickname()); // 닉네임 출력
                     return member;
                 }
+
             }
         }
         return null;
