@@ -48,6 +48,9 @@
             text-align: center;
         }
     </style>
+    <title>My Page</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
 <div class="mypage-content">
@@ -59,12 +62,12 @@
     </div>
     <div id="nickname-change" class="hidden center">
         <p>새 닉네임을 입력하세요:</p>
-        <input type="text" id="new-nickname">
+        <input type="text" id="new-nickname" autocomplete="off" onfocus="clearInput(this)">
         <button onclick="submitNicknameChange()">닉네임 변경</button>
     </div>
     <div id="password-change" class="hidden center">
         <p>새 비밀번호를 입력하세요:</p>
-        <input type="password" id="new-password">
+        <input type="password" id="new-password" autocomplete="off" onfocus="clearInput(this)">
         <button onclick="submitPasswordChange()">비밀번호 변경</button>
     </div>
     <script>
@@ -77,6 +80,10 @@
                 document.getElementById('nickname-change').classList.add('hidden');
                 document.getElementById('password-change').classList.remove('hidden');
             }
+        }
+
+        function clearInput(input) {
+            input.value = '';
         }
 
         async function submitNicknameChange() {
