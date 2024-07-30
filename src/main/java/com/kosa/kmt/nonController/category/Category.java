@@ -23,4 +23,5 @@ public class Category {
     @ManyToOne
     @JoinColumn(name = "BOARD_ID", nullable = false)
     private Board board;
+
 }

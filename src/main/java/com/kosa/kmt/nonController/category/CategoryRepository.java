@@ -13,4 +13,5 @@ public interface CategoryRepository {
     List<Category> findByBoard(Board board);
     List<Category> findByBoardId(Long boardId);
     Optional<Category> findById(Long categoryId);
+    Optional<Category> findByIdAndBoard(Long id, Board board);
 }

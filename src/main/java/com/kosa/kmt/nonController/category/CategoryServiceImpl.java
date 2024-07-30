@@ -62,4 +62,9 @@ public class CategoryServiceImpl implements CategoryService {
     public Category findCategoryById(Long categoryId) {
         return categoryRepository.findById(categoryId).orElse(null);
     }
+
+    @Override
+    public Optional<Category> findCategoryByIdAndBoard(Long categoryId, Board board) {
+        return categoryRepository.findByIdAndBoard(categoryId, board);
+    }
 }

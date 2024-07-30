@@ -54,7 +54,7 @@ public class CommentServiceTests {
         testPost = new Post();
         testPost.setTitle("Test Post");
         testPost.setContent("Test Content");
-        testPost.setCategory(categoryRepository.findById(1).get());  // 예시 카테고리 ID
+        testPost.setCategory(categoryRepository.findById(1L).get());  // 예시 카테고리 ID
         testPost.setMember(testMember);
         testPost = postRepository.saveAndFlush(testPost);
     }

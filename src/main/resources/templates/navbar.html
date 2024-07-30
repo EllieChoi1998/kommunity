@@ -77,6 +77,12 @@
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="pills-jobtips-tab" href="/category/jobtips" role="tab" aria-controls="pills-jobtips" aria-selected="false">취업 꿀팁</a>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="pills-blank1-tab" href="#" role="tab" aria-controls="pills-codingtest" aria-selected="false">코딩 테스트 연습</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="pills-blank2-tab" href="#" role="tab" aria-controls="pills-jobtips" aria-selected="false">취업 꿀팁</a>
+                </li>
                 <li th:each="board : ${boards}" class="nav-item dropdown" role="presentation">
                     <a th:href="@{/category/{boardName}(boardName=${board.name})}" class="nav-link dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" th:text="${board.name}"></a>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">

@@ -8,6 +8,7 @@ import com.kosa.kmt.nonController.post.Post;
 import com.kosa.kmt.nonController.post.PostForm;
 import com.kosa.kmt.nonController.post.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -77,28 +79,6 @@ public class PostController {
         return "redirect:/posts";
     }
 
-    @GetMapping("/board/{boardId}")
-    public String getPostsByBoard(@PathVariable Long boardId, Model model) throws SQLException {
-        addCommonAttributes(model, boardId);
-
-        List<Post> posts = postService.getPostsByBoard(boardId);
-        model.addAttribute("posts", posts);
-        model.addAttribute("isAllCategories", true);
-        return "posts/boardPosts";
-    }
-
-    @GetMapping("/board/{boardId}/category/{categoryId}")
-    public String getPostsByCategory(@PathVariable Long boardId, @PathVariable Long categoryId, Model model) throws SQLException {
-        addCommonAttributes(model, boardId);
-
-        Category category = categoryService.findCategoryById(categoryId);
-        List<Post> posts = postService.getPostsByCategory(categoryId);
-        model.addAttribute("category", category);
-        model.addAttribute("posts", posts);
-        model.addAttribute("isAllCategories", false);
-        return "posts/boardPosts";
-    }
-
     private void addCommonAttributes(Model model, Long boardId) throws SQLException {
         List<Board> boards = boardService.findAllBoards();
         Board board = boardService.findBoardById(boardId);
@@ -111,5 +91,35 @@ public class PostController {
         model.addAttribute("board", board);
         model.addAttribute("categories", categories);
         model.addAttribute("boardCategories", boardCategories);
+    }
+
+    @GetMapping("/board/{boardId}")
+    public String getPostsByBoard(@PathVariable Long boardId, Model model) throws SQLException {
+        Optional<Board> optionalBoard = Optional.ofNullable(boardService.findBoardById(boardId));
+
+        if (!optionalBoard.isPresent()) {
+            return "error/404";
+        }
+
+        Board board = optionalBoard.get();
+        List<Post> posts = postService.getPostsByBoard(boardId);
+
+        addCommonAttributes(model, boardId);
+
+        model.addAttribute("board", board);
+        model.addAttribute("posts", posts);
+        model.addAttribute("isAllCategories", true);
+        return "posts/boardPosts";
+    }
+
+    @GetMapping("/board/{boardId}/category/{categoryId}")
+    public String getPostsByCategory(@PathVariable Long boardId, @PathVariable Long categoryId, Model model) throws SQLException {
+        Category category = categoryService.findCategoryById(categoryId);
+        List<Post> posts = postService.getPostsByCategory(categoryId);
+        addCommonAttributes(model, boardId);
+        model.addAttribute("category", category);
+        model.addAttribute("posts", posts);
+        model.addAttribute("isAllCategories", false);
+        return "posts/categoryPosts";
     }
 }

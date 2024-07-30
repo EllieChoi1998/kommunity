@@ -25,7 +25,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Navigation</title>
+    <title>Navigation Bar</title>
 </head>
 <body>
 <nav th:fragment="navbarFragment(boards, boardCategories)" class="navbar navbar-expand-lg navbar-light bg-light justify-content-between">
@@ -48,20 +48,21 @@
         </div>
         <div class="collapse navbar-collapse justify-content-center order-lg-1" id="navbarNav">
             <ul class="nav nav-pills mb-3 flex-column flex-lg-row" id="pills-tab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link active" id="pills-danamusup-tab" href="/category/danamusup" role="tab" aria-controls="pills-danamusup" aria-selected="true">대나무숲</a>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-codingtest-tab" href="/category/codingtest" role="tab" aria-controls="pills-codingtest" aria-selected="false">코딩 테스트 연습</a>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-jobtips-tab" href="/category/jobtips" role="tab" aria-controls="pills-jobtips" aria-selected="false">취업 꿀팁</a>
-                </li>
+                <!-- 보드 목록을 반복하여 각 보드에 대한 드롭다운 메뉴를 생성 -->
                 <li th:each="board : ${boards}" class="nav-item dropdown" role="presentation">
-                    <a th:href="@{/posts/board/{boardId}(boardId=${board.boardId})}" class="nav-link dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" th:text="${board.name}"></a>
+                    <!-- 보드 이름을 클릭할 수 있는 링크로 설정 -->
+                    <a th:href="@{/category/{boardId}(boardId=${board.boardId})}" class="nav-link dropdown-toggle"
+                       id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" th:text="${board.name}"></a>
+                    <!-- 드롭다운 메뉴 -->
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <!-- 전체 카테고리를 선택할 수 있는 항목 -->
+                        <li>
+                            <a th:href="@{/category/{boardId}(boardId=${board.boardId})}" class="dropdown-item">전체</a>
+                        </li>
+                        <!-- 해당 보드의 각 카테고리 목록을 반복하여 생성 -->
                         <li th:each="category : ${boardCategories[board.boardId]}" class="dropdown-item">
-                            <a th:href="@{/posts/board/{boardId}/category/{categoryId}(boardId=${board.boardId}, categoryId=${category.categoryId})}" th:text="${category.name}"></a>
+                            <a th:href="@{/category/{boardId}/{categoryId}(boardId=${board.boardId}, categoryId=${category.categoryId})}"
+                               th:text="${category.name}"></a>
                         </li>
                     </ul>
                 </li>

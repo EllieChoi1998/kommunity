@@ -1,19 +1,53 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="ko" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+
+<!--</head>-->
+<!--<body>-->
+<!--<div class="category">-->
+<!--    <div class="category">-->
+<!--        <ul class="list-group">-->
+<!--            <li class="list-group-item" th:each="category : ${categories}">-->
+<!--                <a th:href="@{/category/{boardName}/{categoryName}(boardName=${board.name}, categoryName=${category.name})}" th:text="${category.name}"></a>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </div>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <title>Category</title>
 </head>
 <body>
-<div class="category">
-    <div class="category">
-        <ul class="list-group">
-            <li class="list-group-item" th:each="category : ${categories}">
-                <a th:href="@{/category/{boardName}/{categoryName}(boardName=${board.name}, categoryName=${category.name})}" th:text="${category.name}"></a>
-            </li>
-        </ul>
+<!--<div class="category">-->
+<!--    <ul class="list-group">-->
+<!--        &lt;!&ndash; 전체 카테고리 추가 &ndash;&gt;-->
+<!--        <li class="list-group-item">-->
+<!--            <a th:href="@{/posts/board/{boardId}(boardId=${board.boardId})}">전체</a>-->
+<!--        </li>-->
+<!--        &lt;!&ndash; 각 게시판의 동적 카테고리 목록 &ndash;&gt;-->
+<!--        <li class="list-group-item" th:each="category : ${categories}">-->
+<!--            <a th:href="@{/category/{boardId}/{categoryId}(boardId=${board.boardId}, categoryId=${category.categoryId})}" th:text="${category.name}"></a>-->
+<!--        </li>-->
+<!--    </ul>-->
+<!--</div>-->
+<div class="category d-flex flex-row flex-wrap">
+    <div class="list-group-category d-flex flex-row">
+        <a class="list-group-category-item list-group-item-action"
+           th:href="@{/posts/board/{boardId}(boardId=${board.boardId})}">전체</a>
+        <a class="list-group-category-item list-group-item-action" th:each="category : ${categories}"
+           th:href="@{/category/{boardId}/{categoryId}(boardId=${board.boardId}, categoryId=${category.categoryId})}"
+           th:text="${category.name}"></a>
     </div>
 </div>
+
 </body>
 </html>
+
