@@ -4,6 +4,7 @@ import com.kosa.kmt.exceptions.DataNotFoundException;
 import com.kosa.kmt.nonController.member.signup.email.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +17,7 @@ import java.util.Random;
 @Service
 @Transactional
 public class MemberServiceImpl implements MemberService {
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
     @Autowired
     private MailService mailService;
@@ -141,6 +142,21 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public Boolean updatePassword(Member member, String newPassword, String oldPassword) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+        // 사용자가 입력한 현재 비밀번호를 확인
+        if (encoder.matches(oldPassword, member.getPassword())) {
+            // 새로운 비밀번호를 인코딩하여 저장
+            String encodedNewPassword = encoder.encode(newPassword);
+            member.setPassword(encodedNewPassword);
+            memberRepository.save(member);
+            return true;
+        }
+        return false; // 현재 비밀번호가 일치하지 않을 경우
+    }
+
+    @Override
     public Member saveMember(String name, String email, String password){
         Member member = new Member();
         member.setEmail(email);
@@ -178,4 +194,21 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
+    @Override
+    public Member findByEmail(String email) {
+        return memberRepository.findByEmail(email).orElseThrow(() -> new DataNotFoundException("Member not found"));
+    }
+
+    @Override
+    public void save(Member member) {
+        memberRepository.save(member);
+    }
+
+//    @Autowired
+//    private PasswordEncoder passwordEncoder; // PasswordEncoder 빈 주입 -> 중복이라서 실행이 X
+//
+//    @Override
+//    public Boolean verifyPassword(Member member, String password) {
+//        return passwordEncoder.matches(password, member.getPassword());
+//    }
 }

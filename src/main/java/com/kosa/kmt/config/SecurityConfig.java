@@ -4,6 +4,7 @@ import com.kosa.kmt.nonController.member.signup.UserRole;
 import com.kosa.kmt.nonController.member.signup.UserSecurityService;
 import com.kosa.kmt.nonController.member.signup.oAuth.CustomOAuth2LoginSuccessHandler;
 import com.kosa.kmt.nonController.member.signup.oAuth.CustomOAuth2UserService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,9 +27,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
+
     private final UserSecurityService userSecurityService;
     private final WebConfig webConfig;
 //    private CustomFilter filter = new CustomFilter();
+
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -39,6 +42,7 @@ public class SecurityConfig {
 //                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .cors(cors -> cors.configurationSource(webConfig.getCorsConfiguration()))
                 .addFilterAfter(new CsrfCookieGeneratorFilter(), org.springframework.security.web.csrf.CsrfFilter.class)
+
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers(
                                 "/kommunity",

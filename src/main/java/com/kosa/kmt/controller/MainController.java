@@ -1,5 +1,4 @@
 package com.kosa.kmt.controller;
-
 import com.kosa.kmt.nonController.board.Board;
 import com.kosa.kmt.nonController.board.BoardService;
 import com.kosa.kmt.nonController.category.Category;
@@ -17,15 +16,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 @Controller
 public class MainController {
     private final MemberService memberService;
-
     @Autowired
     private BoardService boardService;
 
@@ -74,11 +70,16 @@ public class MainController {
             if (principal instanceof UserDetails) {
                 UserDetails userDetails = (UserDetails) principal;
                 String username = userDetails.getUsername();
-                Member member = memberRepository.findByEmail(username).get();
-                System.out.println(member.getMemberId());
-                System.out.println(member.getEmail());
-                System.out.println(member.getName());
-                return member;
+
+                Member member = memberRepository.findByEmail(username).orElse(null);
+                if (member != null) {
+                    System.out.println(member.getMemberId());
+                    System.out.println(member.getEmail());
+                    System.out.println(member.getName());
+                    System.out.println(member.getNickname()); // 닉네임 출력
+                    return member;
+                }
+
             }
         }
         return null;

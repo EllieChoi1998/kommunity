@@ -13,30 +13,42 @@
         .profile-content .row {
             display: flex;
             gap: 10px;
+            justify-content: center; /* 버튼들을 가운데 정렬 */
+            margin-left: 0; /* margin-left 제거 */
         }
 
-        .profile-content .row button {
+        .profile-content .row button,
+        .profile-content .row a {
             flex: 1;
             white-space: nowrap; /* 텍스트 줄바꿈 방지 */
         }
 
-        .profile-content button {
+        .profile-content button,
+        .profile-content .row a button {
             display: block;
             width: 100%;
             padding: 10px;
             background-color: #f8f8f8;
-            border: none;
+            border: 1px solid #888888; /* 테두리 추가 */
             cursor: pointer;
             border-radius: 5px;
+            text-align: center; /* 텍스트 가운데 정렬 */
+        }
+
+        .profile-content .row a {
+            display: flex;
         }
     </style>
 </head>
 <body>
 <div class="profile-content">
     <div class="row">
-        <button>프로필 관리</button>
-        <a th:href="@{/logout}"> <button>로그아웃</button></a>
-        <button>로그아웃</button>
+        <button id="mypageButton">
+            프로필 관리
+        </button>
+        <a th:href="@{/logout}">
+            <button>로그아웃</button>
+        </a>
     </div>
     <button>내 게시글 관리</button>
     <button>내 댓글 관리</button>

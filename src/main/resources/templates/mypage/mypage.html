@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .mypage-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .mypage-content .row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-left: 0;
+        }
+
+        .mypage-content .row button,
+        .mypage-content .row a {
+            flex: 1;
+            white-space: nowrap;
+        }
+
+        .mypage-content button,
+        .mypage-content .row a button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border: 1px solid #888888;
+            cursor: pointer;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .mypage-content .row a {
+            display: flex;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="mypage-content">
+    <span th:text="${member.name} + ' (KOSA MSA5기)'"></span>
+    <span th:text="${member.email}"></span>
+    <div id="buttons-row" class="row">
+        <button onclick="showChangeForm('nickname')">닉네임 변경</button>
+        <button onclick="showChangeForm('password')">비밀번호 변경</button>
+    </div>
+    <div id="nickname-change" class="hidden center">
+        <p>새 닉네임을 입력하세요:</p>
+        <input type="text" id="new-nickname">
+        <button onclick="submitNicknameChange()">닉네임 변경</button>
+    </div>
+    <div id="password-change" class="hidden center">
+        <p>새 비밀번호를 입력하세요:</p>
+        <input type="password" id="new-password">
+        <button onclick="submitPasswordChange()">비밀번호 변경</button>
+    </div>
+    <script>
+        function showChangeForm(action) {
+            document.getElementById('buttons-row').classList.add('hidden');
+            if (action === 'nickname') {
+                document.getElementById('password-change').classList.add('hidden');
+                document.getElementById('nickname-change').classList.remove('hidden');
+            } else if (action === 'password') {
+                document.getElementById('nickname-change').classList.add('hidden');
+                document.getElementById('password-change').classList.remove('hidden');
+            }
+        }
+
+        async function submitNicknameChange() {
+            const nickname = document.getElementById('new-nickname').value;
+
+            // 닉네임 변경 전 확인 메시지
+            const confirmed = confirm('정말로 닉네임을 변경하시겠습니까?');
+            if (!confirmed) {
+                return; // 사용자가 확인하지 않으면 닉네임 변경 중단
+            }
+
+            const response = await fetch('/update-nickname', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    nickname: nickname
+                })
+            });
+            const result = await response.json();
+            if (result.success) {
+                alert('닉네임이 성공적으로 변경되었습니다.');
+                document.querySelector('.user-profile span').textContent = nickname;
+            } else {
+                alert(result.message || '닉네임 변경에 실패했습니다.');
+            }
+        }
+
+        async function submitPasswordChange() {
+            const newPassword = document.getElementById('new-password').value;
+
+            // 비밀번호 변경 전 확인 메시지
+            const confirmed = confirm('정말로 비밀번호를 변경하시겠습니까?');
+            if (!confirmed) {
+                return; // 사용자가 확인하지 않으면 비밀번호 변경 중단
+            }
+
+            const response = await fetch('/update-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    newPassword: newPassword
+                })
+            });
+            const result = await response.json();
+            if (result.success) {
+                alert('비밀번호가 성공적으로 변경되었습니다.');
+                // 로그아웃 처리
+                await fetch('/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                });
+                window.location.href = '/login'; // 로그아웃 후 로그인 페이지로 리디렉션
+            } else {
+                alert(result.message || '비밀번호 변경에 실패했습니다.');
+            }
+        }
+    </script>
+</div>
+</body>
+</html>
