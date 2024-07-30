@@ -1,25 +1,29 @@
 $(document).ready(function() {
-    function getCsrfToken() {
-        var name = 'X-CSRF-TOKEN=';
-        var decodedCookie = decodeURIComponent(document.cookie);
-        var ca = decodedCookie.split(';');
-        for (var i = 0; i < ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) == ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) == 0) {
-                return c.substring(name.length, c.length);
-            }
-        }
-        return "";
-    }
 
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': getCsrfToken()
-        }
-    });
+    var header = $("meta[name='_csrf_header']").attr('content');
+    var token = $("meta[name='_csrf']").attr('content');
+
+    // function getCsrfToken() {
+    //     var name = 'X-CSRF-TOKEN=';
+    //     var decodedCookie = decodeURIComponent(document.cookie);
+    //     var ca = decodedCookie.split(';');
+    //     for (var i = 0; i < ca.length; i++) {
+    //         var c = ca[i];
+    //         while (c.charAt(0) == ' ') {
+    //             c = c.substring(1);
+    //         }
+    //         if (c.indexOf(name) == 0) {
+    //             return c.substring(name.length, c.length);
+    //         }
+    //     }
+    //     return "";
+    // }
+    //
+    // $.ajaxSetup({
+    //     headers: {
+    //         'X-CSRF-TOKEN': getCsrfToken()
+    //     }
+    // });
 
     $('.chat-header').on('click', function() {
         $('#chat-container').toggleClass('expanded');
@@ -71,11 +75,15 @@ $(document).ready(function() {
         if (message) {
             $.ajax({
                 url: '/kommunity/chat/sendChat',
+
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ content: message }),
                 xhrFields: {
                     withCredentials: true
+                },
+                beforeSend: function(xhr){
+                    xhr.setRequestHeader(header, token);
                 },
                 success: function(response) {
                     if (response && response.chatContent) {

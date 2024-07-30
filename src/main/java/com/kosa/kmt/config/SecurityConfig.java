@@ -1,14 +1,9 @@
 package com.kosa.kmt.config;
 
+import com.kosa.kmt.nonController.member.signup.UserRole;
+import com.kosa.kmt.nonController.member.signup.UserSecurityService;
 import com.kosa.kmt.nonController.member.signup.oAuth.CustomOAuth2LoginSuccessHandler;
 import com.kosa.kmt.nonController.member.signup.oAuth.CustomOAuth2UserService;
-import com.kosa.kmt.nonController.member.signup.UserRole;
-import com.kosa.kmt.nonController.member.signup.UserSecurityService; // UserSecurityService 추가
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,13 +16,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfToken;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.filter.OncePerRequestFilter;
-
-import java.io.IOException;
 
 @RequiredArgsConstructor
 @Configuration
@@ -37,6 +28,7 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final UserSecurityService userSecurityService;
     private final WebConfig webConfig;
+//    private CustomFilter filter = new CustomFilter();
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -44,10 +36,13 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 )
+//                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .cors(cors -> cors.configurationSource(webConfig.getCorsConfiguration()))
                 .addFilterAfter(new CsrfCookieGeneratorFilter(), org.springframework.security.web.csrf.CsrfFilter.class)
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers(
+                                "/kommunity",
+                                "/",
                                 "/login",
                                 "/kommunity/signup",
                                 "/kommunity/validateEmail",
