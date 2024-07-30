@@ -39,6 +39,9 @@
     </div>
 </div>
 
+<!-- 프로필 메뉴 컨테이너 -->
+<div id="profileMenuContainer" class="profile-menu hidden"></div>
+
 <!-- Bootstrap JS -->
 <script th:src="@{/bootstrap.bundle.min.js}"></script>
 <script th:src="@{/bootstrap.min.js}"></script>
@@ -75,46 +78,46 @@
 
         // 프로필 메뉴 외부 클릭 시 숨기기
         $(document).click(function(event) {
-            if (!$(event.target).closest('#profileMenuContainer, #profileBtn').length) {
+            if (!$(event.target).closest('#profileMenuContainer, #profileBtn, #mypageButton').length) {
                 $('#profileMenuContainer').addClass('hidden').removeClass('visible');
+                $('#mypage-menu').hide(); // 마이페이지 메뉴도 숨기기
             }
         });
-    });
 
-    $(document).ready(function() {
+        // 프로필 관리 버튼 클릭 시 마이페이지 메뉴 로드 및 표시
+        $(document).on('click', '#mypageButton', function() {
+            $.get('/mypage-menu', function(data) {
+                $('#profileMenuContainer').html(data).slideDown(); // 메뉴를 항상 보이도록
+            });
+        });
+
+        // 보드 클릭 시 카테고리 로드
+        $('#pills-tab a[data-board-id]').on('click', function () {
+            var boardId = $(this).data('board-id');
+            $.get('/categories/' + boardId, function (data) {
+                $('#category-container').html(data);
+            });
+        });
+
+        // 채팅창 토글
+        $('.chat-header').on('click', function() {
+            $('#chat-container').toggleClass('expanded');
+        });
+
+        // 채팅 jQuery
         $('#chat-send').on('click', function() {
-            var message = $('#chat-input').val();
-            if (message.trim() !== '') {
-                $('#chat-messages').append('<div>' + message + '</div>');
+            var message = $('#chat-input').val(); // #chat-input 입력 필드의 값을 가져옴
+            if (message.trim() !== '') { // 메시지가 공백이 아닌 경우
+                $('#chat-messages').append('<div class="chat-message">' + message + '</div>');
                 $('#chat-input').val('');
             }
         });
 
         $('#chat-input').on('keypress', function(e) {
-            if (e.which === 13) { // Enter key pressed
-                $('#chat-send').click();
+            if (e.which === 13) { // Enter 키(키 코드 13)를 눌렀을 때
+                $('#chat-send').click(); // #chat-send 버튼의 클릭 이벤트를 트리거
             }
         });
-    });
-
-    // 채팅창 토글
-    $('.chat-header').on('click', function() {
-        $('#chat-container').toggleClass('expanded');
-    });
-
-    // 채팅 jQuery
-    $('#chat-send').on('click', function() {
-        var message = $('#chat-input').val(); // #chat-input 입력 필드의 값을 가져옴
-        if (message.trim() !== '') { // 메시지가 공백이 아닌 경우
-            $('#chat-messages').append('<div class="chat-message">' + message + '</div>');
-            $('#chat-input').val('');
-        }
-    });
-
-    $('#chat-input').on('keypress', function(e) {
-        if (e.which === 13) { // Enter 키(키 코드 13)를 눌렀을 때
-            $('#chat-send').click(); // #chat-send 버튼의 클릭 이벤트를 트리거
-        }
     });
 </script>
 <!-- JavaScript End -->

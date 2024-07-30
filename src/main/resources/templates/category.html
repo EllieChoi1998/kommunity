@@ -3,16 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 </head>
 <body>
-<div class="category">
-    <div class="category">
-        <ul class="list-group">
-            <li class="list-group-item" th:each="category : ${categories}">
-                <a th:href="@{/category/{boardName}/{categoryName}(boardName=${board.name}, categoryName=${category.name})}" th:text="${category.name}"></a>
-            </li>
-        </ul>
+<div class="category d-flex flex-row flex-wrap">
+    <div class="list-group-category d-flex flex-row">
+        <a class="list-group-category-item list-group-item-action" th:each="category : ${categories}"
+           th:href="@{/category/{boardName}/{categoryName}(boardName=${board.name}, categoryName=${category.name})}"
+           th:text="${category.name}"></a>
     </div>
 </div>
 </body>

@@ -1,9 +1,12 @@
 package com.kosa.kmt.nonController.post;
 
+import com.kosa.kmt.nonController.category.Category;
+import com.kosa.kmt.nonController.category.CategoryRepository;
 import com.kosa.kmt.nonController.hashtag.HashtagRepository;
 import com.kosa.kmt.nonController.hashtag.PostHashtag;
 import com.kosa.kmt.nonController.hashtag.PostHashtagRepository;
 import com.kosa.kmt.nonController.hashtag.PostHashtagServiceImpl;
+import com.kosa.kmt.nonController.member.Member;
 import com.kosa.kmt.nonController.member.MemberRepository;
 import com.kosa.kmt.nonController.post.Post;
 import com.kosa.kmt.nonController.post.PostRepository;
@@ -35,15 +38,26 @@ public class PostHashtagServiceImplTest {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     private Post post;
 
     @BeforeEach
     public void setUp() {
+        Member member = new Member();
+        member.setName("Test Member");
+        member = memberRepository.save(member);
+
+        Category category = new Category();
+        category.setName("Test Category");
+        category = categoryRepository.saveCategory(category);
+
         post = new Post();
         post.setTitle("Test Title");
         post.setContent("Test Content");
-        post.setMember(memberRepository.findById(1).get());
-        post.setCategoryId(1);
+        post.setMember(member);  // Member 설정
+        post.setCategory(category);  // Category 설정
         postRepository.save(post);
     }
 
