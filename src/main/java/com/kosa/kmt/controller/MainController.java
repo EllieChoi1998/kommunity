@@ -69,7 +69,7 @@ public class MainController {
 //    }
 
     @GetMapping("/kommunity/main")
-    public String main(@RequestParam(value = "categoryId", required = false) Long categoryId, Model model) throws 
+    public String main(@RequestParam(value = "categoryId", required = false) Long categoryId, Model model) throws Exception
     {
         List<Board> boards = boardService.findAllBoards();
         Map<Long, List<Category>> boardCategories = boards.stream()
