@@ -6,27 +6,17 @@
     <title th:text="${title}">Posts</title>
     <!-- Bootstrap CSS 추가 -->
     <link rel="stylesheet" href="/css/posts.css"/>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
 </head>
 <body>
-
-<div layout:fragment="sidebarLeft">
-    <div th:replace="~{sidebars/left-sidebar :: leftSidebarFragment}"></div>
-</div>
-
-<div layout:fragment="sidebarRight">
-    <div th:replace="~{sidebars/right-sidebar :: rightSidebarFragment}"></div>
-</div>
 
 <!-- 메인 컨텐츠 부분 시작 -->
 <div layout:fragment="content" class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 th:text="${board.name}">Board Name</h1>
-            <h2 th:if="${isAllCategories}" th:text="'전체 게시판'"></h2>
-            <h2 th:if="${category != null}" th:text="'Category: ' + ${category.name}"></h2>
-        </div>
+<!--        <div>-->
+<!--            <h1 th:text="${board.name}">Board Name</h1>-->
+<!--            <h2 th:if="${isAllCategories}" th:text="'전체 게시판'"></h2>-->
+<!--            <h2 th:if="${category != null}" th:text="'Category: ' + ${category.name}"></h2>-->
+<!--        </div>-->
         <div>
             <a th:if="${isAllCategories}" th:href="@{'/posts/new/' + ${board.boardId}}" class="btn btn-primary">
                 글쓰기
@@ -37,13 +27,17 @@
         </div>
     </div>
     <div class="card-container">
-        <div th:each="post : ${posts}">
-            <a th:href="@{'/posts/' + ${post.id}}" class="card-link">
+        <div th:each="postForm : ${posts}">
+            <a th:href="@{'/posts/' + ${postForm.id}}" class="card-link">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title" th:text="${post.title}">Post Title</h5>
-                        <p class="card-text" th:text="${post.content}">Post Content</p>
-                        <small class="text-muted post-date" th:text="${post.postDate}">Post Date</small>
+                        <h5 class="card-title" th:text="${postForm.title}">Post Title</h5>
+                        <!-- 마크다운으로 작성된 콘텐츠를 HTML로 변환하여 출력 -->
+                        <div class="card-text" th:utext="${postForm.renderedContent}">Post Content</div> <!-- 수정: th:text에서 th:utext로 변경하여 HTML로 변환된 콘텐츠 출력 -->
+                        <small class="text-muted post-date" th:text="${postForm.postDate}">Post Date</small>
+                        <div class="hashtag-container">
+                            <span class="hashtag" th:each="hashtag : ${postForm.hashtags}" th:text="'#' + ${hashtag.hashtag.name}"></span>
+                        </div>
                     </div>
                 </div>
             </a>

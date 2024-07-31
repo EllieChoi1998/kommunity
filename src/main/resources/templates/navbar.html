@@ -30,7 +30,9 @@
                     <!-- 보드 이름을 클릭할 수 있는 링크로 설정 -->
                     <a th:href="@{/category/{boardId}(boardId=${board.boardId})}"
                        class="nav-link"
+
                        th:classappend="${board.boardId == selectedBoardId} ? 'active' : ''"
+
                        th:text="${board.name}"
                        role="tab">
                     </a>

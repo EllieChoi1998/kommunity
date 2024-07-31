@@ -375,3 +375,25 @@
     padding: 20px;
     margin: 20px 0;
 }
+
+.search-result-item {
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin: 2px 0;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* 호버 스타일 */
+.search-result-item:hover {
+    background-color: #f0f0f0; /* 마우스를 올렸을 때 배경색 */
+    color: #333; /* 마우스를 올렸을 때 텍스트 색상 */
+}
+
+/* 강조된 항목 스타일 */
+.search-result-item.highlighted {
+    background-color: #007bff; /* 강조된 배경색 */
+    color: #fff; /* 강조된 텍스트 색상 */
+    font-weight: bold; /* 강조된 항목을 굵게 표시 */
+}
+

@@ -20,7 +20,7 @@
                 <div class="card my-3">
                     <div class="card-body">
                         <div class="post-content">
-                            <div class="card-text" th:text="${post.content}"></div>
+                            <div class="card-text" th:utext="${renderedContent}"></div>
                         </div>
                         <div class="post-meta">
                             <small class="text-muted"

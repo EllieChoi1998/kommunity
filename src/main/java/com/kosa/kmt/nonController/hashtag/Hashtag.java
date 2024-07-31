@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Setter
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Hashtag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
