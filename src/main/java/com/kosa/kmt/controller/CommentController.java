@@ -24,6 +24,11 @@ public class CommentController {
     private final MemberRepository memberRepository;
     private final CommentLikeOrHateService commentLikeOrHateService;
 
+    @GetMapping("/post/{postId}")
+    public List<PostComment> getCommentsByPostId(@PathVariable Long postId) {
+        return commentService.getCommentsByPostId(postId);
+    }
+
     // 댓글 추가
     @PostMapping("/create")
     public String createComment(@RequestParam Long postId, @RequestParam Integer memberId, @RequestParam String content) {

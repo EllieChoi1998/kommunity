@@ -4,8 +4,9 @@ import com.kosa.kmt.nonController.board.Board;
 import com.kosa.kmt.nonController.board.BoardService;
 import com.kosa.kmt.nonController.category.Category;
 import com.kosa.kmt.nonController.category.CategoryService;
+import com.kosa.kmt.nonController.comment.CommentService;
+import com.kosa.kmt.nonController.comment.PostComment;
 import com.kosa.kmt.nonController.member.Member;
-import com.kosa.kmt.nonController.member.MemberService;
 import com.kosa.kmt.nonController.post.Post;
 import com.kosa.kmt.nonController.post.PostForm;
 import com.kosa.kmt.nonController.post.PostService;
@@ -16,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -32,6 +34,8 @@ public class PostController {
 
     private final CategoryService categoryService;
 
+    private final CommentService commentService;
+
     private final MainController mainController;
 
     @GetMapping
@@ -44,9 +48,17 @@ public class PostController {
     @GetMapping("/{id}")
     public String getPostById(@PathVariable Long id, Model model) throws SQLException {
         Post post = postService.getPostById(id);
+        Member member = mainController.getCurrentMember(); // 현재 사용자를 가져오는 로직
+        List<PostComment> comments = commentService.getCommentsByPostId(id); // Comment 서비스가 있다고 가정합니다.
+
+        addCommonAttributes(model, post.getCategory().getBoard().getBoardId());
+
         model.addAttribute("post", post);
+        model.addAttribute("comments", comments);
+        model.addAttribute("member", member);
         return "posts/detail";
     }
+
 
     @GetMapping("/new")
     public String createPostForm(Model model) {
@@ -138,4 +150,5 @@ public class PostController {
         model.addAttribute("isAllCategories", false);
         return "posts/posts";
     }
+
 }
