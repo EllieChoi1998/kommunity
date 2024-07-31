@@ -77,7 +77,7 @@ public class ChatController {
                 chat.setChatDateTime(LocalDateTime.now());
                 chat.setMember(member);
 
-                Long savedChatId = chatService.saveChat(chat, currentMember.getMemberId());
+                Long savedChatId = chatService.saveChat(chat, member.getMemberId());
                 if (savedChatId != -1) {
                     chatDTO.setChatWriterName(member.getName());
                     chatDTO.setChatWriterId(member.getMemberId());
