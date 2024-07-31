@@ -163,6 +163,7 @@ public class PostController {
 
         model.addAttribute("board", board);
         model.addAttribute("posts", posts);
+        model.addAttribute("selectedBoardId", boardId);
         model.addAttribute("isAllCategories", true);
         return "posts/posts";
     }
@@ -187,6 +188,7 @@ public class PostController {
 
         model.addAttribute("category", category);
         model.addAttribute("posts", posts);
+        model.addAttribute("selectedBoardId", boardId);
         model.addAttribute("isAllCategories", false);
         return "posts/posts";
     }
