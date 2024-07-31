@@ -3,10 +3,13 @@ import com.kosa.kmt.nonController.board.Board;
 import com.kosa.kmt.nonController.board.BoardService;
 import com.kosa.kmt.nonController.category.Category;
 import com.kosa.kmt.nonController.category.CategoryService;
+import com.kosa.kmt.nonController.hashtag.Hashtag;
+import com.kosa.kmt.nonController.hashtag.HashtagRepository;
 import com.kosa.kmt.nonController.member.Member;
 import com.kosa.kmt.nonController.member.MemberRepository;
 import com.kosa.kmt.nonController.member.MemberService;
 import com.kosa.kmt.nonController.post.Post;
+import com.kosa.kmt.nonController.post.PostRepository;
 import com.kosa.kmt.nonController.post.PostService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -39,6 +43,8 @@ public class MainController {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private HashtagRepository hashtagRepository;
 
     public MainController(MemberService memberService) {
         this.memberService = memberService;
@@ -55,18 +61,6 @@ public class MainController {
         return "redirect:/kommunity"; // 리디렉션 설정
     }
 
-//    @GetMapping("/kommunity/main")
-//    public String main(Model model) {
-//        List<Board> boards = boardService.findAllBoards();
-//        Map<Long, List<Category>> boardCategories = boards.stream()
-//                .collect(Collectors.toMap(Board::getBoardId, categoryService::findCategoriesByBoard));
-//
-//        System.out.println("boardCategories: " + boardCategories);
-//
-//        model.addAttribute("boards", boards);
-//        model.addAttribute("boardCategories", boardCategories);
-//        return "danamusup";
-//    }
 
     @GetMapping("/kommunity/main")
     public String main(@RequestParam(value = "categoryId", required = false) Long categoryId, Model model) throws Exception
@@ -94,6 +88,19 @@ public class MainController {
         model.addAttribute("boardCategories", boardCategories);
 
         model.addAttribute("member", getCurrentMember());
+
+
+        List<Hashtag> hashtags = hashtagRepository.findAll();
+
+        Map<String, Integer> hashtagCount = new HashMap<>();
+
+        for (Hashtag hashtag : hashtags) {
+            hashtagCount.put(hashtag.getName(), hashtagCount.getOrDefault(hashtag.getName(), 0) + 1);
+        }
+
+        model.addAttribute("hashtags", hashtagCount);
+
+
         return "danamusup";
     }
 
@@ -110,10 +117,7 @@ public class MainController {
 
                 Member member = memberRepository.findByEmail(username).orElse(null);
                 if (member != null) {
-                    System.out.println(member.getMemberId());
-                    System.out.println(member.getEmail());
-                    System.out.println(member.getName());
-                    System.out.println(member.getNickname()); // 닉네임 출력
+
                     return member;
                 }
 
@@ -137,22 +141,22 @@ public class MainController {
             case 1:
                 return "redirect:/home"; // 로그인 성공 시 리다이렉트 경로
             case 0:
-                System.out.println("로그인 시간 업데이트 실패");
+
                 model.addAttribute("error", "로그인 시간 업데이트에 실패했습니다.");
                 break;
             case -1:
-                System.out.println("비밀번호 불일치");
+
                 model.addAttribute("error", "비밀번호가 일치하지 않습니다.");
                 break;
 
             case -2:
-                System.out.println("이메일 없음");
+
                 model.addAttribute("error", "이메일을 찾을 수 없습니다.");
                 System.out.println(model.getAttribute("error"));
                 break;
 
             default:
-                System.out.println("Unexpected Error");
+
                 model.addAttribute("error", "알 수 없는 오류가 발생했습니다.");
                 break;
 

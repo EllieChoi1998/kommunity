@@ -43,6 +43,20 @@ public class MemberSingupController {
         return "redirect:/signup";
     }
 
+    @GetMapping("/change-pw")
+    public String change_password() {
+        return "member/change-password";
+    }
+
+    @PostMapping("/change-pw")
+    public String change_password(@RequestParam String email, Model model){
+        Boolean sendSuccess = this.sendCodeToEmail(email);
+        if(sendSuccess){
+            return "signup/validateEmail";
+        }
+        return "redirect:/change-pw";
+    }
+
     private Boolean sendCodeToEmail(String email) {
         String sentCode = memberService.sendCodeToEmail(email);
         if (sentCode.equals("-1")){
