@@ -140,4 +140,28 @@ public class CommentController {
         commentLikeOrHateService.hatePostComment(comment, member);
         return ResponseEntity.ok().build();
     }
+
+    // 댓글 정렬 기능 추가
+    @GetMapping("/sorted")
+    public String getSortedComments(@RequestParam Long postId,
+                                    @RequestParam String order,
+                                    Model model) throws SQLException {
+        List<PostComment> comments;
+        if ("newest".equals(order)) {
+            comments = commentService.getAllCommentsByNewest();
+        } else {
+            comments = commentService.getAllCommentsByOldest();
+        }
+
+        Post post = postService.getPostById(postId);
+        Member member = mainController.getCurrentMember();
+
+        mainController.addCommonAttributes(model, post.getCategory().getBoard().getBoardId());
+
+        model.addAttribute("post", post);
+        model.addAttribute("comments", comments);
+        model.addAttribute("member", member);
+        model.addAttribute("commentForm", new CommentForm());
+        return "posts/detail";
+    }
 }
