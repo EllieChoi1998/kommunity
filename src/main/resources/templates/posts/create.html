@@ -4,38 +4,53 @@
 <head>
     <meta charset="UTF-8">
     <title>Create Post</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/create.css">
 </head>
 <body>
-<div layout:fragment="content">
-    <h1>Create New Post</h1>
-    <form th:action="@{/posts/new}" th:object="${postForm}" method="post">
-        <div>
-            <label for="title">Title:</label>
-            <input type="text" id="title" th:field="*{title}" required/>
-        </div>
-        <div>
-            <label for="content">Content:</label>
-            <textarea id="content" th:field="*{content}" required></textarea>
-        </div>
-        <div>
-            <label>Categories:</label>
-            <div th:each="category : ${categories}">
-                <input type="radio" th:field="*{categoryId}" th:value="${category.categoryId}" th:id="'category-' + ${category.categoryId}"
-                       th:checked="${category.categoryId == postForm.categoryId}" required/>
-                <label th:for="'category-' + ${category.categoryId}" th:text="${category.name}"></label>
+<div layout:fragment="content" class="container mt-5">
+    <div class="form-container">
+        <div class="card">
+            <div class="card-body">
+                <button type="button" class="close-btn" onclick="window.history.back();">X</button>
+                <form th:action="@{/posts/new}" th:object="${postForm}" method="post">
+                    <div class="form-group">
+                        <label>게시 위치</label>
+                        <div class="radio-container">
+                            <div class="custom-radio" th:each="category : ${categories}">
+                                <input type="radio" th:field="*{categoryId}" th:value="${category.categoryId}"
+                                       th:id="'category-' + ${category.categoryId}" required/>
+                                <label th:for="'category-' + ${category.categoryId}" th:text="${category.name}"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="title">제목</label>
+                        <input type="text" id="title" th:field="*{title}" class="form-control" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="content">내용</label>
+                        <textarea id="content" th:field="*{content}" class="form-control" rows="5" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="strHashtag">해시태그</label>
+                        <input type="text" id="strHashtag" th:field="*{strHashtag}" class="form-control"
+                               placeholder="#자소서 #지원동기" required/>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <input type="hidden" th:field="*{boardId}" th:value="${boardId}"/>
+                        <button type="submit" class="btn btn-primary">게시하기</button>
+                        <a th:href="@{'/posts/board/' + ${boardId}}" class="btn btn-secondary">글쓰기 취소</a>
+                    </div>
+                </form>
             </div>
         </div>
-        <div>
-            <input type="hidden" name="boardId" th:value="${boardId}"/>
-            <input type="hidden" name="categoryId" th:value="${categoryId}"/>
-            <label for="strHashtag">Hashtags (comma separated):</label>
-            <input type="text" id="strHashtag" th:field="*{strHashtag}" placeholder="e.g. hashtag1, hashtag2" required/>
-        </div>
-        <div>
-            <button type="submit">Create</button>
-        </div>
-    </form>
-    <a th:href="@{'/posts/board/' + ${boardId}}">Back to list</a>
+    </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>
 </html>
