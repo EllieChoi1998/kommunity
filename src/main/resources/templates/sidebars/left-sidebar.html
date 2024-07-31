@@ -13,9 +13,9 @@
 
     <ul class="list-group">
         <!-- Dynamic content -->
-        <li th:each="entry : ${hashtags}" class="list-group-item d-flex justify-content-between align-items-center">
-            <a th:href="@{'#' + ${entry.key}}" th:text="'# ' + ${entry.key}" class="stretched-link link-dark"></a>
-            <span th:text="${entry.value}" class="badge bg-primary rounded-pill"></span>
+        <li th:each="hashtag : ${hashtagDTO}" class="list-group-item d-flex justify-content-between align-items-center">
+            <a th:href="@{'#' + ${hashtag.name}}" th:text="'# ' + ${hashtag.name}" class="stretched-link link-dark"></a>
+            <span th:text="${hashtag.count}" class="badge bg-primary rounded-pill"></span>
         </li>
     </ul>
 </div>

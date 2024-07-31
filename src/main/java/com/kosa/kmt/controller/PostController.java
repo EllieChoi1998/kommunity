@@ -4,10 +4,12 @@ import com.kosa.kmt.nonController.board.Board;
 import com.kosa.kmt.nonController.board.BoardService;
 import com.kosa.kmt.nonController.category.Category;
 import com.kosa.kmt.nonController.category.CategoryService;
+import com.kosa.kmt.nonController.hashtag.*;
 import com.kosa.kmt.nonController.member.Member;
 import com.kosa.kmt.nonController.member.MemberService;
 import com.kosa.kmt.nonController.post.Post;
 import com.kosa.kmt.nonController.post.PostForm;
+import com.kosa.kmt.nonController.post.PostRepository;
 import com.kosa.kmt.nonController.post.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -33,6 +33,9 @@ public class PostController {
     private final CategoryService categoryService;
 
     private final MainController mainController;
+    private final PostRepository postRepository;
+    private final PostHashtagRepository postHashtagRepository;
+    private final HashtagRepository hashtagRepository;
 
     @GetMapping
     public String getAllPosts(Model model) throws SQLException {
@@ -83,6 +86,55 @@ public class PostController {
         return "redirect:/posts";
     }
 
+    private List<HashtagDTO> findAllHastags_by_boardId(List<Category> categories, Board board) throws SQLException {
+        Map<Long, Post> posts = new HashMap<>();
+        for (Category category : categories) {
+            List<Post> tmp = postRepository.findByCategoryCategoryId(category.getCategoryId());
+            for (Post post : tmp) {
+                if (!posts.containsKey(post.getId())) {
+                    posts.put(post.getId(), post);
+                }
+            }
+        }
+
+        Map<Long, HashtagDTO> foundHashtagDTOS = new HashMap<>();
+        for (Long postId : posts.keySet()) {
+            Post post = posts.get(postId);
+            List<PostHashtag> postHashtags = postHashtagRepository.findAllByPost_Id(postId);
+            if (postHashtags.size() > 0) {
+                for (PostHashtag postHashtag : postHashtags) {
+                    Long hashtagId = postHashtag.getHashtag().getId();
+                    Optional<Hashtag> optionalHashtag = hashtagRepository.findById(hashtagId);
+                    if (optionalHashtag.isPresent()) {
+                        String hashtagName = optionalHashtag.get().getName();
+                        if (foundHashtagDTOS.containsKey(hashtagId)) {
+                            HashtagDTO tmp = foundHashtagDTOS.get(hashtagId);
+                            tmp.addPosts(post);
+                            foundHashtagDTOS.replace(hashtagId, tmp);
+                        } else {
+                            HashtagDTO hashtagDTO = new HashtagDTO(hashtagName, hashtagId);
+                            foundHashtagDTOS.put(hashtagId, hashtagDTO);
+                            hashtagDTO.addPosts(post);
+                        }
+//                        System.out.println("+++++++++++++++++++++++++++++");
+//                        System.out.println(foundHashtagDTOS.get(hashtagId).getName() + "\t" + foundHashtagDTOS.get(hashtagId).getCount());
+                    } else {
+                        // hashtagId에 해당하는 Hashtag가 없는 경우 처리
+                        System.out.println("Hashtag not found for id: " + hashtagId);
+                    }
+                }
+            }
+        }
+
+        List<HashtagDTO> hashtagDTOS = new ArrayList<>();
+        for (Long hashtagId : foundHashtagDTOS.keySet()) {
+            hashtagDTOS.add(foundHashtagDTOS.get(hashtagId));
+        }
+
+        return hashtagDTOS;
+
+    }
+
     private void addCommonAttributes(Model model, Long boardId) throws SQLException {
         List<Board> boards = boardService.findAllBoards();
         Board board = boardId != null ? boardService.findBoardById(boardId).orElse(null) : null;
@@ -91,11 +143,24 @@ public class PostController {
         Map<Long, List<Category>> boardCategories = boards.stream()
                 .collect(Collectors.toMap(Board::getBoardId, b -> categoryService.findCategoriesByBoardId(b.getBoardId())));
 
+
+        List<HashtagDTO> hashtagDTO = findAllHastags_by_boardId(categories, board);
+//        System.out.println("*******************");
+//        for (HashtagDTO hashtagDTO1 : hashtagDTO) {
+//            System.out.println(hashtagDTO1.getName() + "=" + hashtagDTO1.getCount());
+//        }
+//        System.out.println("*******************");
+
+        List<HashtagDTO> sortedHashtagDTO = hashtagDTO.stream()
+                .sorted(Comparator.comparingInt(HashtagDTO::getCount).reversed())
+                .collect(Collectors.toList());
+
         model.addAttribute("member", mainController.getCurrentMember());
         model.addAttribute("boards", boards);
         model.addAttribute("board", board);
         model.addAttribute("categories", categories);
         model.addAttribute("boardCategories", boardCategories);
+        model.addAttribute("hashtagDTO", sortedHashtagDTO);
     }
 
     @GetMapping("/board/{boardId}")
