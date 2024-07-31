@@ -24,7 +24,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -47,7 +46,6 @@ public class PostController {
     private final MarkdownService markdownService;
 
     public static List<HashtagDTO> staticHashtagDTOs;
-
 
     @Autowired
     private PostRepository postRepository;
@@ -87,21 +85,6 @@ public class PostController {
         model.addAttribute("commentForm", new CommentForm()); // 추가된 부분
         return "posts/detail";
     }
-
-//    @GetMapping("/new/{boardId}")
-//    public String showCreatePostForm(@PathVariable Long boardId, @RequestParam(required = false) Long categoryId, Model model) {
-//        List<Category> categories = categoryService.findCategoriesByBoardId(boardId);
-//        PostForm postForm = new PostForm();
-//        if (categoryId != null) {
-//            postForm.setCategoryId(Math.toIntExact(categoryId)); // 카테고리 ID 설정
-//        }
-//
-//        model.addAttribute("categories", categories);
-//        model.addAttribute("postForm", postForm);
-//        model.addAttribute("boardId", boardId);
-//        model.addAttribute("categoryId", categoryId);
-//        return "posts/create";
-//    }
 
     @GetMapping("/new/{boardId}")
     public String showCreatePostForm(@PathVariable Long boardId, @RequestParam(required = false) Long categoryId, Model model) throws SQLException {
@@ -211,9 +194,7 @@ public class PostController {
         Map<Long, List<Category>> boardCategories = boards.stream()
                 .collect(Collectors.toMap(Board::getBoardId, b -> categoryService.findCategoriesByBoardId(b.getBoardId())));
 
-
         List<HashtagDTO> hashtagDTO = findAllHastags_by_boardId(categories, board);
-
 
         List<HashtagDTO> sortedHashtagDTO = hashtagDTO.stream()
                 .sorted(Comparator.comparingInt(HashtagDTO::getCount).reversed())
@@ -228,18 +209,8 @@ public class PostController {
         model.addAttribute("sortedHashtagDTO", sortedHashtagDTO);
     }
 
-
-    @GetMapping("/board/{boardId}")
-    public String getPostsByBoard(@PathVariable Long boardId, Model model) throws SQLException {
-        Optional<Board> optionalBoard = boardService.findBoardById(boardId);
-        if (optionalBoard.isEmpty()) {
-            return "error/404";
-        }
-
-        Board board = optionalBoard.get();
-        List<Post> posts = postService.getPostsByBoard(boardId);
-
-        List<PostForm> postForms = posts.stream().map(post -> {
+    private List<PostForm> convertToPostForms(List<Post> posts) {
+        return posts.stream().map(post -> {
             PostForm postForm = new PostForm();
             postForm.setId(post.getId());
             postForm.setTitle(post.getTitle());
@@ -248,23 +219,59 @@ public class PostController {
             postForm.setRenderedContent(HtmlRenderer.builder().build().render(document));
             postForm.setMemberId(post.getMember().getMemberId());
             postForm.setNickname(post.getMember().getNickname());
-            postForm.setCategoryId(Math.toIntExact(post.getCategory().getCategoryId()));
-            postForm.setBoardId(Math.toIntExact(post.getCategory().getBoard().getBoardId()));
+            if (post.getCategory() != null) {
+                postForm.setCategoryId(Math.toIntExact(post.getCategory().getCategoryId()));
+                postForm.setBoardId(Math.toIntExact(post.getCategory().getBoard().getBoardId()));
+            } else {
+                postForm.setCategoryId(null);
+                postForm.setBoardId(null);
+            }
             postForm.setPostDate(post.getPostDate());
             postForm.setHashtags(postHashtagRepository.findAllByPost_Id(post.getId()));
             return postForm;
-        }).toList();
+        }).collect(Collectors.toList());
+    }
+
+
+    @GetMapping("/board/{boardId}")
+    public String getPostsByBoard(@PathVariable Long boardId,
+                                  @RequestParam(defaultValue = "desc") String sort,
+                                  Model model) throws SQLException {
+        Optional<Board> optionalBoard = boardService.findBoardById(boardId);
+        if (optionalBoard.isEmpty()) {
+            return "error/404";
+        }
+
+        Board board = optionalBoard.get();
+        List<Post> posts;
+        switch (sort) {
+            case "asc":
+                posts = postService.getPostsByBoardOrderByPostDateAsc(boardId);
+                break;
+            case "bookmarks":
+                posts = postService.getPostsByBoardOrderByBookmarksDesc(boardId);
+                break;
+            case "comments":
+                posts = postService.getPostsByBoardOrderByCommentsDesc(boardId);
+                break;
+            case "desc":
+            default:
+                posts = postService.getPostsByBoardOrderByPostDateDesc(boardId);
+                break;
+        }
+        List<PostForm> postForms = convertToPostForms(posts);
 
         addCommonAttributes(model, boardId);
-
-        model.addAttribute("board", board);
         model.addAttribute("posts", postForms);
         model.addAttribute("isAllCategories", true);
+        model.addAttribute("selectedSort", sort);
         return "posts/posts";
     }
 
     @GetMapping("/category/{boardId}/{categoryId}")
-    public String getPostsByCategory(@PathVariable Long boardId, @PathVariable Long categoryId, Model model) throws SQLException {
+    public String getPostsByCategory(@PathVariable Long boardId, @PathVariable Long categoryId,
+                                     @RequestParam(defaultValue = "desc") String sort,
+                                     Model model) throws SQLException {
         Optional<Board> optionalBoard = boardService.findBoardById(boardId);
         if (optionalBoard.isEmpty()) {
             return "error/404";
@@ -277,29 +284,29 @@ public class PostController {
         }
 
         Category category = optionalCategory.get();
-        List<Post> posts = postService.getPostsByCategory(categoryId);
-
-        List<PostForm> postForms = posts.stream().map(post -> {
-            PostForm postForm = new PostForm();
-            postForm.setId(post.getId());
-            postForm.setTitle(post.getTitle());
-            postForm.setContent(post.getContent());
-            Node document = Parser.builder().build().parse(post.getContent());
-            postForm.setRenderedContent(HtmlRenderer.builder().build().render(document));
-            postForm.setMemberId(post.getMember().getMemberId());
-            postForm.setNickname(post.getMember().getNickname());
-            postForm.setCategoryId(Math.toIntExact(post.getCategory().getCategoryId()));
-            postForm.setBoardId(Math.toIntExact(post.getCategory().getBoard().getBoardId()));
-            postForm.setPostDate(post.getPostDate());
-            postForm.setHashtags(postHashtagRepository.findAllByPost_Id(post.getId()));
-            return postForm;
-        }).toList();
+        List<Post> posts;
+        switch (sort) {
+            case "asc":
+                posts = postService.getPostsByCategoryOrderByPostDateAsc(categoryId);
+                break;
+            case "bookmarks":
+                posts = postService.getPostsByCategoryOrderByBookmarksDesc(categoryId);
+                break;
+            case "comments":
+                posts = postService.getPostsByCategoryOrderByCommentsDesc(categoryId);
+                break;
+            case "desc":
+            default:
+                posts = postService.getPostsByCategoryOrderByPostDateDesc(categoryId);
+                break;
+        }
+        List<PostForm> postForms = convertToPostForms(posts);
 
         addCommonAttributes(model, boardId);
-
         model.addAttribute("category", category);
         model.addAttribute("posts", postForms);
         model.addAttribute("isAllCategories", false);
+        model.addAttribute("selectedSort", sort);
         return "posts/posts";
     }
 
