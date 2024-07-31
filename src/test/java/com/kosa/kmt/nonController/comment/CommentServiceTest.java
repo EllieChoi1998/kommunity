@@ -4,8 +4,6 @@ import com.kosa.kmt.nonController.member.Member;
 import com.kosa.kmt.nonController.member.MemberRepository;
 import com.kosa.kmt.nonController.post.Post;
 import com.kosa.kmt.nonController.post.PostRepository;
-import jakarta.persistence.EntityNotFoundException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,19 +27,18 @@ public class CommentServiceTest {
     @Autowired
     private PostCommentRepository postCommentRepository;
 
-    private Post post;
-    private Member member;
-
     @Test
     public void testCreateMultipleComments() {
-        Long[] postIds = {13L, 14L};
-        Integer memberId = 65;
+        // 생성된 PostId에 맞게 수정해야 함 (다중 생성 Test 코드)
+        Long[] postIds = {21L, 22L};
+        // 생성된 멤버에 맞게 memberId도 수정해야 함
+        Integer memberId = 1;
         String[] comments = {
-                "This is the first test comment for post 13",
-                "This is the second test comment for post 13",
-                "This is the third test comment for post 13",
-                "This is the first test comment for post 14",
-                "This is the second test comment for post 14"
+                "This is the first test comment for post 21",
+                "This is the second test comment for post 21",
+                "This is the third test comment for post 21",
+                "This is the first test comment for post 22",
+                "This is the second test comment for post 22"
         };
 
         // Ensure the member exists

@@ -17,6 +17,7 @@ import java.util.List;
 public class PostComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "COMMENT_ID")
     private Long commentId;
 
     @Column(name = "COMMENT_CONTENT", nullable = false)
@@ -43,4 +44,7 @@ public class PostComment {
     @OneToMany(mappedBy = "postComment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommentHate> hates;
 
+    public PostComment() {
+        this.commentDateTime = LocalDateTime.now();
+    }
 }

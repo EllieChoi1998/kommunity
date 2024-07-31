@@ -4,6 +4,7 @@ import com.kosa.kmt.nonController.board.Board;
 import com.kosa.kmt.nonController.board.BoardService;
 import com.kosa.kmt.nonController.category.Category;
 import com.kosa.kmt.nonController.category.CategoryService;
+import com.kosa.kmt.nonController.comment.CommentForm;
 import com.kosa.kmt.nonController.comment.CommentService;
 import com.kosa.kmt.nonController.comment.PostComment;
 import com.kosa.kmt.nonController.hashtag.*;
@@ -66,6 +67,7 @@ public class PostController {
         model.addAttribute("post", post);
         model.addAttribute("comments", comments);
         model.addAttribute("member", member);
+        model.addAttribute("commentForm", new CommentForm()); // 추가된 부분
         return "posts/detail";
     }
 

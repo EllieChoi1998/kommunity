@@ -10,6 +10,15 @@
 
 </head>
 <body>
+
+<div layout:fragment="sidebarLeft">
+    <div th:replace="~{sidebars/left-sidebar :: leftSidebarFragment}"></div>
+</div>
+
+<div layout:fragment="sidebarRight">
+    <div th:replace="~{sidebars/right-sidebar :: rightSidebarFragment}"></div>
+</div>
+
 <!-- 메인 컨텐츠 부분 시작 -->
 <div layout:fragment="content" class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
