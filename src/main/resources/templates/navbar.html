@@ -14,7 +14,7 @@
                 <button id="profileBtn">
                     <img src="/images/defaultuser.png" alt="User" class="profile-logo">
                     <!--닉네임-->
-                    <span id="navbar-nickname" th:text="${member.nickname}"></span>
+                    <span id="navbar-nickname" th:text="${member != null ? member.nickname : ''}"></span>
                 </button>
                 <div id="profileMenuContainer" class="profile-menu hidden"></div>
             </div>
