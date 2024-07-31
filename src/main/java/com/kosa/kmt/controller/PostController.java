@@ -41,9 +41,6 @@ public class PostController {
     private final CommentService commentService;
 
     private final MainController mainController;
-    private final PostRepository postRepository;
-    private final PostHashtagRepository postHashtagRepository;
-    private final HashtagRepository hashtagRepository;
 
     public static List<HashtagDTO> staticHashtagDTOs;
 
