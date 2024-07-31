@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -173,5 +174,21 @@ public class MainController {
         return "redirect:/kommunity";
     }
 
+    // addCommonAttributes 메서드 추가
+    public void addCommonAttributes(Model model, Long boardId) throws SQLException {
+        List<Board> boards = boardService.findAllBoards();
+        Board board = boardId != null ? boardService.findBoardById(boardId).orElse(null) : null;
+        List<Category> categories = boardId != null ? categoryService.findCategoriesByBoardId(boardId) : List.of();
+
+        Map<Long, List<Category>> boardCategories = boards.stream()
+                .collect(Collectors.toMap(Board::getBoardId, b -> categoryService.findCategoriesByBoardId(b.getBoardId())));
+
+        model.addAttribute("member", getCurrentMember());
+        model.addAttribute("boards", boards);
+        model.addAttribute("board", board);
+        model.addAttribute("categories", categories);
+        model.addAttribute("boardCategories", boardCategories);
+        model.addAttribute("selectedBoardId", boardId); // selectedBoardId 추가
+    }
 
 }

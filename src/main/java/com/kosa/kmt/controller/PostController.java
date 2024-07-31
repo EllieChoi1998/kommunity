@@ -74,7 +74,8 @@ public class PostController {
         List<PostComment> comments = commentService.getCommentsByPostId(id); // Comment 서비스가 있다고 가정합니다.
         String renderedContent = markdownService.renderMarkdownToHtml(post.getContent());
 
-        addCommonAttributes(model, post.getCategory().getBoard().getBoardId());
+        Long boardId = post.getCategory().getBoard().getBoardId();
+        addCommonAttributes(model, boardId);
 
         model.addAttribute("post", post);
         model.addAttribute("comments", comments);
@@ -220,6 +221,7 @@ public class PostController {
         model.addAttribute("board", board);
         model.addAttribute("categories", categories);
         model.addAttribute("boardCategories", boardCategories);
+        model.addAttribute("selectedBoardId", boardId); // 추가된 부분
         model.addAttribute("sortedHashtagDTO", sortedHashtagDTO);
     }
 
