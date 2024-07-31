@@ -8,12 +8,16 @@ import com.kosa.kmt.nonController.comment.CommentForm;
 import com.kosa.kmt.nonController.comment.CommentService;
 import com.kosa.kmt.nonController.comment.PostComment;
 import com.kosa.kmt.nonController.hashtag.*;
+import com.kosa.kmt.nonController.markdown.MarkdownService;
 import com.kosa.kmt.nonController.member.Member;
 import com.kosa.kmt.nonController.post.Post;
 import com.kosa.kmt.nonController.post.PostForm;
 import com.kosa.kmt.nonController.post.PostRepository;
 import com.kosa.kmt.nonController.post.PostService;
 import lombok.RequiredArgsConstructor;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -40,6 +44,8 @@ public class PostController {
 
     private final MainController mainController;
 
+    private final MarkdownService markdownService;
+
     @Autowired
     private PostRepository postRepository;
 
@@ -61,12 +67,14 @@ public class PostController {
         Post post = postService.getPostById(id);
         Member member = mainController.getCurrentMember(); // 현재 사용자를 가져오는 로직
         List<PostComment> comments = commentService.getCommentsByPostId(id); // Comment 서비스가 있다고 가정합니다.
+        String renderedContent = markdownService.renderMarkdownToHtml(post.getContent());
 
         addCommonAttributes(model, post.getCategory().getBoard().getBoardId());
 
         model.addAttribute("post", post);
         model.addAttribute("comments", comments);
         model.addAttribute("member", member);
+        model.addAttribute("renderedContent", renderedContent);
         model.addAttribute("commentForm", new CommentForm()); // 추가된 부분
         return "posts/detail";
     }
@@ -90,6 +98,7 @@ public class PostController {
     public String showCreatePostForm(@PathVariable Long boardId, @RequestParam(required = false) Long categoryId, Model model) throws SQLException {
         List<Category> categories = categoryService.findCategoriesByBoardId(boardId);
         PostForm postForm = new PostForm();
+        postForm.setBoardId(Math.toIntExact(boardId));
         if (categoryId != null) {
             postForm.setCategoryId(Math.toIntExact(categoryId)); // 카테고리 ID 설정
         }
@@ -105,10 +114,11 @@ public class PostController {
     }
 
     @PostMapping("/new")
-    public String createPost(@ModelAttribute PostForm postForm, @RequestParam Long boardId, @RequestParam Long categoryId) throws SQLException {
+    public String createPost(@ModelAttribute PostForm postForm) throws SQLException {
         Member member = mainController.getCurrentMember();
-        postService.createPost(postForm.getTitle(), postForm.getContent(), member.getMemberId(), Math.toIntExact(categoryId), postForm.getStrHashtag());
-        return "redirect:/posts/category/" + boardId + "/" + categoryId;
+        String renderedContent = markdownService.renderMarkdownToHtml(postForm.getContent());
+        postService.createPost(postForm.getTitle(), renderedContent, member.getMemberId(), postForm.getCategoryId(), postForm.getStrHashtag());
+        return "redirect:/posts/category/" + postForm.getBoardId() + "/" + postForm.getCategoryId();
     }
 
     @GetMapping("/{id}/edit")
@@ -159,10 +169,27 @@ public class PostController {
 
         Board board = optionalBoard.get();
         List<Post> posts = postService.getPostsByBoard(boardId);
+
+        List<PostForm> postForms = posts.stream().map(post -> {
+            PostForm postForm = new PostForm();
+            postForm.setId(post.getId());
+            postForm.setTitle(post.getTitle());
+            postForm.setContent(post.getContent());
+            Node document = Parser.builder().build().parse(post.getContent());
+            postForm.setRenderedContent(HtmlRenderer.builder().build().render(document));
+            postForm.setMemberId(post.getMember().getMemberId());
+            postForm.setNickname(post.getMember().getNickname());
+            postForm.setCategoryId(Math.toIntExact(post.getCategory().getCategoryId()));
+            postForm.setBoardId(Math.toIntExact(post.getCategory().getBoard().getBoardId()));
+            postForm.setPostDate(post.getPostDate());
+            postForm.setHashtags(postHashtagRepository.findAllByPost_Id(post.getId()));
+            return postForm;
+        }).toList();
+
         addCommonAttributes(model, boardId);
 
         model.addAttribute("board", board);
-        model.addAttribute("posts", posts);
+        model.addAttribute("posts", postForms);
         model.addAttribute("isAllCategories", true);
         return "posts/posts";
     }
@@ -183,10 +210,26 @@ public class PostController {
         Category category = optionalCategory.get();
         List<Post> posts = postService.getPostsByCategory(categoryId);
 
+        List<PostForm> postForms = posts.stream().map(post -> {
+            PostForm postForm = new PostForm();
+            postForm.setId(post.getId());
+            postForm.setTitle(post.getTitle());
+            postForm.setContent(post.getContent());
+            Node document = Parser.builder().build().parse(post.getContent());
+            postForm.setRenderedContent(HtmlRenderer.builder().build().render(document));
+            postForm.setMemberId(post.getMember().getMemberId());
+            postForm.setNickname(post.getMember().getNickname());
+            postForm.setCategoryId(Math.toIntExact(post.getCategory().getCategoryId()));
+            postForm.setBoardId(Math.toIntExact(post.getCategory().getBoard().getBoardId()));
+            postForm.setPostDate(post.getPostDate());
+            postForm.setHashtags(postHashtagRepository.findAllByPost_Id(post.getId()));
+            return postForm;
+        }).toList();
+
         addCommonAttributes(model, boardId);
 
         model.addAttribute("category", category);
-        model.addAttribute("posts", posts);
+        model.addAttribute("posts", postForms);
         model.addAttribute("isAllCategories", false);
         return "posts/posts";
     }
