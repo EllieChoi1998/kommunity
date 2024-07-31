@@ -37,4 +37,16 @@ public class AdminCreateNewUserTest {
         memberRepository.save(member);
 //        }
     }
+
+    @Test
+    public void test3() {
+//        Optional<Member> memberls = memberRepository.findByName("admin");
+//        if (memberls.isPresent() == false) {
+        Member member = new Member();
+        member.setEmail("teamkom2024@gmail.com");
+        member.setName("최혜령");
+
+        memberRepository.save(member);
+//        }
+    }
 }
