@@ -10,4 +10,6 @@ public interface PostCommentRepository extends JpaRepository<PostComment, Long>,
 
     // 오래된 순 정렬
     List<PostComment> findAllByOrderByCommentDateTimeAsc();
+
+    List<PostComment> findByPostId(Long postId);
 }

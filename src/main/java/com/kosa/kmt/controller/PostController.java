@@ -4,19 +4,25 @@ import com.kosa.kmt.nonController.board.Board;
 import com.kosa.kmt.nonController.board.BoardService;
 import com.kosa.kmt.nonController.category.Category;
 import com.kosa.kmt.nonController.category.CategoryService;
+
+import com.kosa.kmt.nonController.comment.CommentForm;
+import com.kosa.kmt.nonController.comment.CommentService;
+import com.kosa.kmt.nonController.comment.PostComment;
+
 import com.kosa.kmt.nonController.hashtag.*;
 import com.kosa.kmt.nonController.member.Member;
-import com.kosa.kmt.nonController.member.MemberService;
 import com.kosa.kmt.nonController.post.Post;
 import com.kosa.kmt.nonController.post.PostForm;
 import com.kosa.kmt.nonController.post.PostRepository;
 import com.kosa.kmt.nonController.post.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,12 +38,23 @@ public class PostController {
 
     private final CategoryService categoryService;
 
+    private final CommentService commentService;
+
     private final MainController mainController;
     private final PostRepository postRepository;
     private final PostHashtagRepository postHashtagRepository;
     private final HashtagRepository hashtagRepository;
 
     public static List<HashtagDTO> staticHashtagDTOs;
+
+    @Autowired
+    private PostRepository postRepository;
+
+    @Autowired
+    private PostHashtagRepository postHashtagRepository;
+
+    @Autowired
+    private HashtagRepository hashtagRepository;
 
     @GetMapping
     public String getAllPosts(Model model) throws SQLException {
@@ -49,20 +66,56 @@ public class PostController {
     @GetMapping("/{id}")
     public String getPostById(@PathVariable Long id, Model model) throws SQLException {
         Post post = postService.getPostById(id);
+        Member member = mainController.getCurrentMember(); // 현재 사용자를 가져오는 로직
+        List<PostComment> comments = commentService.getCommentsByPostId(id); // Comment 서비스가 있다고 가정합니다.
+
+        addCommonAttributes(model, post.getCategory().getBoard().getBoardId());
+
         model.addAttribute("post", post);
+        model.addAttribute("comments", comments);
+        model.addAttribute("member", member);
+        model.addAttribute("commentForm", new CommentForm()); // 추가된 부분
         return "posts/detail";
     }
 
-    @GetMapping("/new")
-    public String createPostForm(Model model) {
-        model.addAttribute("postForm", new PostForm());
+//    @GetMapping("/new/{boardId}")
+//    public String showCreatePostForm(@PathVariable Long boardId, @RequestParam(required = false) Long categoryId, Model model) {
+//        List<Category> categories = categoryService.findCategoriesByBoardId(boardId);
+//        PostForm postForm = new PostForm();
+//        if (categoryId != null) {
+//            postForm.setCategoryId(Math.toIntExact(categoryId)); // 카테고리 ID 설정
+//        }
+//
+//        model.addAttribute("categories", categories);
+//        model.addAttribute("postForm", postForm);
+//        model.addAttribute("boardId", boardId);
+//        model.addAttribute("categoryId", categoryId);
+//        return "posts/create";
+//    }
+
+    @GetMapping("/new/{boardId}")
+    public String showCreatePostForm(@PathVariable Long boardId, @RequestParam(required = false) Long categoryId, Model model) throws SQLException {
+        List<Category> categories = categoryService.findCategoriesByBoardId(boardId);
+        PostForm postForm = new PostForm();
+        if (categoryId != null) {
+            postForm.setCategoryId(Math.toIntExact(categoryId)); // 카테고리 ID 설정
+        }
+
+        addCommonAttributes(model, boardId);
+
+        model.addAttribute("postForm", postForm);
+        model.addAttribute("boardId", boardId);
+        model.addAttribute("categoryId", categoryId);
+        model.addAttribute("leftSidebar", false);
+        model.addAttribute("rightSidebar", false);
         return "posts/create";
     }
 
-    @PostMapping
-    public String createPost(@ModelAttribute PostForm postForm) throws SQLException {
-        postService.createPost(postForm.getTitle(), postForm.getContent(), postForm.getMemberId(), postForm.getCategoryId(), postForm.getStrHashtag());
-        return "redirect:/posts";
+    @PostMapping("/new")
+    public String createPost(@ModelAttribute PostForm postForm, @RequestParam Long boardId, @RequestParam Long categoryId) throws SQLException {
+        Member member = mainController.getCurrentMember();
+        postService.createPost(postForm.getTitle(), postForm.getContent(), member.getMemberId(), Math.toIntExact(categoryId), postForm.getStrHashtag());
+        return "redirect:/posts/category/" + boardId + "/" + categoryId;
     }
 
     @GetMapping("/{id}/edit")
@@ -118,8 +171,7 @@ public class PostController {
                             foundHashtagDTOS.put(hashtagId, hashtagDTO);
                             hashtagDTO.addPosts(post);
                         }
-//                        System.out.println("+++++++++++++++++++++++++++++");
-//                        System.out.println(foundHashtagDTOS.get(hashtagId).getName() + "\t" + foundHashtagDTOS.get(hashtagId).getCount());
+
                     } else {
                         // hashtagId에 해당하는 Hashtag가 없는 경우 처리
                         System.out.println("Hashtag not found for id: " + hashtagId);
@@ -149,11 +201,7 @@ public class PostController {
 
 
         List<HashtagDTO> hashtagDTO = findAllHastags_by_boardId(categories, board);
-//        System.out.println("*******************");
-//        for (HashtagDTO hashtagDTO1 : hashtagDTO) {
-//            System.out.println(hashtagDTO1.getName() + "=" + hashtagDTO1.getCount());
-//        }
-//        System.out.println("*******************");
+
 
         List<HashtagDTO> sortedHashtagDTO = hashtagDTO.stream()
                 .sorted(Comparator.comparingInt(HashtagDTO::getCount).reversed())
@@ -166,6 +214,7 @@ public class PostController {
         model.addAttribute("boardCategories", boardCategories);
         model.addAttribute("sortedHashtagDTO", sortedHashtagDTO);
     }
+
 
     @GetMapping("/board/{boardId}")
     public String getPostsByBoard(@PathVariable Long boardId, Model model) throws SQLException {
@@ -180,6 +229,7 @@ public class PostController {
 
         model.addAttribute("board", board);
         model.addAttribute("posts", posts);
+        model.addAttribute("selectedBoardId", boardId);
         model.addAttribute("isAllCategories", true);
         return "posts/posts";
     }
@@ -204,6 +254,7 @@ public class PostController {
 
         model.addAttribute("category", category);
         model.addAttribute("posts", posts);
+        model.addAttribute("selectedBoardId", boardId);
         model.addAttribute("isAllCategories", false);
         return "posts/posts";
     }

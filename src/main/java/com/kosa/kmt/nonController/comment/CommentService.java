@@ -28,19 +28,21 @@ public class CommentService {
     // 댓글 조회
     public PostComment getCommentById(Long commentId) {
         return postCommentRepository.findById(commentId)
-                .orElseThrow(() -> new RuntimeException("Comment not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Comment not found with id " + commentId));
+    }
+
+    public List<PostComment> getCommentsByPostId(Long postId) {
+        return postCommentRepository.findByPostId(postId);
     }
 
     // 댓글 추가
     public PostComment createComment(Long postId, Integer memberId, String content) {
-        PostComment comment = new PostComment();
-
-        // post와 member를 설정하는 부분
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("Post not found with id " + postId));
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException("Member not found with id " + memberId));
 
+        PostComment comment = new PostComment();
         comment.setPost(post);
         comment.setMember(member);
         comment.setCommentContent(content);
@@ -51,13 +53,15 @@ public class CommentService {
 
     // 댓글 삭제
     public void deleteComment(Long commentId) {
-        postCommentRepository.deleteById(commentId);
+        PostComment comment = postCommentRepository.findById(commentId)
+                .orElseThrow(() -> new EntityNotFoundException("Comment not found with id " + commentId));
+        postCommentRepository.delete(comment);
     }
 
     // 댓글 수정
     public PostComment updateComment(Long commentId, String newContent) {
         PostComment comment = postCommentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid comment ID: " + commentId));
+                .orElseThrow(() -> new EntityNotFoundException("Comment not found with id " + commentId));
         comment.setCommentContent(newContent);
 
         // 수정 시 현재 시간으로 업데이트
