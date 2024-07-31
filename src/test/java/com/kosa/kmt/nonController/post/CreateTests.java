@@ -1,16 +1,21 @@
 package com.kosa.kmt.nonController.post;
 
 import com.kosa.kmt.nonController.hashtag.PostHashtagRepository;
+import com.kosa.kmt.nonController.member.Member;
+import com.kosa.kmt.nonController.member.MemberRepository;
 import com.kosa.kmt.nonController.post.PostRepository;
 import com.kosa.kmt.nonController.post.PostService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@Transactional
 @SpringBootTest
 public class CreateTests {
 
@@ -22,6 +27,9 @@ public class CreateTests {
 
     @Autowired
     private PostHashtagRepository postHashtagRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     // create
 //    @Test
