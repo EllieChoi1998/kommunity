@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>해시태그 입력 및 검색</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
-
+    <script th:src="@{/axios.min.js}"></script>
 </head>
 <body>
 <div th:fragment="rightSidebarFragment">
@@ -13,21 +13,20 @@
     <div class="input-group mb-3 inp_tag">
         <div class="hashtags-container" id="hashtags-containers">
             <input type="text" id="hashtags" class="form-control" placeholder="Enter로 추가해보세요.">
-            <div id="hashtags-container" class="hashtags-container">
+            <div id="hashtags-container" class="hashtags-container"></div>
             <input type="hidden" id="hashtags-hidden" field="hashtags" />
-            </div>
         </div>
         <button type="button" class="btn btn-outline-primary" id="search-btn">검색</button>
     </div>
 
-
     <div id="search-results" class="search-results"></div> <!-- 실시간 검색 결과 표시 영역 -->
+
 
     <!-- 채팅기능 -->
     <div th:replace="~{chat :: chatFragment}"></div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="/hashtag.js"></script>
+<script src="/hashtagSearch.js"></script>
 </body>
 </html>

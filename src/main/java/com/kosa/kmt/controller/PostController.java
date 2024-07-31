@@ -37,6 +37,8 @@ public class PostController {
     private final PostHashtagRepository postHashtagRepository;
     private final HashtagRepository hashtagRepository;
 
+    public static List<HashtagDTO> staticHashtagDTOs;
+
     @GetMapping
     public String getAllPosts(Model model) throws SQLException {
         List<Post> posts = postService.getPostsAll();
@@ -131,6 +133,8 @@ public class PostController {
             hashtagDTOS.add(foundHashtagDTOS.get(hashtagId));
         }
 
+        staticHashtagDTOs = hashtagDTOS;
+
         return hashtagDTOS;
 
     }
@@ -160,7 +164,7 @@ public class PostController {
         model.addAttribute("board", board);
         model.addAttribute("categories", categories);
         model.addAttribute("boardCategories", boardCategories);
-        model.addAttribute("hashtagDTO", sortedHashtagDTO);
+        model.addAttribute("sortedHashtagDTO", sortedHashtagDTO);
     }
 
     @GetMapping("/board/{boardId}")
