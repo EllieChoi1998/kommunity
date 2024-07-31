@@ -96,9 +96,8 @@
             <button>로그아웃</button>
         </a>
     </div>
-    <button>내 게시글 관리</button>
-    <button>내 댓글 관리</button>
-    <button>내 좋아요 관리</button>
+    <button id="mypostButton">내 게시글 관리</button>
+    <button id="bookmarkButton">내 북마크 관리</button>
 </div>
 
 <script>
@@ -166,6 +165,21 @@
     }
 
     initDragAndDrop();
+
+
+    document.getElementById('bookmarkButton').addEventListener('click', function() {
+        // 페이지를 /mypage/bookmark.html로 이동
+        window.location.href = '/kommunity/mypage/bookmark';
+    });
+
+    document.getElementById('mypostButton').addEventListener('click', function() {
+        // 페이지를 /mypage/myposts.html로 이동
+        window.location.href = '/kommunity/mypage/myposts';
+    });
+
+
 </script>
+
+
 </body>
 </html>

@@ -12,15 +12,14 @@ import com.kosa.kmt.nonController.comment.PostComment;
 import com.kosa.kmt.nonController.hashtag.*;
 import com.kosa.kmt.nonController.markdown.MarkdownService;
 import com.kosa.kmt.nonController.member.Member;
-import com.kosa.kmt.nonController.post.Post;
-import com.kosa.kmt.nonController.post.PostForm;
-import com.kosa.kmt.nonController.post.PostRepository;
-import com.kosa.kmt.nonController.post.PostService;
+import com.kosa.kmt.nonController.post.*;
 import lombok.RequiredArgsConstructor;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -56,6 +55,11 @@ public class PostController {
 
     @Autowired
     private HashtagRepository hashtagRepository;
+    @Autowired
+    private PostHateRepository postHateRepository;
+    @Autowired
+    private PostLikeOrHateService postLikeOrHateService;
+
 
     @GetMapping
     public String getAllPosts(Model model) throws SQLException {
@@ -304,5 +308,26 @@ public class PostController {
         model.addAttribute("isAllCategories", false);
         model.addAttribute("selectedSort", sort);
         return "posts/posts";
+    }
+
+    // 좋아요 기능
+    @PostMapping("/like/{postId}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Void> likePost(@PathVariable Long postId) throws SQLException {
+        Post post = postService.getPostById(postId);
+        Member member = mainController.getCurrentMember();
+        postLikeOrHateService.likePost(post, member);
+        return ResponseEntity.ok().build();
+    }
+
+    // 싫어요 기능
+    @PostMapping("/dislike/{postId}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Void> dislikePost(@PathVariable Long postId) throws SQLException {
+        Post post = postService.getPostById(postId);
+        Member member = mainController.getCurrentMember();
+        postLikeOrHateService.hatePost(post, member);
+
+        return ResponseEntity.ok().build();
     }
 }
