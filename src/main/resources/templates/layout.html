@@ -13,12 +13,12 @@
     <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
-    <title>Hello, sbb!</title>
+    <title>Hello, Kommunity!</title>
 </head>
 <body>
 
 <!-- 네비게이션바 -->
-<nav th:replace="~{navbar :: navbarFragment(${boards}, ${boardCategories})}"></nav>
+<nav th:replace="~{navbar :: navbarFragment(${boards}, ${boardCategories},${selectedBoardId})}"></nav>
 
 <!-- 카테고리 컨테이너 -->
 <div id="category-container" class="center-container">
@@ -59,6 +59,9 @@
 <script th:src="@{/stomp.min.js}"></script>
 <script th:src="@{/sockjs.min.js}"></script>
 <script th:src="@{/chat.js}"></script>
-<script th:src="@{/hashtag.js}"></script>
+<script th:src="@{/axios.min.js}"></script>
+
+
+<script th:src="@{/hashtagSearch.js}"></script>
 </body>
 </html>

@@ -37,3 +37,29 @@ hashtagsInput.addEventListener("keydown", (event) => {
         }
     }
 });
+
+$(document).ready(function() {
+    var hashtagsList = /*[[${hashtagDTO}]]*/ [];
+
+    $("#hashtags").on("input", function() {
+        let query = $(this).val().toLowerCase();
+        let searchResults = $("#search-results");
+        searchResults.empty();
+        if (query.length > 0) {
+            let filteredHashtags = hashtagsList.filter(function(hashtag) {
+                return hashtag.name.toLowerCase().includes(query);
+            });
+            filteredHashtags.forEach(function(hashtag) {
+                searchResults.append(
+                    `<div class="search-result-item" data-name="${hashtag.name}">${hashtag.name}</div>`
+                );
+            });
+        }
+    });
+
+    $(document).on("click", ".search-result-item", function() {
+        let selectedHashtag = $(this).data("name");
+        $("#hashtags").val(selectedHashtag);
+        $("#search-results").empty();
+    });
+});

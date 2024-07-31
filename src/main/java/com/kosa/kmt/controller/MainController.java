@@ -63,14 +63,28 @@ public class MainController {
 
 
     @GetMapping("/kommunity/main")
-    public String main(@RequestParam(value = "categoryId", required = false) Long categoryId, Model model) throws Exception
-    {
+    public String main(@RequestParam(value = "categoryId", required = false) Long categoryId,
+                       @RequestParam(value = "selectedBoardId", required = false) Long selectedBoardId,
+                       Model model) throws Exception {
         List<Board> boards = boardService.findAllBoards();
         Map<Long, List<Category>> boardCategories = boards.stream()
                 .collect(Collectors.toMap(Board::getBoardId, categoryService::findCategoriesByBoard));
 
-        Long boardId = 1L; // 익명 게시판의 ID
-        Optional<Board> optionalBoard = boards.stream().filter(board -> board.getBoardId().equals(boardId)).findFirst();
+        // 대나무숲 보드를 찾기 위해 보드 이름을 통해 검색 (대나무 숲 보드Id가 1이 아닐 경우가 있기에)
+        Long bambooBoardId = boards.stream()
+                .filter(board -> "대나무숲".equals(board.getName()))
+                .findFirst()
+                .map(Board::getBoardId)
+                .orElse(null);
+
+        Long boardId = selectedBoardId != null ? selectedBoardId : bambooBoardId;
+        if (boardId == null) {
+            throw new IllegalStateException("대나무숲 보드를 찾을 수 없습니다.");
+        }
+
+        // 오류가 나는 경우 보드 이름을 통해 검색 부분 없애고 아래 부분 넣을 것
+        // Long boardId = selectedBoardId != null ? selectedBoardId : 1L; // 기본적으로 익명 게시판의 ID
+        // Optional<Board> optionalBoard = boards.stream().filter(board -> board.getBoardId().equals(boardId)).findFirst();
 
         List<Post> posts;
         if (categoryId != null) {
@@ -86,20 +100,15 @@ public class MainController {
 
         model.addAttribute("boards", boards);
         model.addAttribute("boardCategories", boardCategories);
-
+        model.addAttribute("selectedBoardId", boardId);
         model.addAttribute("member", getCurrentMember());
 
-
         List<Hashtag> hashtags = hashtagRepository.findAll();
-
         Map<String, Integer> hashtagCount = new HashMap<>();
-
         for (Hashtag hashtag : hashtags) {
             hashtagCount.put(hashtag.getName(), hashtagCount.getOrDefault(hashtag.getName(), 0) + 1);
         }
-
         model.addAttribute("hashtags", hashtagCount);
-
 
         return "danamusup";
     }

@@ -1,8 +1,14 @@
 <!DOCTYPE html>
-<html lang="ko" layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<html lang="ko" layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        h3 {
+            line-height: 1.5; /* 줄 간격을 1.5배로 설정 */
+        }
+    </style>
 </head>
 <body>
 <!-- 사이드바를 사용하지 않을 때, 밑에 body 태그 사용-->
@@ -19,9 +25,12 @@
 <!-- 메인 컨텐츠  -->
 
 <div layout:fragment="content" class="container my-3">
-    <h1 class="text-center">Post 작성 중</h1>
-    <a href="/comment">Go to Comment List</a>
-
+    <h2 class="text-center">MSA 5기를 위한 커뮤니티, Kommunity에 오신 걸 환영합니다!</h2><br>
+    <h3 class="text-start">
+        1. 대나무 숲은 익명 게시판입니다.<br>
+        2. 이런식으로 이용 방법을 main page에 보여주는거 어때요<br>
+        3. 너무 휑하길래 적어봤습니다ㅎㅎ,,
+    </h3>
 </div>
 
 </body>
