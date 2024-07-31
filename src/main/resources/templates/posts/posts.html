@@ -28,7 +28,10 @@
             <h2 th:if="${category != null}" th:text="'Category: ' + ${category.name}"></h2>
         </div>
         <div>
-            <a th:href="@{/posts/new}" class="btn btn-primary">
+            <a th:if="${isAllCategories}" th:href="@{'/posts/new/' + ${board.boardId}}" class="btn btn-primary">
+                글쓰기
+            </a>
+            <a th:if="${!isAllCategories}" th:href="@{'/posts/new/' + ${board.boardId} + '?categoryId=' + ${category.categoryId}}" class="btn btn-primary">
                 글쓰기
             </a>
         </div>

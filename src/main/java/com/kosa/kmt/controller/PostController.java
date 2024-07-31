@@ -7,21 +7,22 @@ import com.kosa.kmt.nonController.category.CategoryService;
 import com.kosa.kmt.nonController.comment.CommentForm;
 import com.kosa.kmt.nonController.comment.CommentService;
 import com.kosa.kmt.nonController.comment.PostComment;
+import com.kosa.kmt.nonController.hashtag.*;
 import com.kosa.kmt.nonController.member.Member;
 import com.kosa.kmt.nonController.post.Post;
 import com.kosa.kmt.nonController.post.PostForm;
+import com.kosa.kmt.nonController.post.PostRepository;
 import com.kosa.kmt.nonController.post.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -38,6 +39,15 @@ public class PostController {
     private final CommentService commentService;
 
     private final MainController mainController;
+
+    @Autowired
+    private PostRepository postRepository;
+
+    @Autowired
+    private PostHashtagRepository postHashtagRepository;
+
+    @Autowired
+    private HashtagRepository hashtagRepository;
 
     @GetMapping
     public String getAllPosts(Model model) throws SQLException {
@@ -61,17 +71,44 @@ public class PostController {
         return "posts/detail";
     }
 
+//    @GetMapping("/new/{boardId}")
+//    public String showCreatePostForm(@PathVariable Long boardId, @RequestParam(required = false) Long categoryId, Model model) {
+//        List<Category> categories = categoryService.findCategoriesByBoardId(boardId);
+//        PostForm postForm = new PostForm();
+//        if (categoryId != null) {
+//            postForm.setCategoryId(Math.toIntExact(categoryId)); // 카테고리 ID 설정
+//        }
+//
+//        model.addAttribute("categories", categories);
+//        model.addAttribute("postForm", postForm);
+//        model.addAttribute("boardId", boardId);
+//        model.addAttribute("categoryId", categoryId);
+//        return "posts/create";
+//    }
 
-    @GetMapping("/new")
-    public String createPostForm(Model model) {
-        model.addAttribute("postForm", new PostForm());
+    @GetMapping("/new/{boardId}")
+    public String showCreatePostForm(@PathVariable Long boardId, @RequestParam(required = false) Long categoryId, Model model) throws SQLException {
+        List<Category> categories = categoryService.findCategoriesByBoardId(boardId);
+        PostForm postForm = new PostForm();
+        if (categoryId != null) {
+            postForm.setCategoryId(Math.toIntExact(categoryId)); // 카테고리 ID 설정
+        }
+
+        addCommonAttributes(model, boardId);
+
+        model.addAttribute("postForm", postForm);
+        model.addAttribute("boardId", boardId);
+        model.addAttribute("categoryId", categoryId);
+        model.addAttribute("leftSidebar", false);
+        model.addAttribute("rightSidebar", false);
         return "posts/create";
     }
 
-    @PostMapping
-    public String createPost(@ModelAttribute PostForm postForm) throws SQLException {
-        postService.createPost(postForm.getTitle(), postForm.getContent(), postForm.getMemberId(), postForm.getCategoryId(), postForm.getStrHashtag());
-        return "redirect:/posts";
+    @PostMapping("/new")
+    public String createPost(@ModelAttribute PostForm postForm, @RequestParam Long boardId, @RequestParam Long categoryId) throws SQLException {
+        Member member = mainController.getCurrentMember();
+        postService.createPost(postForm.getTitle(), postForm.getContent(), member.getMemberId(), Math.toIntExact(categoryId), postForm.getStrHashtag());
+        return "redirect:/posts/category/" + boardId + "/" + categoryId;
     }
 
     @GetMapping("/{id}/edit")
@@ -111,6 +148,7 @@ public class PostController {
         model.addAttribute("categories", categories);
         model.addAttribute("boardCategories", boardCategories);
     }
+
 
     @GetMapping("/board/{boardId}")
     public String getPostsByBoard(@PathVariable Long boardId, Model model) throws SQLException {
@@ -152,5 +190,4 @@ public class PostController {
         model.addAttribute("isAllCategories", false);
         return "posts/posts";
     }
-
 }
