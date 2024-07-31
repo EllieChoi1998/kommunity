@@ -2,10 +2,8 @@ package com.kosa.kmt.nonController.comment;
 
 import com.kosa.kmt.nonController.member.Member;
 import com.kosa.kmt.nonController.post.Post;
-import groovyjarjarantlr4.v4.runtime.misc.NotNull;
 import groovyjarjarantlr4.v4.runtime.misc.Nullable;
 import jakarta.persistence.*;
-import jdk.jfr.Name;
 import lombok.Getter;
 import lombok.Setter;
 

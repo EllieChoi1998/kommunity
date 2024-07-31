@@ -29,24 +29,7 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    private final PostService postService;
-
     private final MainController mainController;
-
-    @GetMapping("/danamusup")
-    public String danamusup() {
-        return "category-danamusup"; // category-danamusup.html 페이지를 반환합니다.
-    }
-
-    @GetMapping("/codingtest")
-    public String codingtest() {
-        return "category-codingtest"; // category-codingtest.html 페이지를 반환합니다.
-    }
-
-    @GetMapping("/jobtips")
-    public String jobtips() {
-        return "category-jobtips"; // category-jobtips.html 페이지를 반환합니다.
-    }
 
     @GetMapping("/{boardId}")
     public String getCategoriesByBoard(@PathVariable Long boardId, Model model) throws SQLException {
