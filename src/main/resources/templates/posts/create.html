@@ -1,35 +1,41 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
+    <meta charset="UTF-8">
     <title>Create Post</title>
 </head>
 <body>
-<h1>Create New Post</h1>
-<form th:action="@{/posts}" th:object="${postForm}" method="post">
-    <div>
-        <label>Title:</label>
-        <input type="text" th:field="*{title}" />
-    </div>
-    <div>
-        <label>Content:</label>
-        <textarea th:field="*{content}"></textarea>
-    </div>
-    <div>
-        <label>Member ID:</label>
-        <input type="text" th:field="*{memberId}" />
-    </div>
-    <div>
-        <label>Category ID:</label>
-        <input type="text" th:field="*{categoryId}" />
-    </div>
-    <div>
-        <label>Hashtag:</label>
-        <input type="text" th:field="*{strHashtag}" />
-    </div>
-    <div>
-        <button type="submit">Create</button>
-    </div>
-</form>
-<a th:href="@{/posts}">Back to list</a>
+<div layout:fragment="content">
+    <h1>Create New Post</h1>
+    <form th:action="@{/posts/new}" th:object="${postForm}" method="post">
+        <div>
+            <label for="title">Title:</label>
+            <input type="text" id="title" th:field="*{title}" required/>
+        </div>
+        <div>
+            <label for="content">Content:</label>
+            <textarea id="content" th:field="*{content}" required></textarea>
+        </div>
+        <div>
+            <label>Categories:</label>
+            <div th:each="category : ${categories}">
+                <input type="radio" th:field="*{categoryId}" th:value="${category.categoryId}" th:id="'category-' + ${category.categoryId}"
+                       th:checked="${category.categoryId == postForm.categoryId}" required/>
+                <label th:for="'category-' + ${category.categoryId}" th:text="${category.name}"></label>
+            </div>
+        </div>
+        <div>
+            <input type="hidden" name="boardId" th:value="${boardId}"/>
+            <input type="hidden" name="categoryId" th:value="${categoryId}"/>
+            <label for="strHashtag">Hashtags (comma separated):</label>
+            <input type="text" id="strHashtag" th:field="*{strHashtag}" placeholder="e.g. hashtag1, hashtag2" required/>
+        </div>
+        <div>
+            <button type="submit">Create</button>
+        </div>
+    </form>
+    <a th:href="@{'/posts/board/' + ${boardId}}">Back to list</a>
+</div>
 </body>
 </html>
