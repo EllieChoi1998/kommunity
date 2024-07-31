@@ -1,42 +1,152 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml"
-      layout:decorate="~{layout}" >
+      layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
     <title>Post Detail</title>
     <link rel="stylesheet" th:href="@{/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/detail.css}">
 </head>
-<body>
-<!-- 메인 컨텐츠 부분 시작 -->
-<div layout:fragment="content" class="container mt-4">
-    <div class="detail-card">
-        <!-- Post 섹션 -->
-        <div class="post-section">
-            <h1 th:text="${post.title}">게시글 제목</h1>
-            <div class="post-meta">
-                <small class="text-muted" th:text="${post.member.nickname}">작성자</small>
-                <small class="text-muted" th:text="${#temporals.format(post.postDate, 'yyyy-MM-dd HH:mm')}">작성 날짜</small>
-            </div>
-            <p th:text="${post.content}">게시글 내용</p>
 
-        </div>
-        <!-- 댓글 섹션 -->
-        <div class="comments-section">
-            <h2>댓글</h2>
-            <div th:each="comment : ${comments}">
-                <div class="comment">
-                    <p th:text="${comment.commentContent}">댓글 내용</p>
-                    <div class="comment-meta">
-                        <small class="text-muted" th:text="${comment.member.nickname}">작성자</small>
-                        <small class="text-muted" th:text="${#temporals.format(comment.commentDateTime, 'yyyy-MM-dd HH:mm')}">작성 날짜</small>
+<body th:with="leftSidebar=false, rightSidebar=false">
+
+<!-- 메인 컨텐츠 부분 시작 -->
+<div layout:fragment="content" class="container my-3">
+    <div class="rounded-rectangle-container">
+        <div class="row">
+            <!-- Post 섹션 -->
+            <div class="col-md-6 post-section">
+                <h1 class="border-bottom py-2 post-subject" th:text="${post.title}">게시글 제목</h1>
+                <div class="card my-3">
+                    <div class="card-body">
+                        <div class="post-content">
+                            <div class="card-text" th:text="${post.content}"></div>
+                        </div>
+                        <div class="post-meta">
+                            <small class="text-muted"
+                                   th:text="${post.member.nickname}">작성자</small>
+                            <small class="text-muted"
+                                   th:text="${#temporals.format(post.postDate, 'yyyy-MM-dd HH:mm')}">작성 날짜</small>
+                        </div>
+
+                        <div class="my-3 like-dislike-container">
+                            <!--Post 좋아요-->
+                            <a href="javascript:void(0);" class="like btn btn-sm btn-outline-secondary"
+                               th:data-uri="@{|/post/like/${post.id}|}">
+                                <img src="/images/heart-fill.svg"/>
+                                <span class="badge rounded-pill bg-success"
+                                      th:text="${#lists.size(post.likes)}"></span>
+                            </a>
+                            <!--Post 싫어요-->
+                            <a href="javascript:void(0);" class="dislike btn btn-sm btn-outline-secondary"
+                               th:data-uri="@{|/post/dislike/${post.id}|}">
+                                <img src="/images/heartbreak-fill.svg"/>
+                                <span class="badge rounded-pill bg-danger"
+                                      th:text="${#lists.size(post.hates)}"></span>
+                            </a>
+                            <!--Post 북마크 자바 스크립트 구현 예정-->
+                            <a href="javascript:void(0):" class="bookmark btn btn-sm btn-outline-secondary"
+                            >
+                                <img src="/images/bookmark-star.svg"/>
+                               </a>
+                        </div>
+
                     </div>
                 </div>
-                <hr/>
+            </div>
+
+            <!-- 댓글 섹션 -->
+            <div class="col-md-6 comment-section">
+                <!-- 댓글의 갯수 표시 -->
+                <h5 class="border-bottom py-3 comment-title text-center"
+                    th:text="|댓글 (${#lists.size(comments)})|"></h5>
+
+                <!-- 댓글 작성 폼 -->
+                <form th:action="@{|/comment/create/${post.id}|}" th:object="${commentForm}" method="post"
+                      class="my-3 textarea-container">
+                    <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+                    <textarea sec:authorize="isAnonymous()" disabled th:field="*{commentContent}"
+                              class="form-control textarea-with-btn"
+                              rows="2" placeholder="댓글을 입력하세요."></textarea>
+                    <textarea sec:authorize="isAuthenticated()" th:field="*{commentContent}"
+                              class="form-control textarea-with-btn"
+                              rows="2" placeholder="댓글을 입력하세요."></textarea>
+                    <input type="submit" value="추가" class="btn btn-primary my-1 submit-btn">
+                </form>
+
+                <!-- 댓글 리스트 -->
+                <div class="card my-3 comment-content" th:each="comment : ${comments}">
+                    <div class="card-body">
+                        <div class="comment">
+                            <div class="card-text" th:text="${comment.commentContent}">댓글 내용</div>
+                        </div>
+                        <div class="comment-meta">
+                            <small class="text-muted"
+                                   th:text="${comment.member.nickname}">작성자</small>
+                            <small class="text-muted"
+                                   th:text="${#temporals.format(comment.commentDateTime, 'yyyy-MM-dd HH:mm')}">작성
+                                날짜</small>
+                        </div>
+
+                        <div class="my-3 like-dislike-container">
+                            <!--댓글 좋아요-->
+                            <a href="javascript:void(0);" class="like btn btn-sm btn-outline-secondary"
+                               th:data-uri="@{|/comment/like/${comment.commentId}|}">
+                                <img src="/images/heart-fill.svg"/>
+                                <span class="badge rounded-pill bg-success"
+                                      th:text="${#lists.size(comment.likes)}"></span>
+                            </a>
+
+                            <!--댓글 싫어요-->
+                            <a href="javascript:void(0);" class="dislike btn btn-sm btn-outline-secondary"
+                               th:data-uri="@{|/comment/dislike/${comment.commentId}|}">
+                                <img src="/images/heartbreak-fill.svg"/>
+                                <span class="badge rounded-pill bg-danger"
+                                      th:text="${#lists.size(comment.hates)}"></span>
+                            </a>
+                            <!--                        <a th:href="@{|/comment/update/${comment.commentId}|}" class="btn btn-sm btn-outline-secondary"
+                                                       sec:authorize="isAuthenticated()"
+                                                       th:if="${comment.member != null and #authentication.getPrincipal().getUsername() == comment.member.username}"
+                                                       th:text="수정"></a>
+                                                    <a href="javascript:void(0);" th:data-uri="@{|/comment/delete/${comment.commentId}|}"
+                                                       class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
+                                                       th:if="${comment.member != null and #authentication.getPrincipal().getUsername() == comment.member.username}"
+                                                       th:text="삭제"></a>-->
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 <!-- 메인 컨텐츠 부분 끝 -->
+<script layout:fragment="script" type='text/javascript'>
+    const delete_elements = document.getElementsByClassName("delete");
+    Array.from(delete_elements).forEach(function (element) {
+        element.addEventListener('click', function () {
+            if (confirm("정말로 삭제하시겠습니까?")) {
+                location.href = this.dataset.uri;
+            }
+        });
+    });
+
+    const like_elements = document.getElementsByClassName("like");
+    Array.from(like_elements).forEach(function (element) {
+        element.addEventListener('click', function () {
+            if (confirm("정말로 좋아요 하시겠습니까?")) {
+                location.href = this.dataset.uri;
+            }
+        });
+    });
+
+    const dislike_elements = document.getElementsByClassName("dislike");
+    Array.from(dislike_elements).forEach(function (element) {
+        element.addEventListener('click', function () {
+            if (confirm("정말로 싫어요 하시겠습니까?")) {
+                location.href = this.dataset.uri;
+            }
+        });
+    });
+</script>
 </body>
 </html>
