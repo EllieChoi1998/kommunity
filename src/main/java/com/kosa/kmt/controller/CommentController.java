@@ -141,16 +141,18 @@ public class CommentController {
         return ResponseEntity.ok().build();
     }
 
-    // 댓글 정렬 기능 추가
+    // 댓글 정렬 기능 추가 (최신 순, 오래된 순, 좋아요 많은 순)
     @GetMapping("/sorted")
-    public String getSortedComments(@RequestParam Long postId,
-                                    @RequestParam String order,
-                                    Model model) throws SQLException {
+    public String getSortedComments(@RequestParam Long postId, @RequestParam String order, Model model) throws SQLException {
         List<PostComment> comments;
         if ("newest".equals(order)) {
-            comments = commentService.getAllCommentsByNewest();
+            comments = commentService.getCommentsByPostIdAndNewest(postId);
+        } else if ("oldest".equals(order)) {
+            comments = commentService.getCommentsByPostIdAndOldest(postId);
+        } else if ("likes".equals(order)) {
+            comments = commentService.getAllCommentsByLikes(postId);
         } else {
-            comments = commentService.getAllCommentsByOldest();
+            comments = commentService.getCommentsByPostId(postId);
         }
 
         Post post = postService.getPostById(postId);
