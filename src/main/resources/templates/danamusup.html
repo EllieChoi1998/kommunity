@@ -5,14 +5,140 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: #2b2d42;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .content h2 {
+            color: #8d99ae;
+            margin-bottom: 20px;
+        }
+
+        .content p {
+            color: #4f5d75;
+            line-height: 1.6;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
         .styled-img {
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
             max-width: 100%;
             height: auto;
+            margin-bottom: 20px;
         }
-        h3 {
-            line-height: 1.5; /* 줄 간격을 1.5배로 설정 */
+
+        figcaption {
+            text-align: center;
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+
+        .call-to-action {
+            background-color: #edf2f4;
+            border-left: 5px solid #0eb4fc;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .call-to-action h3 {
+            color: #2b2d42;
+            margin-bottom: 15px;
+        }
+
+        .call-to-action p {
+            color: #4f5d75;
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 300px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 15px;
+        }
+
+        .card-content h3 {
+            margin: 0;
+            font-size: 1.5em;
+            color: #2b2d42;
+        }
+
+        .card-content p {
+            font-size: 1.0em;
+            color: #8d99ae;
+            margin: 10px 0 0;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .card-container {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        .card-content h4 {
+            margin: 0;
+            font-size: 1.2em;
+            color: #2b2d42;
         }
     </style>
 </head>
@@ -31,16 +157,64 @@
 <!-- 메인 컨텐츠  -->
 
 <div layout:fragment="content" class="container my-3">
-    <h2 class="text-center">MSA 5기를 위한 커뮤니티, Kommunity에 오신 걸 환영합니다!</h2><br>
-    <h3 class="text-start">
-        1. 대나무 숲은 익명 게시판입니다.<br>
-        2. 이런식으로 이용 방법을 main page에 보여주는거 어때요<br>
-        3. 너무 휑하길래 적어봤습니다ㅎㅎ,,
-    </h3>
-    <a href="/images/letsgo.jpg" target="_blank">
-        <img src="/images/letsgo.jpg" alt="Lets Go" class="styled-img">
-    </a>
-    <figcaption>이 이미지는 우리 커뮤니티의 시작을 상징합니다.</figcaption>
+    <div class="container">
+        <div class="content">
+            <h2>KOSA MSA 5기 커뮤니티 : KOMMUNITY</h2>
+            <p>2024년 04월 23일 부터 시작된 우리, 10월 18일까지 화이팅합시다!</p>
+            <p>우리 모두 목표를 달성하는 그날까지, 화이팅!</p>
+            <div class="call-to-action">
+                <h3>커뮤니티를 최대한 활용하기 위한 팁!</h3>
+                <p>1. 대나무 숲은 익명 게시판으로 자유롭게 의견을 나눠보세요.<br>
+                    2. 각 카테고리에 맞는 주제의 게시글을 작성하므로써, 다양한 정보를 공유하세요!<br>
+                    3. 실시간 채팅 기능으로 접속중인 친구들과 자유로운 소통을 해보세요! <br>
+                    4. 해시테그를 입력하면서 편안한 검색을 하세요! <br>
+                    5. 18시 이후, 자동 로그아웃됩니다! 야근을 하시는 분들은 야근하기를 꼭 drag 해두세요!
+                </p>
+            </div>
+            <br>
+            <br>
+            <h2> Team.Kom [팀 닷 콤] 개발자들</h2>
+            <div class="card-container">
+                <div class="card">
+                    <img src="/images/최혜령.jpg" alt="최혜령" class="styled-img">
+                    <div class="card-content">
+                        <h3>최혜령</h3>
+                        <h4>MSA5기 반장</h4>
+                        <p>1998년 10월 08일생</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="/images/김진석.jpg" alt="김진석" class="styled-img">
+                    <div class="card-content">
+                        <h3>김진석</h3>
+                        <h4>Team.Kom의 팀장</h4>
+                        <p>1999년 03월 14일생</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="/images/장원석.jpg" alt="장원석" class="styled-img">
+                    <div class="card-content">
+                        <h3>장원석</h3>
+                        <h4>Team.Kom의 두목</h4>
+                        <p>1996년 09월 06일생</p>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <br>
+            <h2> MSA5기의 생활 장소들</h2>
+            <div class="card-container">
+                <div class="card">
+                <img src="/images/letsgo.jpg" alt="Lets Go" class="styled-img">
+                <p>KOSA 혜화교육센터 6층 복도</p>
+                </div>
+                <div class="card">
+                    <img src="/images/classroom.jpg" alt="classroom" class="styled-img">
+                    <p>601호 우리들의 교육장</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 
