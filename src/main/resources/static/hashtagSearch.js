@@ -7,7 +7,7 @@ let hashtags = [];
 let hashtagDTOs = []; // 한 번만 선언
 let highlightedIndex = -1; // 현재 강조된 항목의 인덱스
 
-// Axios를 사용하여 데이터 가져오기
+
 axios.get('/api/hashtags')
     .then(response => {
         hashtagDTOs = response.data;
