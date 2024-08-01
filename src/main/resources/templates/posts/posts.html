@@ -14,8 +14,11 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div class="d-flex align-items-center">
             <div>
-                <a th:if="${isAllCategories}" th:href="@{'/posts/new/' + ${board.boardId}}" class="btn btn-primary">글쓰기</a>
-                <a th:if="${!isAllCategories}" th:href="@{'/posts/new/' + ${board.boardId} + '?categoryId=' + ${category.categoryId}}" class="btn btn-primary">글쓰기</a>
+                <a th:if="${isAllCategories}" th:href="@{'/posts/new/' + ${board.boardId}}"
+                   class="btn btn-primary">글쓰기</a>
+                <a th:if="${!isAllCategories}"
+                   th:href="@{'/posts/new/' + ${board.boardId} + '?categoryId=' + ${category.categoryId}}"
+                   class="btn btn-primary">글쓰기</a>
             </div>
         </div>
         <div>
@@ -35,10 +38,15 @@
                     <div class="card-body">
                         <h5 class="card-title" th:text="${postForm.title}">Post Title</h5>
                         <!-- 마크다운으로 작성된 콘텐츠를 HTML로 변환하여 출력 -->
-                        <div class="card-text" th:utext="${postForm.renderedContent}">Post Content</div> <!-- 수정: th:text에서 th:utext로 변경하여 HTML로 변환된 콘텐츠 출력 -->
-                        <small class="text-muted post-date" th:text="${postForm.postDate}">Post Date</small>
+                        <div class="card-text" th:utext="${postForm.renderedContent}">Post Content</div>
+                        <!-- 수정: th:text에서 th:utext로 변경하여 HTML로 변환된 콘텐츠 출력 -->
                         <div class="hashtag-container">
-                            <span class="hashtag" th:each="hashtag : ${postForm.hashtags}" th:text="'#' + ${hashtag.hashtag.name}"></span>
+                            <span class="hashtag" th:each="hashtag : ${postForm.hashtags}"
+                                  th:text="'#' + ${hashtag.hashtag.name}"></span>
+                        </div>
+                        <div class="post-date">
+                            <small class="text-muted post-date float-right" th:text="${postForm.postDate}">Post
+                                Date</small>
                         </div>
                     </div>
                 </div>

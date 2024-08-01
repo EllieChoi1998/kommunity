@@ -39,6 +39,7 @@
 
 .post-date {
     white-space: nowrap;
+    align-self: end;
 }
 
 .card-link {

@@ -32,7 +32,7 @@
                         </div>
 
                         <div class="post-meta">
-                            <small class="text-muted"
+                            <small class="text-muted nickname"
                                    th:text="${isAnonymousBoard} ? '익명' : ${post.member.nickname}">작성자</small>
                             <small class="text-muted"
                                    th:text="${#temporals.format(post.postDate, 'yyyy-MM-dd HH:mm')}">작성 날짜</small>
@@ -127,7 +127,7 @@
                                 <div class="card-text" th:text="${commentDetailsDTO.comment.commentContent}">댓글 내용</div>
                             </div>
                             <div class="comment-meta">
-                                <small class="text-muted"
+                                <small class="text-muted nickname"
                                        th:text="${isAnonymousBoard} ? '익명' : ${commentDetailsDTO.comment.member.nickname}">작성자</small>
                                 <small class="text-muted"
                                        th:text="${#temporals.format(commentDetailsDTO.comment.commentDateTime, 'yyyy-MM-dd HH:mm')}">작성
