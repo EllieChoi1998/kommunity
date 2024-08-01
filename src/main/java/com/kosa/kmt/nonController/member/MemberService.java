@@ -29,4 +29,7 @@ public interface MemberService {
     Member findByEmail(String email);
 
 //    Boolean verifyPassword(Member member, String password);
+
+    public void registerMember(Member member);
+
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,6 +38,14 @@
         .profile-content .row a {
             display: flex;
         }
+
+        .dashboard-button {
+            background-color: #ffc107 !important; /* 노란색 배경 */
+            border: 2px solid #000000 !important; /* 검정 테두리 */
+            color: black !important;
+            text-align: center;
+        }
+
 
         .drop-zone {
             width: 100px;
@@ -96,8 +104,21 @@
             <button>로그아웃</button>
         </a>
     </div>
-    <button id="mypostButton">내 게시글 관리</button>
-    <button id="bookmarkButton">내 북마크 관리</button>
+    <div class="row">
+        <button id="mypostButton">내 게시글 관리</button>
+    </div>
+    <div class="row">
+        <button id="bookmarkButton">내 북마크 관리</button>
+    </div>
+    <!-- 관리자 전용 대시보드 관리 버튼 -->
+    <div class="row" sec:authorize="hasRole('ROLE_ADMIN')">
+        <button id="dashboardButton" class="dashboard-button" onclick="window.location.href='/admin/dashboard'">대시보드 관리</button>
+    </div>
+    <!-- 관리자 전용 회원 등록 버튼 -->
+    <div class="row" sec:authorize="hasRole('ROLE_ADMIN')">
+        <button id="registerButton" class="dashboard-button" onclick="window.location.href='/admin/register'">회원등록 관리</button>
+    </div>
+
 </div>
 
 <script>
