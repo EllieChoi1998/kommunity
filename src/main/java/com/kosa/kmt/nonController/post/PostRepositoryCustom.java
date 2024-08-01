@@ -8,4 +8,9 @@ public interface PostRepositoryCustom {
 //    List<Post> findAllOrderByCommentsDesc();
 
     List<Post> findPostsWithMoreHatesThanLikes();
+
+    List<Post> findPostsByAllHashtags(List<String> hashtags, long size);
+
+    List<Post> findPostsByAnyHashtags(List<String> hashtags);
+
 }

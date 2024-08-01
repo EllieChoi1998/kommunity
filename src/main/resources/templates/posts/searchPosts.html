@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+    <!-- Bootstrap CSS 추가 -->
+    <link rel="stylesheet" href="/css/posts.css"/>
+</head>
+<body>
+
+<!-- 메인 컨텐츠 부분 시작 -->
+<div layout:fragment="content" class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Search Results</h2>
+        <div>
+            <select id="sortSelect" class="form-select">
+                <option th:value="'desc'" th:selected="${selectedSort == 'desc'}">최신순</option>
+                <option th:value="'asc'" th:selected="${selectedSort == 'asc'}">오래된 순</option>
+                <option th:value="'bookmarks'" th:selected="${selectedSort == 'bookmarks'}">북마크순</option>
+                <option th:value="'comments'" th:selected="${selectedSort == 'comments'}">댓글순</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="card-container">
+        <div th:each="postForm : ${posts}">
+            <a th:href="@{'/posts/' + ${postForm.id}}" class="card-link">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${postForm.title}">Post Title</h5>
+                        <!-- 마크다운으로 작성된 콘텐츠를 HTML로 변환하여 출력 -->
+                        <div class="card-text" th:utext="${postForm.renderedContent}">Post Content</div> <!-- 수정: th:text에서 th:utext로 변경하여 HTML로 변환된 콘텐츠 출력 -->
+                        <small class="text-muted post-date" th:text="${postForm.postDate}">Post Date</small>
+                        <div class="hashtag-container">
+                            <span class="hashtag" th:each="hashtag : ${postForm.hashtags}" th:text="'#' + ${hashtag.hashtag.name}"></span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

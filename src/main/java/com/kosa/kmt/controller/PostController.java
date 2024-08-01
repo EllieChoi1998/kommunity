@@ -205,7 +205,7 @@ public class PostController {
         model.addAttribute("board", board);
         model.addAttribute("categories", categories);
         model.addAttribute("boardCategories", boardCategories);
-        model.addAttribute("selectedBoardId", boardId); // 추가된 부분
+        model.addAttribute("selectedBoardId", boardId);
         model.addAttribute("sortedHashtagDTO", sortedHashtagDTO);
     }
 
@@ -215,8 +215,7 @@ public class PostController {
             postForm.setId(post.getId());
             postForm.setTitle(post.getTitle());
             postForm.setContent(post.getContent());
-            Node document = Parser.builder().build().parse(post.getContent());
-            postForm.setRenderedContent(HtmlRenderer.builder().build().render(document));
+            postForm.setRenderedContent(MarkdownService.renderMarkdownToHtml(post.getContent()));
             postForm.setMemberId(post.getMember().getMemberId());
             postForm.setNickname(post.getMember().getNickname());
             if (post.getCategory() != null) {
@@ -329,5 +328,27 @@ public class PostController {
         postLikeOrHateService.hatePost(post, member);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/search")
+    public String searchPosts(@RequestParam Long boardId,
+                              @RequestParam List<String> hashtags,
+                              @RequestParam(defaultValue = "desc") String sort,
+                              @RequestParam(defaultValue = "all") String matchType,
+                              Model model) throws SQLException {
+        List<Post> posts;
+        if ("all".equalsIgnoreCase(matchType)) {
+            posts = postService.findPostsByAllHashtags(hashtags);
+        } else {
+            posts = postService.findPostsByAnyHashtags(hashtags);
+        }
+
+        List<PostForm> postForms = convertToPostForms(posts);
+
+        addCommonAttributes(model, boardId);
+        model.addAttribute("posts", postForms);
+        model.addAttribute("isAllCategories", true);
+        model.addAttribute("selectedSort", sort);
+        return "posts/searchPost";
     }
 }

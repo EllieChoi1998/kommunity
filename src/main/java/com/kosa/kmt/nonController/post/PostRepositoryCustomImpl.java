@@ -34,4 +34,24 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
         TypedQuery<Post> query = em.createQuery(jpql, Post.class);
         return query.getResultList();
     }
+
+    @Override
+    public List<Post> findPostsByAllHashtags(List<String> hashtags, long size) {
+        String jpql = "SELECT p FROM Post p JOIN p.hashtags ph JOIN ph.hashtag h " +
+                "WHERE h.name IN :hashtags " +
+                "GROUP BY p.id HAVING COUNT(DISTINCT h.name) = :size";
+        TypedQuery<Post> query = em.createQuery(jpql, Post.class);
+        query.setParameter("hashtags", hashtags);
+        query.setParameter("size", size);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Post> findPostsByAnyHashtags(List<String> hashtags) {
+        String jpql = "SELECT DISTINCT p FROM Post p JOIN p.hashtags ph JOIN ph.hashtag h " +
+                "WHERE h.name IN :hashtags";
+        TypedQuery<Post> query = em.createQuery(jpql, Post.class);
+        query.setParameter("hashtags", hashtags);
+        return query.getResultList();
+    }
 }
