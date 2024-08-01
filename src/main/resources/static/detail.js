@@ -113,16 +113,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
 
 
-    // 페이지 로드 시 localStorage에서 텍스트를 복원
-    const savedSortText = localStorage.getItem('sortButtonText');
-    if (savedSortText) {
-        document.getElementById('sortButtonText').innerText = savedSortText;
-    }
-
+    // 페이지 로드 시 항상 기본값으로 "댓글 정렬"로 표시
+    const sortButtonTextElement = document.getElementById('sortButtonText');
+    const defaultSortText = '댓글 정렬';
+    sortButtonTextElement.innerText = defaultSortText;
+    localStorage.setItem('sortButtonText', defaultSortText);
 });
 
-// 댓글 정렬 시 드롭다운 메뉴 버튼 클릭 시, 정렬 text 변환 js
-function setSortButtonText(text) {
-    document.getElementById('sortButtonText').innerText = text;
-    localStorage.setItem('sortButtonText', text);
-}
+// // 댓글 정렬 시 드롭다운 메뉴 버튼 클릭 시, 정렬 text 변환 js
+// function setSortButtonText(text) {
+//     document.getElementById('sortButtonText').innerText = text;
+//     localStorage.setItem('sortButtonText', text);
+// }
