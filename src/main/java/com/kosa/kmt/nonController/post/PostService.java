@@ -24,7 +24,7 @@ public interface PostService {
     public Long createPostNonTitle(String content, Integer memberId, Integer categoryId, String strHashtag) throws SQLException;
 
     // update post
-    public Boolean updatePost(Post post, Long id) throws SQLException;
+    Boolean updatePost(Long postId, String title, String content) throws SQLException;
 
     // delete post
     public Boolean deletePost(Long id) throws SQLException;

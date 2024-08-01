@@ -16,11 +16,14 @@ html, body {
     height: 100%;
 }
 
-/*댓글*/
-
+/* 댓글 */
 .rounded-rectangle-container {
-    /*background-color: #ffffff; !* 배경 색상 설정 *!*/
+
     border: 2px solid #ffffff; /* 원하는 테두리 색상으로 변경하세요 */
+
+    /*background-color: #ffffff; !* 배경 색상 설정 *!*/
+    border: 2px solid #f9f9f9; /* 원하는 테두리 색상으로 변경하세요 */
+
     border-radius: 15px; /* 둥근 모서리의 반경 */
     padding: 20px;
     margin: 10px 0;
@@ -76,5 +79,21 @@ html, body {
 }
 .like-dislike-container a {
     margin: 0 5px; /* 버튼 간의 간격 조절 */
+}
+
+/* 추가된 부분: 버튼 색상 스타일링 */
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    color: white;
 }
 

@@ -46,4 +46,14 @@ public class CommentLikeOrHateServiceImpl implements CommentLikeOrHateService {
             commentHateRepository.save(commentHate);
         }
     }
+
+    @Override
+    public boolean isCommentLikedByMember(PostComment comment, Member member) {
+        return commentLikeRepository.findByPostComment_CommentIdAndMember_MemberId(comment.getCommentId(), member.getMemberId()) != null;
+    }
+
+    @Override
+    public boolean isCommentHatedByMember(PostComment comment, Member member) {
+        return commentHateRepository.findByPostComment_CommentIdAndMember_MemberId(comment.getCommentId(), member.getMemberId()) != null;
+    }
 }
