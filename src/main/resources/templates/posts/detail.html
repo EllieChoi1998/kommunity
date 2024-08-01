@@ -32,14 +32,14 @@
                         <div class="my-3">
                             <!--Post 좋아요-->
                             <a href="javascript:void(0);" class="like btn btn-sm btn-outline-secondary"
-                               th:data-uri="@{|/post/like/${post.id}|}">
+                               th:data-uri="@{|/posts/like/${post.id}|}">
                                 <img src="/images/heart-fill.svg"/>
                                 <span class="badge rounded-pill bg-success"
                                       th:text="${#lists.size(post.likes)}"></span>
                             </a>
                             <!--Post 싫어요-->
                             <a href="javascript:void(0);" class="dislike btn btn-sm btn-outline-secondary"
-                               th:data-uri="@{|/post/dislike/${post.id}|}">
+                               th:data-uri="@{|/posts/dislike/${post.id}|}">
                                 <img src="/images/heartbreak-fill.svg"/>
                                 <span class="badge rounded-pill bg-danger"
                                       th:text="${#lists.size(post.hates)}"></span>
