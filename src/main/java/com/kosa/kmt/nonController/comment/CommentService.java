@@ -70,12 +70,17 @@ public class CommentService {
     }
 
     // 최신 순 정렬
-    public List<PostComment> getAllCommentsByNewest() {
-        return postCommentRepository.findAllByOrderByCommentDateTimeDesc();
+    public List<PostComment> getCommentsByPostIdAndNewest(Long postId) {
+        return postCommentRepository.findByPostIdOrderByCommentDateTimeDesc(postId);
     }
 
     // 오래된 순 정렬
-    public List<PostComment> getAllCommentsByOldest() {
-        return postCommentRepository.findAllByOrderByCommentDateTimeAsc();
+    public List<PostComment> getCommentsByPostIdAndOldest(Long postId) {
+        return postCommentRepository.findByPostIdOrderByCommentDateTimeAsc(postId);
+    }
+
+    // 좋아요 순 정렬
+    public List<PostComment> getAllCommentsByLikes(Long postId) {
+        return postCommentRepository.findAllByOrderByLikesDesc(postId);
     }
 }

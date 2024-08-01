@@ -3,6 +3,7 @@ package com.kosa.kmt.nonController.post;
 import com.kosa.kmt.nonController.board.Board;
 import com.kosa.kmt.nonController.category.Category;
 import com.kosa.kmt.nonController.category.CategoryRepository;
+import com.kosa.kmt.nonController.category.CategoryService;
 import com.kosa.kmt.nonController.comment.PostCommentRepository;
 import com.kosa.kmt.nonController.hashtag.PostHashtagService;
 import com.kosa.kmt.nonController.member.Member;
@@ -28,6 +29,8 @@ public class PostServiceImpl implements PostService {
     private final BookMarkRepository bookMarkRepository;
     private final PostCommentRepository postCommentRepository;
     private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
+
 
     @Override
     public List<Post> getPostsAll() throws SQLException {
@@ -147,12 +150,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getPostsOrderByPostDateDesc(Post post) throws SQLException {
+    public List<Post> getPostsOrderByPostDateDesc() throws SQLException {
         return postRepository.findAllByOrderByPostDateDesc();
     }
 
     @Override
-    public List<Post> getPostsOrderByPostDateAsc(Post post) throws SQLException {
+    public List<Post> getPostsOrderByPostDateAsc() throws SQLException {
         return postRepository.findAllByOrderByPostDateAsc();
     }
 
@@ -181,4 +184,69 @@ public class PostServiceImpl implements PostService {
         return postRepository.findPostsWithMoreHatesThanLikes();
     }
 
+
+    @Override
+    public List<Post> getPostsByBoardOrderByPostDateDesc(Long boardId) throws SQLException {
+        return postRepository.findAllByCategory_Board_BoardIdOrderByPostDateDesc(boardId);
+    }
+
+    @Override
+    public List<Post> getPostsByBoardOrderByPostDateAsc(Long boardId) throws SQLException {
+        return postRepository.findAllByCategory_Board_BoardIdOrderByPostDateAsc(boardId);
+    }
+
+    @Override
+    public List<Post> getPostsByBoardOrderByBookmarksDesc(Long boardId) throws SQLException {
+        List<Post> posts = postRepository.findAllByCategory_Board_BoardId(boardId);
+        return posts.stream()
+                .map(post -> new PostBookmarkCountDTO(post, bookMarkRepository.countBookMarksByPost(post)))
+                .sorted(Comparator.comparing(PostBookmarkCountDTO::getBookmarkCount).reversed())
+                .map(PostBookmarkCountDTO::getPost)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Post> getPostsByBoardOrderByCommentsDesc(Long boardId) throws SQLException {
+        List<Post> posts = postRepository.findAllByCategory_Board_BoardId(boardId);
+        return posts.stream()
+                .map(post -> new PostCommentCountDTO(post, postCommentRepository.countCommentsByPost(post)))
+                .sorted(Comparator.comparing(PostCommentCountDTO::getCommentCount).reversed())
+                .map(PostCommentCountDTO::getPost)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Post> getPostsByCategoryOrderByPostDateDesc(Long categoryId) throws SQLException {
+        return postRepository.findAllByCategory_CategoryIdOrderByPostDateDesc(categoryId);
+    }
+
+    @Override
+    public List<Post> getPostsByCategoryOrderByPostDateAsc(Long categoryId) throws SQLException {
+        return postRepository.findAllByCategory_CategoryIdOrderByPostDateAsc(categoryId);
+    }
+
+    @Override
+    public List<Post> getPostsByCategoryOrderByBookmarksDesc(Long categoryId) throws SQLException {
+        List<Post> posts = postRepository.findAllByCategory_CategoryId(categoryId);
+        return posts.stream()
+                .map(post -> new PostBookmarkCountDTO(post, bookMarkRepository.countBookMarksByPost(post)))
+                .sorted(Comparator.comparing(PostBookmarkCountDTO::getBookmarkCount).reversed())
+                .map(PostBookmarkCountDTO::getPost)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Post> getPostsByCategoryOrderByCommentsDesc(Long categoryId) throws SQLException {
+        List<Post> posts = postRepository.findAllByCategory_CategoryId(categoryId);
+        return posts.stream()
+                .map(post -> new PostCommentCountDTO(post, postCommentRepository.countCommentsByPost(post)))
+                .sorted(Comparator.comparing(PostCommentCountDTO::getCommentCount).reversed())
+                .map(PostCommentCountDTO::getPost)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Post> findPostsByAnyHashtags(Long boardId, List<String> hashtags) throws SQLException {
+        return postRepository.findPostsByAnyHashtags(boardId, hashtags, hashtags.size());
+    }
 }

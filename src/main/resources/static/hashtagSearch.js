@@ -114,3 +114,19 @@ hashtagsInput.addEventListener("keydown", (event) => {
         navigateResults('up');
     }
 });
+
+document.getElementById('search-btn').addEventListener('click', () => {
+    const searchHashtags = hiddenHashtagsInput.value.split(',').filter(tag => tag.trim() !== '');
+    const boardId = document.getElementById('boardId').value;
+    if (searchHashtags.length > 0) {
+
+        const queryParams = new URLSearchParams({
+            hashtags: searchHashtags.join(','),
+        });
+
+        window.location.href = `/posts/search/${boardId}?${queryParams.toString()}`;
+    } else {
+        alert("Please enter at least one hashtag and select a board.");
+    }
+});
+

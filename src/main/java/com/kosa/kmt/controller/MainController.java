@@ -103,6 +103,8 @@ public class MainController {
         model.addAttribute("boardCategories", boardCategories);
         model.addAttribute("selectedBoardId", boardId);
         model.addAttribute("member", getCurrentMember());
+        model.addAttribute("leftSidebar", false);
+        model.addAttribute("rightSidebar", false);
 
         List<Hashtag> hashtags = hashtagRepository.findAll();
         Map<String, Integer> hashtagCount = new HashMap<>();

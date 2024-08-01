@@ -3,7 +3,7 @@
       layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${title}">Posts</title>
+    <title>Search Results</title>
     <!-- Bootstrap CSS 추가 -->
     <link rel="stylesheet" href="/css/posts.css"/>
 </head>
@@ -11,20 +11,10 @@
 
 <!-- 메인 컨텐츠 부분 시작 -->
 <div layout:fragment="content" class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div class="d-flex align-items-center">
-            <div>
-                <a th:if="${isAllCategories}" th:href="@{'/posts/new/' + ${board.boardId}}" class="btn btn-primary">글쓰기</a>
-                <a th:if="${!isAllCategories}" th:href="@{'/posts/new/' + ${board.boardId} + '?categoryId=' + ${category.categoryId}}" class="btn btn-primary">글쓰기</a>
-            </div>
-        </div>
-        <div>
-            <select id="sortSelect" class="form-select">
-                <option th:value="'desc'" th:selected="${selectedSort == 'desc'}">최신순</option>
-                <option th:value="'asc'" th:selected="${selectedSort == 'asc'}">오래된 순</option>
-                <option th:value="'bookmarks'" th:selected="${selectedSort == 'bookmarks'}">북마크순</option>
-                <option th:value="'comments'" th:selected="${selectedSort == 'comments'}">댓글순</option>
-            </select>
+    <div class="d-flex justify-content-center align-items-center mb-4">
+        <!-- 해시태그 이름 나열 -->
+        <div class="searched-hashtags">
+            <span th:each="hashtag : ${hashtags}" th:text="'#' + ${hashtag}">#Hashtag</span>
         </div>
     </div>
 

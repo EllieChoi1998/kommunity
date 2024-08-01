@@ -16,7 +16,7 @@ public interface CategoryService {
 
     List<Category> findCategoriesByBoardId(Long boardId);
 
-    Category findCategoryById(Long categoryId);
+    Category findById(Long categoryId);
 
     Optional<Category> findCategoryByIdAndBoard(Long categoryId, Board board);
 }
