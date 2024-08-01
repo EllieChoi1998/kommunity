@@ -1,6 +1,8 @@
 package com.kosa.kmt.nonController.post;
 
 import com.kosa.kmt.nonController.board.Board;
+import com.kosa.kmt.nonController.category.Category;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +26,7 @@ public interface PostService {
     public Long createPostNonTitle(String content, Integer memberId, Integer categoryId, String strHashtag) throws SQLException;
 
     // update post
-    Boolean updatePost(Long postId, String title, String content) throws SQLException;
+    Boolean updatePost(Long postId, String title, String content, Integer categoryId, String strHashtag) throws SQLException;
 
     // delete post
     public Boolean deletePost(Long id) throws SQLException;

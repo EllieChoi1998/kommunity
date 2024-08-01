@@ -1,4 +1,4 @@
-package com.kosa.kmt.nonController.markdown;
+package com.kosa.kmt.util;
 
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
@@ -6,7 +6,7 @@ import org.commonmark.renderer.html.HtmlRenderer;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MarkdownService {
+public class MarkdownUtil {
     private static final Parser parser = Parser.builder().build();
     private static final HtmlRenderer renderer = HtmlRenderer.builder().build();
 
