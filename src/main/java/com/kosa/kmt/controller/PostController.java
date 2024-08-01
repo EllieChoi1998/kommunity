@@ -88,6 +88,7 @@ public class PostController {
 
         // 댓글을 최신순으로 정렬하여 가져옴
         List<PostComment> comments = commentService.getCommentsByPostIdAndNewest(id);
+
         String renderedContent = markdownUtil.renderMarkdownToHtml(post.getContent());
 
         List<PostHashtag> hashtags = post.getHashtags();

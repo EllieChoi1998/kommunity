@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="mb-4">관리자 대시보드</h1>
+
+    <!-- 보드 추가 폼 -->
+    <div class="card mb-4">
+        <div class="card-header">보드 추가</div>
+        <div class="card-body">
+            <form th:action="@{/admin/boards/add}" method="post">
+                <div class="form-group">
+                    <label for="boardName">보드 이름</label>
+                    <input type="text" id="boardName" name="boardName" class="form-control" placeholder="보드 이름" required>
+                </div>
+                <button type="submit" class="btn btn-primary">추가</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 카테고리 추가 폼 -->
+    <div class="card mb-4">
+        <div class="card-header">카테고리 추가</div>
+        <div class="card-body">
+            <form th:action="@{/admin/categories/add}" method="post">
+                <div class="form-group">
+                    <label for="categoryName">카테고리 이름</label>
+                    <input type="text" id="categoryName" name="categoryName" class="form-control" placeholder="카테고리 이름" required>
+                </div>
+                <div class="form-group">
+                    <label for="boardId">보드 선택</label>
+                    <select id="boardId" name="boardId" class="form-control" required>
+                        <option th:each="board : ${boards}" th:value="${board.boardId}" th:text="${board.name}"></option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">추가</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 보드 및 카테고리 목록 -->
+    <div class="card">
+        <div class="card-header">보드 및 카테고리 목록</div>
+        <div class="card-body">
+            <div th:each="board : ${boards}" class="mb-3">
+                <h3 th:text="${board.name}"></h3>
+                <!-- 보드 삭제 버튼과 폼 -->
+                <form th:action="@{/admin/boards/delete/{boardId}(boardId=${board.boardId})}" method="post"
+                      th:onsubmit="return confirm('이 보드를 삭제하시겠습니까?');">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <input type="hidden" name="_method" value="delete"/>
+                    <button type="submit" class="btn btn-danger btn-sm">보드 삭제</button>
+                </form>
+
+                <ul class="list-group mt-2">
+                    <li th:each="category : ${categories}"
+                        th:if="${category.board.boardId == board.boardId}"
+                        class="list-group-item d-flex justify-content-between align-items-center">
+                        <span th:text="${category.name}"></span>
+                        <!-- 카테고리 삭제 버튼과 폼 -->
+                        <form th:action="@{/admin/categories/delete/{categoryId}(categoryId=${category.categoryId})}" method="post"
+                              th:onsubmit="return confirm('이 카테고리를 삭제하시겠습니까?');">
+                            <input type="hidden" name="_method" value="delete"/>
+                            <button type="submit" class="btn btn-danger btn-sm">카테고리 삭제</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

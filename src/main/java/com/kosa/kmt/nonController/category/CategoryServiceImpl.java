@@ -67,4 +67,14 @@ public class CategoryServiceImpl implements CategoryService {
     public Optional<Category> findCategoryByIdAndBoard(Long categoryId, Board board) {
         return categoryRepository.findByIdAndBoard(categoryId, board);
     }
+
+    @Override
+    @Transactional
+    public Optional<Category> deleteCategoryById(Long categoryId) {
+        Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
+
+        categoryOptional.ifPresent(categoryRepository::deleteCategory);
+
+        return categoryOptional;
+    }
 }
