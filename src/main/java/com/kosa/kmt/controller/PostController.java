@@ -87,7 +87,7 @@ public class PostController {
         Member member = mainController.getCurrentMember(); // 현재 사용자를 가져오는 로직
 
         List<PostComment> comments = commentService.getCommentsByPostId(id);
-        String renderedContent = markdownService.renderMarkdownToHtml(post.getContent());
+        String renderedContent = markdownUtil.renderMarkdownToHtml(post.getContent());
         List<PostHashtag> hashtags = post.getHashtags();
 
         Long boardId = post.getCategory().getBoard().getBoardId();
