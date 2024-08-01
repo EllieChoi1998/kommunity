@@ -69,4 +69,16 @@ document.addEventListener('DOMContentLoaded', (event) => {
             }
         });
     });
+
+    // 페이지 로드 시 localStorage에서 텍스트를 복원
+    const savedSortText = localStorage.getItem('sortButtonText');
+    if (savedSortText) {
+        document.getElementById('sortButtonText').innerText = savedSortText;
+    }
 });
+
+// 댓글 정렬 시 드롭다운 메뉴 버튼 클릭 시, 정렬 text 변환 js
+function setSortButtonText(text) {
+    document.getElementById('sortButtonText').innerText = text;
+    localStorage.setItem('sortButtonText', text);
+}

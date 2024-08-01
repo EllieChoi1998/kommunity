@@ -77,12 +77,17 @@
                 <!-- 정렬 드롭다운 버튼 -->
                 <div class="d-flex justify-content-center my-3">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            댓글 정렬
+                        <button id="sortButton" type="button" class="btn btn-secondary dropdown-toggle"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            <span id="sortButtonText">정렬 선택</span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" th:href="@{|/comment/sorted?postId=${post.id}&order=newest|}">최신 순 정렬</a></li>
-                            <li><a class="dropdown-item" th:href="@{|/comment/sorted?postId=${post.id}&order=oldest|}">오래된 순 정렬</a></li>
+                            <li><a class="dropdown-item" th:href="@{|/comment/sorted?postId=${post.id}&order=newest|}"
+                                   onclick="setSortButtonText('최신 순 정렬')">최신 순 정렬</a></li>
+                            <li><a class="dropdown-item" th:href="@{|/comment/sorted?postId=${post.id}&order=oldest|}"
+                                   onclick="setSortButtonText('오래된 순 정렬')">오래된 순 정렬</a></li>
+                            <li><a class="dropdown-item" th:href="@{|/comment/sorted?postId=${post.id}&order=likes|}"
+                                   onclick="setSortButtonText('좋아요 순 정렬')">좋아요 순 정렬</a></li>
                         </ul>
                     </div>
                 </div>
