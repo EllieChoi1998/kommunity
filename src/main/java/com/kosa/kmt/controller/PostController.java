@@ -5,12 +5,18 @@ import com.kosa.kmt.nonController.board.BoardService;
 import com.kosa.kmt.nonController.category.Category;
 import com.kosa.kmt.nonController.category.CategoryService;
 
+
 import com.kosa.kmt.nonController.comment.*;
+
+import com.kosa.kmt.nonController.comment.CommentForm;
+import com.kosa.kmt.nonController.comment.CommentService;
+import com.kosa.kmt.nonController.comment.PostComment;
 
 import com.kosa.kmt.nonController.hashtag.*;
 import com.kosa.kmt.nonController.markdown.MarkdownService;
 import com.kosa.kmt.nonController.member.Member;
 import com.kosa.kmt.nonController.post.*;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +25,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -56,7 +64,6 @@ public class PostController {
     private PostHateRepository postHateRepository;
     @Autowired
     private PostLikeOrHateService postLikeOrHateService;
-
     @Autowired
     private BookMarkService bookMarkService;
     @Autowired
@@ -79,15 +86,21 @@ public class PostController {
     public String getPostById(@PathVariable Long id, Model model) throws SQLException {
         Post post = postService.getPostById(id);
         Member member = mainController.getCurrentMember(); // 현재 사용자를 가져오는 로직
-        List<PostComment> comments = commentService.getCommentsByPostId(id); // Comment 서비스가 있다고 가정합니다.
+        List<PostComment> comments = commentService.getCommentsByPostId(id);
         String renderedContent = markdownService.renderMarkdownToHtml(post.getContent());
 
         Long boardId = post.getCategory().getBoard().getBoardId();
         addCommonAttributes(model, boardId);
 
+//        // 좋아요/싫어요 상태를 가져오기
+//        boolean liked = postLikeOrHateService.isPostLikedByMember(post, member);
+//        boolean disliked = postLikeOrHateService.isPostHateByMember(post, member);
+
         model.addAttribute("post", post);
         model.addAttribute("member", member);
         model.addAttribute("renderedContent", renderedContent);
+//        model.addAttribute("liked", liked);
+//        model.addAttribute("disliked", disliked);
         model.addAttribute("commentForm", new CommentForm()); // 추가된 부분
 
         PostDetailsDTO postDetailsDTO = new PostDetailsDTO();
@@ -152,27 +165,65 @@ public class PostController {
         return "redirect:/posts/category/" + postForm.getBoardId() + "/" + postForm.getCategoryId();
     }
 
-    @GetMapping("/{id}/edit")
-    public String editPostForm(@PathVariable Long id, Model model) throws SQLException {
-        Post post = postService.getPostById(id);
-        model.addAttribute("postForm", new PostForm());
-        model.addAttribute("post", post);
-        return "posts/edit";
+    // 게시물 수정 폼을 보여주는 메서드
+    @GetMapping("/{postId}/edit")
+    @PreAuthorize("isAuthenticated()")
+    public String showUpdateForm(@PathVariable Long postId, Model model) throws SQLException {
+        Post post = postService.getPostById(postId);
+        Member member = mainController.getCurrentMember();
+        if (post.getMember().getEmail().equals(member.getEmail())) {
+            PostForm postForm = new PostForm();
+            postForm.setId(post.getId());
+            postForm.setTitle(post.getTitle());
+            postForm.setContent(post.getContent());
+            postForm.setCategoryId(Math.toIntExact(post.getCategory().getCategoryId()));
+            postForm.setBoardId(Math.toIntExact(post.getCategory().getBoard().getBoardId()));
+            postForm.setMemberId(Math.toIntExact(post.getMember().getMemberId()));
+            postForm.setMemberEmail(post.getMember().getEmail());
+            postForm.setStrHashtag(post.getHashtags().stream()
+                    .map(postHashtag -> postHashtag.getHashtag().getName())
+                    .collect(Collectors.joining(" ")));
+
+            model.addAttribute("postForm", postForm);
+
+            Long selectedBoardId = post.getCategory().getBoard().getBoardId();
+            addCommonAttributes(model, selectedBoardId);
+
+            return "posts/postform"; // 수정 폼 페이지
+        }
+        return "redirect:/posts/" + post.getId(); // 권한이 없으면 원래 페이지로 리디렉트
     }
 
-    @PutMapping("/{id}")
-    public String updatePost(@PathVariable Long id, @ModelAttribute PostForm postForm) throws SQLException {
-        Post post = new Post();
-        post.setTitle(postForm.getTitle());
-        post.setContent(postForm.getContent());
-        postService.updatePost(post, id);
-        return "redirect:/posts";
+    // 게시물 수정 요청을 처리하는 메서드
+    @PostMapping("/update/{postId}")
+    @PreAuthorize("isAuthenticated()")
+    public String updatePost(@PathVariable Long postId,
+                             @Valid @ModelAttribute PostForm postForm,
+                             BindingResult bindingResult,
+                             Principal principal) throws SQLException {
+        if (bindingResult.hasErrors()) {
+            return "posts/postform";
+        }
+
+        Member member = mainController.getCurrentMember();
+        Post post = postService.getPostById(postId);
+        if (post.getMember().getEmail().equals(member.getEmail())) {
+            postService.updatePost(postId, postForm.getTitle(), postForm.getContent());
+        }
+        return "redirect:/posts/" + post.getId(); // 수정 후 원래 페이지로 리디렉트
     }
 
-    @DeleteMapping("/{id}")
-    public String deletePost(@PathVariable Long id) throws SQLException {
-        postService.deletePost(id);
-        return "redirect:/posts";
+    // 게시물 삭제
+    @DeleteMapping("/delete/{postId}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Void> deletePost(@PathVariable Long postId) throws SQLException {
+        Post post = postService.getPostById(postId);
+        Member member = mainController.getCurrentMember();
+        if (post.getMember().getMemberId().equals(member.getMemberId())) {
+            postService.deletePost(postId);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 권한이 없는 경우
     }
 
     private List<HashtagDTO> findAllHastags_by_boardId(List<Category> categories, Board board) throws SQLException {
@@ -269,7 +320,6 @@ public class PostController {
             return postForm;
         }).collect(Collectors.toList());
     }
-
 
     @GetMapping("/board/{boardId}")
     public String getPostsByBoard(@PathVariable Long boardId,
@@ -368,7 +418,6 @@ public class PostController {
 
         return ResponseEntity.ok().build();
     }
-
 
     @PostMapping("/bookmark/{postId}")
     @PreAuthorize("isAuthenticated()")

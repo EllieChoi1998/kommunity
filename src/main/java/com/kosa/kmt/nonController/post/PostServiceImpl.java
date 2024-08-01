@@ -122,14 +122,14 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Boolean updatePost(Post post, Long id) throws SQLException {
-        Optional<Post> postOptional = postRepository.findById(id);
+    public Boolean updatePost(Long postId, String title, String content) throws SQLException {
+        Optional<Post> postOptional = postRepository.findById(postId);
 
         if (postOptional.isPresent()) {
             Post existingPost = postOptional.get();
 
-            existingPost.setTitle(post.getTitle());
-            existingPost.setContent(post.getContent());
+            existingPost.setTitle(title);
+            existingPost.setContent(content);
             postRepository.save(existingPost);
             return true;
         } else {
