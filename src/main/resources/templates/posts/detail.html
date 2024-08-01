@@ -30,28 +30,32 @@
                         </div>
 
                         <div class="my-3">
-                            <!--Post 좋아요-->
+                            <!-- Post 좋아요 -->
                             <a href="javascript:void(0);" class="like btn btn-sm btn-outline-secondary"
+                               th:classappend="${postDetailsDTO.likedByCurrentUser} ? 'btn-success' : 'btn-outline-secondary'"
                                th:data-uri="@{|/posts/like/${post.id}|}">
                                 <img src="/images/heart-fill.svg"/>
                                 <span class="badge rounded-pill bg-success"
                                       th:text="${#lists.size(post.likes)}"></span>
                             </a>
-                            <!--Post 싫어요-->
+                            <!-- Post 싫어요 -->
                             <a href="javascript:void(0);" class="dislike btn btn-sm btn-outline-secondary"
+                               th:classappend="${postDetailsDTO.dislikedByCurrentUser} ? 'btn-danger' : 'btn-outline-secondary'"
                                th:data-uri="@{|/posts/dislike/${post.id}|}">
                                 <img src="/images/heartbreak-fill.svg"/>
                                 <span class="badge rounded-pill bg-danger"
                                       th:text="${#lists.size(post.hates)}"></span>
                             </a>
-                            <!--Post 북마크-->
+                            <!-- Post 북마크 -->
                             <a href="javascript:void(0);" class="bookmark btn btn-sm btn-outline-secondary"
+                               th:classappend="${postDetailsDTO.bookmarkedByCurrentUser} ? 'btn-warning' : 'btn-outline-secondary'"
                                th:data-uri="@{|/posts/bookmark/${post.id}|}">
                                 <img src="/images/bookmark-star.svg"/>
-                                <span class="badge rounded-pill bg-danger"
+                                <span class="badge rounded-pill bg-warning"
                                       th:text="${#lists.size(post.bookMarks)}"></span>
                             </a>
                         </div>
+
 
                     </div>
                 </div>
@@ -96,46 +100,55 @@
 
                 <!-- 댓글 리스트 섹션 -->
                 <div id="comments-section">
-                    <div th:each="comment : ${comments}" class="card my-3 comment-content">
+                    <div th:each="commentDetailsDTO : ${comments}" class="card my-3 comment-content">
                         <div class="card-body">
                             <div class="comment">
-                                <div class="card-text" th:text="${comment.commentContent}">댓글 내용</div>
+                                <div class="card-text" th:text="${commentDetailsDTO.comment.commentContent}">댓글 내용</div>
                             </div>
                             <div class="comment-meta">
-                                <small class="text-muted" th:text="${comment.member.nickname}">작성자</small>
-                                <small class="text-muted" th:text="${#temporals.format(comment.commentDateTime, 'yyyy-MM-dd HH:mm')}">작성 날짜</small>
+                                <small class="text-muted"
+                                       th:text="${commentDetailsDTO.comment.member.nickname}">작성자</small>
+                                <small class="text-muted"
+                                       th:text="${#temporals.format(commentDetailsDTO.comment.commentDateTime, 'yyyy-MM-dd HH:mm')}">작성
+                                    날짜</small>
                             </div>
 
                             <div class="my-3 like-dislike-container">
                                 <!--댓글 좋아요-->
-                                <a href="javascript:void(0);" th:data-uri="@{|/comment/like/${comment.commentId}|}"
+                                <a href="javascript:void(0);"
+                                   th:data-uri="@{|/comment/like/${commentDetailsDTO.comment.commentId}|}"
+                                   th:classappend="${commentDetailsDTO.likedByCurrentUser} ? 'btn-success' : 'btn-outline-secondary'"
                                    class="like btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()">
                                     <img src="/images/heart-fill.svg"/>
-                                    <span class="badge rounded-pill bg-success" th:text="${#lists.size(comment.likes)}"></span>
+                                    <span class="badge rounded-pill bg-success"
+                                          th:text="${#lists.size(commentDetailsDTO.comment.likes)}"></span>
                                 </a>
 
                                 <!--댓글 싫어요-->
-                                <a href="javascript:void(0);" th:data-uri="@{|/comment/dislike/${comment.commentId}|}"
+                                <a href="javascript:void(0);"
+                                   th:data-uri="@{|/comment/dislike/${commentDetailsDTO.comment.commentId}|}"
+                                   th:classappend="${commentDetailsDTO.dislikedByCurrentUser} ? 'btn-danger' : 'btn-outline-secondary'"
                                    class="dislike btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()">
                                     <img src="/images/heartbreak-fill.svg"/>
-                                    <span class="badge rounded-pill bg-danger" th:text="${#lists.size(comment.hates)}"></span>
+                                    <span class="badge rounded-pill bg-danger"
+                                          th:text="${#lists.size(commentDetailsDTO.comment.hates)}"></span>
                                 </a>
 
                                 <!-- 댓글 수정 버튼 -->
-                                <a th:href="@{|/comment/update/${comment.commentId}|}" class="btn btn-sm btn-outline-secondary"
-                                   sec:authorize="isAuthenticated()"
-                                   th:if="${comment.member != null and #authentication.getPrincipal().getUsername() == comment.member.email}"
+                                <a th:href="@{|/comment/update/${commentDetailsDTO.comment.commentId}|}"
+                                   class="btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
+                                   th:if="${commentDetailsDTO.comment.member != null and #authentication.getPrincipal().getUsername() == commentDetailsDTO.comment.member.email}"
                                    th:text="수정"></a>
 
-                                <a href="javascript:void(0);" th:data-uri="@{|/comment/delete/${comment.commentId}|}"
+                                <a href="javascript:void(0);"
+                                   th:data-uri="@{|/comment/delete/${commentDetailsDTO.comment.commentId}|}"
                                    class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
-                                   th:if="${comment.member != null and #authentication.getPrincipal().getUsername() == comment.member.email}"
+                                   th:if="${commentDetailsDTO.comment.member != null and #authentication.getPrincipal().getUsername() == commentDetailsDTO.comment.member.email}"
                                    th:text="삭제"></a>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
