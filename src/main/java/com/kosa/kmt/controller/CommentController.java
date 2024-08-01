@@ -2,14 +2,10 @@ package com.kosa.kmt.controller;
 
 import com.kosa.kmt.nonController.board.Board;
 import com.kosa.kmt.nonController.board.BoardService;
-import com.kosa.kmt.nonController.comment.CommentForm;
-import com.kosa.kmt.nonController.comment.CommentLikeOrHateService;
-import com.kosa.kmt.nonController.comment.CommentService;
-import com.kosa.kmt.nonController.comment.PostComment;
+import com.kosa.kmt.nonController.comment.*;
 import com.kosa.kmt.nonController.member.Member;
 import com.kosa.kmt.nonController.member.MemberService;
-import com.kosa.kmt.nonController.post.Post;
-import com.kosa.kmt.nonController.post.PostService;
+import com.kosa.kmt.nonController.post.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +20,7 @@ import jakarta.validation.Valid;
 
 import java.security.Principal;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -36,6 +33,13 @@ public class CommentController {
     private final BoardService boardService;
     private final MainController mainController;
     private final CommentLikeOrHateService commentLikeOrHateService;
+
+    private final CommentLikeRepository commentLikeRepository;
+    private final CommentHateRepository commentHateRepository;
+
+    private final PostLikeRepository postLikeRepository;
+    private final PostHateRepository postHateRepository;
+    private final BookMarkService bookMarkService;
 
     @PostMapping("/create/{postId}")
     @PreAuthorize("isAuthenticated()")
@@ -144,26 +148,65 @@ public class CommentController {
     // 댓글 정렬 기능 추가 (최신 순, 오래된 순, 좋아요 많은 순)
     @GetMapping("/sorted")
     public String getSortedComments(@RequestParam Long postId, @RequestParam String order, Model model) throws SQLException {
-        List<PostComment> comments;
-        if ("newest".equals(order)) {
-            comments = commentService.getCommentsByPostIdAndNewest(postId);
-        } else if ("oldest".equals(order)) {
-            comments = commentService.getCommentsByPostIdAndOldest(postId);
-        } else if ("likes".equals(order)) {
-            comments = commentService.getAllCommentsByLikes(postId);
-        } else {
-            comments = commentService.getCommentsByPostId(postId);
-        }
-
         Post post = postService.getPostById(postId);
         Member member = mainController.getCurrentMember();
+
+        List<PostComment> comments;
+
+        if ("newest".equals(order)) {
+            comments = commentService.getCommentsByPostIdAndNewest(postId);
+            parsingCommentToDTOs(post, comments, member, model);
+        } else if ("oldest".equals(order)) {
+            comments = commentService.getCommentsByPostIdAndOldest(postId);
+            parsingCommentToDTOs(post, comments, member, model);
+        } else if ("likes".equals(order)) {
+            comments = commentService.getAllCommentsByLikes(postId);
+            parsingCommentToDTOs(post, comments, member, model);
+        } else {
+            comments = commentService.getCommentsByPostId(postId);
+            parsingCommentToDTOs(post, comments, member, model);
+        }
 
         mainController.addCommonAttributes(model, post.getCategory().getBoard().getBoardId());
 
         model.addAttribute("post", post);
-        model.addAttribute("comments", comments);
+
         model.addAttribute("member", member);
         model.addAttribute("commentForm", new CommentForm());
         return "posts/detail";
     }
+
+    private void parsingCommentToDTOs(Post post, List<PostComment> comments, Member member, Model model){
+        PostDetailsDTO postDetailsDTO = new PostDetailsDTO();
+        postDetailsDTO.setPost(post);
+        if(postLikeRepository.findByPost_IdAndMember_MemberId(post.getId(), member.getMemberId()) == null){
+            postDetailsDTO.setLikedByCurrentUser(false);
+        }else{
+            postDetailsDTO.setLikedByCurrentUser(true);
+        }
+        if(postHateRepository.findByPost_IdAndMember_MemberId(post.getId(), member.getMemberId()) == null){
+            postDetailsDTO.setDislikedByCurrentUser(false);
+        }else{
+            postDetailsDTO.setDislikedByCurrentUser(true);
+        }
+        postDetailsDTO.setBookmarkedByCurrentUser(bookMarkService.isBookMarkedByMember(post, member));
+
+        model.addAttribute("postDetailsDTO", postDetailsDTO);
+
+        List<CommentDetailsDTO> commentDetailsDTOS = new ArrayList<>();
+        for (PostComment comment : comments){
+            CommentDetailsDTO commentDetailsDTO = new CommentDetailsDTO();
+            commentDetailsDTO.setComment(comment);
+            commentDetailsDTO.setLikedByCurrentUser(
+                    commentLikeRepository.findByPostComment_CommentIdAndMember_MemberId(comment.getCommentId(), member.getMemberId()) != null ? true : false
+            );
+            commentDetailsDTO.setDislikedByCurrentUser(
+                    commentHateRepository.findByPostComment_CommentIdAndMember_MemberId(comment.getCommentId(), member.getMemberId()) != null ? true : false
+            );
+            commentDetailsDTOS.add(commentDetailsDTO);
+        }
+
+        model.addAttribute("comments", commentDetailsDTOS);
+    }
+
 }

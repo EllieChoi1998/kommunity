@@ -34,8 +34,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     // 댓글 삭제 처리
     deleteElements.forEach(element => {
         element.addEventListener('click', function () {
-            if (confirm("정말로 삭제하시겠습니까?")) {
-                fetch(this.dataset.uri, {
+           fetch(this.dataset.uri, {
                     method: 'POST',
                     headers: {
                         [csrfHeader]: csrfToken,
@@ -49,15 +48,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
                         alert("삭제 실패");
                     }
                 });
-            }
+
         });
     });
 
     // 좋아요 처리
     likeElements.forEach(element => {
         element.addEventListener('click', function () {
-            if (confirm("정말로 추천 하시겠습니까?")) {
-                fetch(this.dataset.uri, {
+            fetch(this.dataset.uri, {
                     method: 'POST',
                     headers: {
                         [csrfHeader]: csrfToken,
@@ -70,15 +68,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
                         alert("추천 실패");
                     }
                 });
-            }
+
         });
     });
 
     // 비추천 처리
     dislikeElements.forEach(element => {
         element.addEventListener('click', function () {
-            if (confirm("정말로 비추천 하시겠습니까?")) {
-                fetch(this.dataset.uri, {
+            fetch(this.dataset.uri, {
                     method: 'POST',
                     headers: {
                         [csrfHeader]: csrfToken,
@@ -91,11 +88,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
                         alert("비추천 실패");
                     }
                 });
-            }
+
         });
     });
 
 
+    // 북마크 처리
     bookmarkElements.forEach(element => {
         element.addEventListener('click', function () {
 
@@ -107,10 +105,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     }
                 }).then(response => {
                     if (response.ok) {
-                        alert("북마크 추가")
                         window.location.reload();
-                    } else {
-                        alert("북마크 해제");
                     }
                 });
 

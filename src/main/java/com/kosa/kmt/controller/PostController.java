@@ -4,18 +4,21 @@ import com.kosa.kmt.nonController.board.Board;
 import com.kosa.kmt.nonController.board.BoardService;
 import com.kosa.kmt.nonController.category.Category;
 import com.kosa.kmt.nonController.category.CategoryService;
+
+
+import com.kosa.kmt.nonController.comment.*;
+
 import com.kosa.kmt.nonController.comment.CommentForm;
 import com.kosa.kmt.nonController.comment.CommentService;
 import com.kosa.kmt.nonController.comment.PostComment;
+
 import com.kosa.kmt.nonController.hashtag.*;
 import com.kosa.kmt.nonController.markdown.MarkdownService;
 import com.kosa.kmt.nonController.member.Member;
 import com.kosa.kmt.nonController.post.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.commonmark.node.Node;
-import org.commonmark.parser.Parser;
-import org.commonmark.renderer.html.HtmlRenderer;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,6 +66,14 @@ public class PostController {
     private PostLikeOrHateService postLikeOrHateService;
     @Autowired
     private BookMarkService bookMarkService;
+    @Autowired
+    private PostLikeRepository postLikeRepository;
+    @Autowired
+    private BookMarkRepository bookMarkRepository;
+    @Autowired
+    private CommentLikeRepository commentLikeRepository;
+    @Autowired
+    private CommentHateRepository commentHateRepository;
 
     @GetMapping
     public String getAllPosts(Model model) throws SQLException {
@@ -86,12 +97,44 @@ public class PostController {
 //        boolean disliked = postLikeOrHateService.isPostHateByMember(post, member);
 
         model.addAttribute("post", post);
-        model.addAttribute("comments", comments);
         model.addAttribute("member", member);
         model.addAttribute("renderedContent", renderedContent);
 //        model.addAttribute("liked", liked);
 //        model.addAttribute("disliked", disliked);
         model.addAttribute("commentForm", new CommentForm()); // 추가된 부분
+
+        PostDetailsDTO postDetailsDTO = new PostDetailsDTO();
+        postDetailsDTO.setPost(post);
+        if(postLikeRepository.findByPost_IdAndMember_MemberId(post.getId(), member.getMemberId()) == null){
+            postDetailsDTO.setLikedByCurrentUser(false);
+        }else{
+            postDetailsDTO.setLikedByCurrentUser(true);
+        }
+        if(postHateRepository.findByPost_IdAndMember_MemberId(post.getId(), member.getMemberId()) == null){
+            postDetailsDTO.setDislikedByCurrentUser(false);
+        }else{
+            postDetailsDTO.setDislikedByCurrentUser(true);
+        }
+        postDetailsDTO.setBookmarkedByCurrentUser(bookMarkService.isBookMarkedByMember(post, member));
+
+        model.addAttribute("postDetailsDTO", postDetailsDTO);
+
+
+        List<CommentDetailsDTO> commentDetailsDTOS = new ArrayList<>();
+        for (PostComment comment : comments){
+            CommentDetailsDTO commentDetailsDTO = new CommentDetailsDTO();
+            commentDetailsDTO.setComment(comment);
+            commentDetailsDTO.setLikedByCurrentUser(
+                    commentLikeRepository.findByPostComment_CommentIdAndMember_MemberId(comment.getCommentId(), member.getMemberId()) != null ? true : false
+            );
+            commentDetailsDTO.setDislikedByCurrentUser(
+                    commentHateRepository.findByPostComment_CommentIdAndMember_MemberId(comment.getCommentId(), member.getMemberId()) != null ? true : false
+            );
+            commentDetailsDTOS.add(commentDetailsDTO);
+        }
+
+        model.addAttribute("comments", commentDetailsDTOS);
+
         return "posts/detail";
     }
 
