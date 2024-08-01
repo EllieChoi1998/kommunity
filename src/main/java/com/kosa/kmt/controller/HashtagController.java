@@ -19,8 +19,6 @@ public class HashtagController {
 
         List<String> hashtagNames = new ArrayList<>();
         for (HashtagDTO hashtagDTO : sortedHashtagDTO) {
-            System.out.println("#########################");
-            System.out.println(hashtagDTO.getName());
             hashtagNames.add(hashtagDTO.getName());
         }
         return hashtagNames;

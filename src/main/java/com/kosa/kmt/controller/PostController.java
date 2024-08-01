@@ -13,12 +13,11 @@ import com.kosa.kmt.nonController.comment.CommentService;
 import com.kosa.kmt.nonController.comment.PostComment;
 
 import com.kosa.kmt.nonController.hashtag.*;
-import com.kosa.kmt.nonController.markdown.MarkdownService;
+import com.kosa.kmt.util.MarkdownUtil;
 import com.kosa.kmt.nonController.member.Member;
 import com.kosa.kmt.nonController.post.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +47,7 @@ public class PostController {
 
     private final MainController mainController;
 
-    private final MarkdownService markdownService;
+    private final MarkdownUtil markdownUtil;
 
     public static List<HashtagDTO> staticHashtagDTOs;
 
@@ -86,9 +85,11 @@ public class PostController {
     public String getPostById(@PathVariable Long id, Model model) throws SQLException {
         Post post = postService.getPostById(id);
         Member member = mainController.getCurrentMember(); // 현재 사용자를 가져오는 로직
+
         // 댓글을 최신순으로 정렬하여 가져옴
         List<PostComment> comments = commentService.getCommentsByPostIdAndNewest(id);
         String renderedContent = markdownService.renderMarkdownToHtml(post.getContent());
+
         List<PostHashtag> hashtags = post.getHashtags();
 
         Long boardId = post.getCategory().getBoard().getBoardId();
@@ -152,7 +153,7 @@ public class PostController {
     @PostMapping("/new")
     public String createPost(@ModelAttribute PostForm postForm) throws SQLException {
         Member member = mainController.getCurrentMember();
-        String renderedContent = markdownService.renderMarkdownToHtml(postForm.getContent());
+        String renderedContent = markdownUtil.renderMarkdownToHtml(postForm.getContent());
         postService.createPost(postForm.getTitle(), renderedContent, member.getMemberId(), postForm.getCategoryId(), postForm.getStrHashtag());
         return "redirect:/posts/category/" + postForm.getBoardId() + "/" + postForm.getCategoryId();
     }
@@ -200,7 +201,7 @@ public class PostController {
         Member member = mainController.getCurrentMember();
         Post post = postService.getPostById(postId);
         if (post.getMember().getEmail().equals(member.getEmail())) {
-            postService.updatePost(postId, postForm.getTitle(), postForm.getContent());
+            postService.updatePost(postId, postForm.getTitle(), postForm.getContent(), postForm.getCategoryId(), postForm.getStrHashtag());
         }
         return "redirect:/posts/" + post.getId(); // 수정 후 원래 페이지로 리디렉트
     }
@@ -282,13 +283,22 @@ public class PostController {
                 .sorted(Comparator.comparingInt(HashtagDTO::getCount).reversed())
                 .collect(Collectors.toList());
 
+        List<HashtagDTO> sortedLimitedHashtagDTO = new ArrayList<>();
+        if (sortedHashtagDTO.size() > 10) {
+            for(int i = 0; i < 10; i++){
+                sortedLimitedHashtagDTO.add(sortedHashtagDTO.get(i));
+            }
+        } else {
+            sortedLimitedHashtagDTO = sortedHashtagDTO;
+        }
+
         model.addAttribute("member", mainController.getCurrentMember());
         model.addAttribute("boards", boards);
         model.addAttribute("board", board);
         model.addAttribute("categories", categories);
         model.addAttribute("boardCategories", boardCategories);
         model.addAttribute("selectedBoardId", boardId);
-        model.addAttribute("sortedHashtagDTO", sortedHashtagDTO);
+        model.addAttribute("sortedHashtagDTO", sortedLimitedHashtagDTO);
     }
 
     private List<PostForm> convertToPostForms(List<Post> posts) {
@@ -297,7 +307,7 @@ public class PostController {
             postForm.setId(post.getId());
             postForm.setTitle(post.getTitle());
             postForm.setContent(post.getContent());
-            postForm.setRenderedContent(MarkdownService.renderMarkdownToHtml(post.getContent()));
+            postForm.setRenderedContent(MarkdownUtil.renderMarkdownToHtml(post.getContent()));
             postForm.setMemberId(post.getMember().getMemberId());
             postForm.setNickname(post.getMember().getNickname());
             if (post.getCategory() != null) {
