@@ -9,8 +9,6 @@ public interface PostRepositoryCustom {
 
     List<Post> findPostsWithMoreHatesThanLikes();
 
-    List<Post> findPostsByAllHashtags(List<String> hashtags, long size);
-
-    List<Post> findPostsByAnyHashtags(List<String> hashtags);
+    List<Post> findPostsByAnyHashtags(Long boardId, List<String> hashtags, long size);
 
 }

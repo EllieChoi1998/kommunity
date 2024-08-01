@@ -330,25 +330,17 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/search")
-    public String searchPosts(@RequestParam Long boardId,
+    @GetMapping("/search/{boardId}")
+    public String searchPosts(@PathVariable Long boardId,
                               @RequestParam List<String> hashtags,
-                              @RequestParam(defaultValue = "desc") String sort,
-                              @RequestParam(defaultValue = "all") String matchType,
                               Model model) throws SQLException {
-        List<Post> posts;
-        if ("all".equalsIgnoreCase(matchType)) {
-            posts = postService.findPostsByAllHashtags(hashtags);
-        } else {
-            posts = postService.findPostsByAnyHashtags(hashtags);
-        }
+        List<Post> posts = postService.findPostsByAnyHashtags(boardId, hashtags);
 
         List<PostForm> postForms = convertToPostForms(posts);
 
         addCommonAttributes(model, boardId);
         model.addAttribute("posts", postForms);
-        model.addAttribute("isAllCategories", true);
-        model.addAttribute("selectedSort", sort);
-        return "posts/searchPost";
+        model.addAttribute("hashtags", hashtags);
+        return "posts/searchPosts";
     }
 }

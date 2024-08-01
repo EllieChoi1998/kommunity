@@ -246,12 +246,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> findPostsByAllHashtags(List<String> hashtags) throws SQLException {
-        return postRepository.findPostsByAllHashtags(hashtags, hashtags.size());
-    }
-
-    @Override
-    public List<Post> findPostsByAnyHashtags(List<String> hashtags) throws SQLException {
-        return postRepository.findPostsByAnyHashtags(hashtags);
+    public List<Post> findPostsByAnyHashtags(Long boardId, List<String> hashtags) throws SQLException {
+        return postRepository.findPostsByAnyHashtags(boardId, hashtags, hashtags.size());
     }
 }
