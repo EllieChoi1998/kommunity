@@ -87,7 +87,7 @@ public class PostController {
         Member member = mainController.getCurrentMember(); // 현재 사용자를 가져오는 로직
 
         List<PostComment> comments = commentService.getCommentsByPostId(id);
-        String renderedContent = markdownService.renderMarkdownToHtml(post.getContent());
+        String renderedContent = markdownUtil.renderMarkdownToHtml(post.getContent());
         List<PostHashtag> hashtags = post.getHashtags();
 
         Long boardId = post.getCategory().getBoard().getBoardId();
@@ -281,13 +281,22 @@ public class PostController {
                 .sorted(Comparator.comparingInt(HashtagDTO::getCount).reversed())
                 .collect(Collectors.toList());
 
+        List<HashtagDTO> sortedLimitedHashtagDTO = new ArrayList<>();
+        if (sortedHashtagDTO.size() > 10) {
+            for(int i = 0; i < 10; i++){
+                sortedLimitedHashtagDTO.add(sortedHashtagDTO.get(i));
+            }
+        } else {
+            sortedLimitedHashtagDTO = sortedHashtagDTO;
+        }
+
         model.addAttribute("member", mainController.getCurrentMember());
         model.addAttribute("boards", boards);
         model.addAttribute("board", board);
         model.addAttribute("categories", categories);
         model.addAttribute("boardCategories", boardCategories);
         model.addAttribute("selectedBoardId", boardId);
-        model.addAttribute("sortedHashtagDTO", sortedHashtagDTO);
+        model.addAttribute("sortedHashtagDTO", sortedLimitedHashtagDTO);
     }
 
     private List<PostForm> convertToPostForms(List<Post> posts) {
