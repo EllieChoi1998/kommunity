@@ -206,7 +206,7 @@ public class PostController {
         Member member = mainController.getCurrentMember();
         Post post = postService.getPostById(postId);
         if (post.getMember().getEmail().equals(member.getEmail())) {
-            postService.updatePost(postId, postForm.getTitle(), postForm.getContent());
+            postService.updatePost(postId, postForm.getTitle(), postForm.getContent(), postForm.getCategoryId(), postForm.getStrHashtag());
         }
         return "redirect:/posts/" + post.getId(); // 수정 후 원래 페이지로 리디렉트
     }
