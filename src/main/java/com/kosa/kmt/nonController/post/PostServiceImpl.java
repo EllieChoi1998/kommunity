@@ -244,4 +244,9 @@ public class PostServiceImpl implements PostService {
                 .map(PostCommentCountDTO::getPost)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Post> findPostsByAnyHashtags(Long boardId, List<String> hashtags) throws SQLException {
+        return postRepository.findPostsByAnyHashtags(boardId, hashtags, hashtags.size());
+    }
 }

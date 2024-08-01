@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const likeElements = document.querySelectorAll(".like");
     const dislikeElements = document.querySelectorAll(".dislike");
     const deletePostButtons = document.querySelectorAll(".delete-post");
+    const bookmarkElements= document.querySelectorAll(".bookmark");
 
     // CSRF 토큰 설정
     const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
@@ -94,11 +95,35 @@ document.addEventListener('DOMContentLoaded', (event) => {
         });
     });
 
+
+    bookmarkElements.forEach(element => {
+        element.addEventListener('click', function () {
+
+                fetch(this.dataset.uri, {
+                    method: 'POST',
+                    headers: {
+                        [csrfHeader]: csrfToken,
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        alert("북마크 추가")
+                        window.location.reload();
+                    } else {
+                        alert("북마크 해제");
+                    }
+                });
+
+        });
+    });
+
+
     // 페이지 로드 시 localStorage에서 텍스트를 복원
     const savedSortText = localStorage.getItem('sortButtonText');
     if (savedSortText) {
         document.getElementById('sortButtonText').innerText = savedSortText;
     }
+
 });
 
 // 댓글 정렬 시 드롭다운 메뉴 버튼 클릭 시, 정렬 text 변환 js

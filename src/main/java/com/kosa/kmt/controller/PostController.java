@@ -61,6 +61,8 @@ public class PostController {
     private PostHateRepository postHateRepository;
     @Autowired
     private PostLikeOrHateService postLikeOrHateService;
+    @Autowired
+    private BookMarkService bookMarkService;
 
     @GetMapping
     public String getAllPosts(Model model) throws SQLException {
@@ -250,7 +252,7 @@ public class PostController {
         model.addAttribute("board", board);
         model.addAttribute("categories", categories);
         model.addAttribute("boardCategories", boardCategories);
-        model.addAttribute("selectedBoardId", boardId); // 추가된 부분
+        model.addAttribute("selectedBoardId", boardId);
         model.addAttribute("sortedHashtagDTO", sortedHashtagDTO);
     }
 
@@ -260,8 +262,7 @@ public class PostController {
             postForm.setId(post.getId());
             postForm.setTitle(post.getTitle());
             postForm.setContent(post.getContent());
-            Node document = Parser.builder().build().parse(post.getContent());
-            postForm.setRenderedContent(HtmlRenderer.builder().build().render(document));
+            postForm.setRenderedContent(MarkdownService.renderMarkdownToHtml(post.getContent()));
             postForm.setMemberId(post.getMember().getMemberId());
             postForm.setNickname(post.getMember().getNickname());
             if (post.getCategory() != null) {
@@ -374,21 +375,35 @@ public class PostController {
 
         return ResponseEntity.ok().build();
     }
-//
-//    @GetMapping("/{postId}/like-status")
-//    @PreAuthorize("isAuthenticated()")
-//    @ResponseBody
-//    public ResponseEntity<Map<String, Boolean>> getLikeStatus(@PathVariable Long postId) throws SQLException {
-//        Post post = postService.getPostById(postId);
-//        Member member = mainController.getCurrentMember();
-//
-//        boolean liked = postLikeOrHateService.isPostLikedByMember(post, member);
-//        boolean disliked = postLikeOrHateService.isPostHateByMember(post, member);
-//
-//        Map<String, Boolean> response = new HashMap<>();
-//        response.put("liked", liked);
-//        response.put("disliked", disliked);
-//
-//        return ResponseEntity.ok(response);
-//    }
+
+    @PostMapping("/bookmark/{postId}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Void> bookmarkPost(@PathVariable Long postId) throws SQLException {
+        Post post = postService.getPostById(postId);
+        Member member = mainController.getCurrentMember();
+        int status = bookMarkService.toggleBookMark(post, member);
+        if (status == 0) {
+            // 북마크가 제거됨
+            return ResponseEntity.ok().build();
+        } else {
+            // 북마크가 추가됨
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        }
+    }
+
+    @GetMapping("/search/{boardId}")
+    public String searchPosts(@PathVariable Long boardId,
+                              @RequestParam List<String> hashtags,
+                              Model model) throws SQLException {
+        List<Post> posts = postService.findPostsByAnyHashtags(boardId, hashtags);
+
+        List<PostForm> postForms = convertToPostForms(posts);
+
+        addCommonAttributes(model, boardId);
+        model.addAttribute("posts", postForms);
+        model.addAttribute("hashtags", hashtags);
+        model.addAttribute("boardId", boardId);
+        return "posts/searchPosts";
+    }
+
 }
