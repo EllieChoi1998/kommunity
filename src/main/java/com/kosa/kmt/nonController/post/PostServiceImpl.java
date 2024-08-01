@@ -122,7 +122,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Boolean updatePost(Long postId, String title, String content) throws SQLException {
+    public Boolean updatePost(Long postId, String title, String content, Integer categoryId, String strHashtag) throws SQLException {
         Optional<Post> postOptional = postRepository.findById(postId);
 
         if (postOptional.isPresent()) {
@@ -130,7 +130,18 @@ public class PostServiceImpl implements PostService {
 
             existingPost.setTitle(title);
             existingPost.setContent(content);
+
+            Optional<Category> optionalCategory = categoryRepository.findById(Long.valueOf(categoryId));
+            if (optionalCategory.isPresent()) {
+                Category category = optionalCategory.get();
+                existingPost.setCategory(category);
+            } else {
+                throw new EntityNotFoundException("Category not found with id " + categoryId);
+            }
+
             postRepository.save(existingPost);
+            postHashtagService.setHashtag(existingPost, strHashtag);
+
             return true;
         } else {
             return false;
