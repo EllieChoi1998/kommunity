@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const deleteElements = document.querySelectorAll(".delete");
     const likeElements = document.querySelectorAll(".like");
     const dislikeElements = document.querySelectorAll(".dislike");
+    const bookmarkElements= document.querySelectorAll(".bookmark");
 
     // CSRF 토큰 설정
     const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
@@ -69,4 +70,26 @@ document.addEventListener('DOMContentLoaded', (event) => {
             }
         });
     });
+
+    bookmarkElements.forEach(element => {
+        element.addEventListener('click', function () {
+
+                fetch(this.dataset.uri, {
+                    method: 'POST',
+                    headers: {
+                        [csrfHeader]: csrfToken,
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        alert("북마크 추가")
+                        window.location.reload();
+                    } else {
+                        alert("북마크 해제");
+                    }
+                });
+
+        });
+    });
+
 });

@@ -44,10 +44,12 @@
                                 <span class="badge rounded-pill bg-danger"
                                       th:text="${#lists.size(post.hates)}"></span>
                             </a>
-                            <!--Post 북마크 자바 스크립트 구현 예정-->
-                            <a href="javascript:void(0):" class="bookmark btn btn-sm btn-outline-secondary"
-                            >
+                            <!--Post 북마크-->
+                            <a href="javascript:void(0);" class="bookmark btn btn-sm btn-outline-secondary"
+                               th:data-uri="@{|/posts/bookmark/${post.id}|}">
                                 <img src="/images/bookmark-star.svg"/>
+                                <span class="badge rounded-pill bg-danger"
+                                      th:text="${#lists.size(post.bookMarks)}"></span>
                             </a>
                         </div>
 
@@ -136,3 +138,24 @@
 <!-- 메인 컨텐츠 부분 끝 -->
 </body>
 </html>
+<!--<script>-->
+<!--    $(document).ready(function() {-->
+<!--        $('.bookmark').on('click', function() {-->
+<!--            const postId = $(this).data('post-id');-->
+<!--            $.ajax({-->
+<!--                url: '/posts/bookmark/' + postId,-->
+<!--                type: 'POST',-->
+<!--                success: function(response, textStatus, xhr) {-->
+<!--                    if (xhr.status === 201) {-->
+<!--                        alert('북마크가 추가되었습니다.');-->
+<!--                    } else if (xhr.status === 200) {-->
+<!--                        alert('북마크가 제거되었습니다.');-->
+<!--                    }-->
+<!--                },-->
+<!--                error: function() {-->
+<!--                    alert('북마크 처리 중 오류가 발생했습니다.');-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->

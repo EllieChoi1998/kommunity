@@ -18,6 +18,7 @@ import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -62,6 +63,8 @@ public class PostController {
     @Autowired
     private PostLikeOrHateService postLikeOrHateService;
 
+    @Autowired
+    private BookMarkService bookMarkService;
 
     @GetMapping
     public String getAllPosts(Model model) throws SQLException {
@@ -323,4 +326,20 @@ public class PostController {
 
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/bookmark/{postId}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Void> bookmarkPost(@PathVariable Long postId) throws SQLException {
+        Post post = postService.getPostById(postId);
+        Member member = mainController.getCurrentMember();
+        int status = bookMarkService.toggleBookMark(post, member);
+        if (status == 0) {
+            // 북마크가 제거됨
+            return ResponseEntity.ok().build();
+        } else {
+            // 북마크가 추가됨
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        }
+    }
+
 }
