@@ -69,7 +69,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public Optional<Category> deleteCategoryById(Long categoryId) {
-        return Optional.empty();
+        Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
+
+        categoryOptional.ifPresent(categoryRepository::deleteCategory);
+
+        return categoryOptional;
     }
 }

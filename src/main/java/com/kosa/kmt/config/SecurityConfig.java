@@ -61,6 +61,7 @@ public class SecurityConfig {
                                 "/*.jpeg",
                                 "/*.svg"
                         ).permitAll()
+                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN") // admin 검사
                         .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
@@ -75,12 +76,7 @@ public class SecurityConfig {
                         .loginPage("/kommunity/validateName")
                         .successHandler(new CustomOAuth2LoginSuccessHandler())
                         .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
-                                .userService(customOAuth2UserService)))
-
-                .authorizeRequests()
-                .requestMatchers("/admin/**").hasRole("ADMIN")
-                .anyRequest().authenticated();
-
+                                .userService(customOAuth2UserService)));
         return http.build();
     }
 

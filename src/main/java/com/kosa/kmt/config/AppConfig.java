@@ -55,7 +55,7 @@ public class AppConfig {
     public BoardRepository boardRepository() { return new BoardRepositoryImpl(em); }
 
     @Bean
-    public BoardService boardService() { return new BoardServiceImpl(boardRepository()); }
+    public BoardService boardService() { return new BoardServiceImpl(boardRepository(), categoryRepository()); }
 
     @Bean
     public CategoryRepository categoryRepository() { return new CategoryRepositoryImpl(em); }

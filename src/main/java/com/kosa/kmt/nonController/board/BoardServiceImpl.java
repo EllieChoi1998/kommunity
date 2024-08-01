@@ -1,5 +1,9 @@
 package com.kosa.kmt.nonController.board;
 
+import com.kosa.kmt.nonController.category.Category;
+import com.kosa.kmt.nonController.category.CategoryRepository;
+import com.kosa.kmt.nonController.category.CategoryService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,10 +15,13 @@ import java.util.Optional;
 public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
+    private final CategoryRepository categoryRepository;
 
-    public BoardServiceImpl(BoardRepository boardRepository) {
+    public BoardServiceImpl(BoardRepository boardRepository, CategoryRepository categoryRepository) {
         this.boardRepository = boardRepository;
+        this.categoryRepository = categoryRepository;
     }
+
 
     @Override
     public Long addNewBoard(Board board) {
@@ -49,7 +56,17 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public void deleteBoardById(Long boardId) {
-
+    @Transactional
+    public void deleteBoardWithCategories(Long boardId) {
+        Optional<Board> board = boardRepository.findBoardById(boardId);
+        if (board.isPresent()) {
+            // 하위 카테고리 삭제
+            List<Category> categories = board.get().getCategories();
+            for (Category category : categories) {
+                categoryRepository.deleteCategory(category);
+            }
+            // 보드 삭제
+            boardRepository.deleteBoard(board.get());
+        }
     }
 }

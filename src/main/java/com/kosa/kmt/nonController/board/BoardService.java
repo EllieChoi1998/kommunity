@@ -9,5 +9,5 @@ public interface BoardService {
     List<Board> findAllBoards();
 
     Optional<Board> findBoardById(Long boardId);
-    void deleteBoardById(Long boardId);
+    void deleteBoardWithCategories(Long boardId);
 }
