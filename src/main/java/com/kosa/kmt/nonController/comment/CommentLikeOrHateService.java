@@ -9,4 +9,8 @@ public interface CommentLikeOrHateService {
     void likePostComment(PostComment comment, Member member);
 
     void hatePostComment(PostComment comment, Member member);
+
+    boolean isCommentLikedByMember(PostComment comment, Member member);
+
+    boolean isCommentHatedByMember(PostComment comment, Member member);
 }

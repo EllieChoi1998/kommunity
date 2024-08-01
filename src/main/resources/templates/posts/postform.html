@@ -1,19 +1,20 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml"
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
-    <title>Create Post</title>
+    <title>Post Form</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/css/create.css">
 </head>
-<body>
+<body th:with="leftSidebar=false, rightSidebar=false">
+
 <div layout:fragment="content" class="container col-md-8 mt-5">
     <div class="form-container">
         <div class="card">
             <div class="card-body">
                 <button type="button" class="close-btn" onclick="window.history.back();">X</button>
-                <form th:action="@{/posts/new}" th:object="${postForm}" method="post">
+                <form th:action="@{/posts/update/{postId}(postId=${postForm.id})}" th:object="${postForm}" method="post">
                     <div class="form-group">
                         <label>게시 위치</label>
                         <div class="radio-container">
@@ -40,7 +41,7 @@
                     <div class="d-flex justify-content-between">
                         <input type="hidden" th:field="*{boardId}" th:value="${boardId}"/>
                         <button type="submit" class="btn btn-primary">게시하기</button>
-                        <a th:href="@{'/posts/board/' + ${boardId}}" class="btn btn-secondary">글쓰기 취소</a>
+                        <a th:href="@{'/posts/' + ${postId}}" class="btn btn-secondary">글쓰기 취소</a>
                     </div>
                 </form>
             </div>

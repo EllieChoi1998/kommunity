@@ -20,7 +20,7 @@ html, body {
 
 .rounded-rectangle-container {
     /*background-color: #ffffff; !* 배경 색상 설정 *!*/
-    border: 2px solid #ffffff; /* 원하는 테두리 색상으로 변경하세요 */
+    border: 2px solid #f9f9f9; /* 원하는 테두리 색상으로 변경하세요 */
     border-radius: 15px; /* 둥근 모서리의 반경 */
     padding: 20px;
     margin: 10px 0;
@@ -76,5 +76,11 @@ html, body {
 }
 .like-dislike-container a {
     margin: 0 5px; /* 버튼 간의 간격 조절 */
+}
+
+.like.active, .dislike.active {
+    background-color: #6c757d;
+    color: white;
+    border-color: #6c757d;
 }
 

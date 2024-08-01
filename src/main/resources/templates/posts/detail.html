@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Post Detail</title>
-    <link rel="stylesheet" th:href="@{/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/detail.css}">
 </head>
 
@@ -51,6 +50,18 @@
                                 <span class="badge rounded-pill bg-danger"
                                       th:text="${#lists.size(post.bookMarks)}"></span>
                             </a>
+
+                            <!-- 게시물 수정 버튼 -->
+                            <a th:href="@{'/posts/' + ${post.id} + '/edit'}" class="btn btn-sm btn-outline-secondary float-right"
+                               sec:authorize="isAuthenticated()"
+                               th:if="${post.member != null and #authentication.getPrincipal().getUsername() == post.member.email}"
+                               th:text="수정"></a>
+
+                            <!-- 게시물 삭제 버튼 -->
+                            <a href="javascript:void(0);" th:data-uri="@{|/posts/delete/${post.id}|}"
+                               class="delete-post btn btn-sm btn-outline-danger ml-2" sec:authorize="isAuthenticated()"
+                               th:if="${post.member != null and #authentication.getPrincipal().getUsername() == post.member.email}"
+                               th:text="삭제"></a>
                         </div>
 
                     </div>
@@ -127,8 +138,9 @@
                                    th:if="${comment.member != null and #authentication.getPrincipal().getUsername() == comment.member.email}"
                                    th:text="수정"></a>
 
+                                <!-- 댓글 삭세 버튼 -->
                                 <a href="javascript:void(0);" th:data-uri="@{|/comment/delete/${comment.commentId}|}"
-                                   class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
+                                   class="delete btn btn-sm btn-outline-danger ml-2" sec:authorize="isAuthenticated()"
                                    th:if="${comment.member != null and #authentication.getPrincipal().getUsername() == comment.member.email}"
                                    th:text="삭제"></a>
                             </div>
