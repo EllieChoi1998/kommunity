@@ -88,7 +88,7 @@ public class PostController {
 
         // 댓글을 최신순으로 정렬하여 가져옴
         List<PostComment> comments = commentService.getCommentsByPostIdAndNewest(id);
-        String renderedContent = markdownService.renderMarkdownToHtml(post.getContent());
+        String renderedContent = markdownUtil.renderMarkdownToHtml(post.getContent());
 
         List<PostHashtag> hashtags = post.getHashtags();
 
@@ -141,6 +141,10 @@ public class PostController {
         }
 
         addCommonAttributes(model, boardId);
+
+        // 게시글이 특정 게시판에 속해 있는지 확인
+        boolean isAnonymousBoard = boardId == 1 || "대나무숲".equals(boardService.findBoardById(boardId).get().getName());
+        model.addAttribute("isAnonymousBoard", isAnonymousBoard);
 
         model.addAttribute("postForm", postForm);
         model.addAttribute("boardId", boardId);
