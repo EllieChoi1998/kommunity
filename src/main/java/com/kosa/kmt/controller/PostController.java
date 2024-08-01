@@ -88,47 +88,38 @@ public class PostController {
         Member member = mainController.getCurrentMember(); // 현재 사용자를 가져오는 로직
         List<PostComment> comments = commentService.getCommentsByPostId(id);
         String renderedContent = markdownService.renderMarkdownToHtml(post.getContent());
+        List<PostHashtag> hashtags = post.getHashtags();
 
         Long boardId = post.getCategory().getBoard().getBoardId();
         addCommonAttributes(model, boardId);
 
-//        // 좋아요/싫어요 상태를 가져오기
-//        boolean liked = postLikeOrHateService.isPostLikedByMember(post, member);
-//        boolean disliked = postLikeOrHateService.isPostHateByMember(post, member);
+        // 게시글이 특정 게시판에 속해 있는지 확인
+        boolean isAnonymousBoard = boardId == 1 || "대나무숲".equals(post.getCategory().getBoard().getName());
 
         model.addAttribute("post", post);
         model.addAttribute("member", member);
         model.addAttribute("renderedContent", renderedContent);
-//        model.addAttribute("liked", liked);
-//        model.addAttribute("disliked", disliked);
-        model.addAttribute("commentForm", new CommentForm()); // 추가된 부분
+        model.addAttribute("commentForm", new CommentForm());
+        model.addAttribute("isAnonymousBoard", isAnonymousBoard); // 익명 표시 여부를 모델에 추가
+        model.addAttribute("hashtags", hashtags); // 해시태그를 모델에 추가
 
         PostDetailsDTO postDetailsDTO = new PostDetailsDTO();
         postDetailsDTO.setPost(post);
-        if(postLikeRepository.findByPost_IdAndMember_MemberId(post.getId(), member.getMemberId()) == null){
-            postDetailsDTO.setLikedByCurrentUser(false);
-        }else{
-            postDetailsDTO.setLikedByCurrentUser(true);
-        }
-        if(postHateRepository.findByPost_IdAndMember_MemberId(post.getId(), member.getMemberId()) == null){
-            postDetailsDTO.setDislikedByCurrentUser(false);
-        }else{
-            postDetailsDTO.setDislikedByCurrentUser(true);
-        }
+        postDetailsDTO.setLikedByCurrentUser(postLikeRepository.findByPost_IdAndMember_MemberId(post.getId(), member.getMemberId()) != null);
+        postDetailsDTO.setDislikedByCurrentUser(postHateRepository.findByPost_IdAndMember_MemberId(post.getId(), member.getMemberId()) != null);
         postDetailsDTO.setBookmarkedByCurrentUser(bookMarkService.isBookMarkedByMember(post, member));
 
         model.addAttribute("postDetailsDTO", postDetailsDTO);
 
-
         List<CommentDetailsDTO> commentDetailsDTOS = new ArrayList<>();
-        for (PostComment comment : comments){
+        for (PostComment comment : comments) {
             CommentDetailsDTO commentDetailsDTO = new CommentDetailsDTO();
             commentDetailsDTO.setComment(comment);
             commentDetailsDTO.setLikedByCurrentUser(
-                    commentLikeRepository.findByPostComment_CommentIdAndMember_MemberId(comment.getCommentId(), member.getMemberId()) != null ? true : false
+                    commentLikeRepository.findByPostComment_CommentIdAndMember_MemberId(comment.getCommentId(), member.getMemberId()) != null
             );
             commentDetailsDTO.setDislikedByCurrentUser(
-                    commentHateRepository.findByPostComment_CommentIdAndMember_MemberId(comment.getCommentId(), member.getMemberId()) != null ? true : false
+                    commentHateRepository.findByPostComment_CommentIdAndMember_MemberId(comment.getCommentId(), member.getMemberId()) != null
             );
             commentDetailsDTOS.add(commentDetailsDTO);
         }

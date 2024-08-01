@@ -21,9 +21,17 @@
                         <div class="post-content">
                             <div class="card-text" th:utext="${renderedContent}"></div>
                         </div>
+
+                        <!-- 해시태그 목록 -->
+                        <div class="hashtags">
+                            <a class="hashtag" th:each="hashtag : ${post.hashtags}"
+                               th:href="@{|/posts/search/1?hashtags={hashtagName}|(hashtagName=${hashtag.hashtag.name})}"
+                               th:text="'#' + ${hashtag.hashtag.name}">#해시태그</a>
+                        </div>
+
                         <div class="post-meta">
                             <small class="text-muted"
-                                   th:text="${post.member.nickname}">작성자</small>
+                                   th:text="${isAnonymousBoard} ? '익명' : ${post.member.nickname}">작성자</small>
                             <small class="text-muted"
                                    th:text="${#temporals.format(post.postDate, 'yyyy-MM-dd HH:mm')}">작성 날짜</small>
                         </div>
@@ -118,7 +126,7 @@
                             </div>
                             <div class="comment-meta">
                                 <small class="text-muted"
-                                       th:text="${commentDetailsDTO.comment.member.nickname}">작성자</small>
+                                       th:text="${isAnonymousBoard} ? '익명' : ${commentDetailsDTO.comment.member.nickname}">작성자</small>
                                 <small class="text-muted"
                                        th:text="${#temporals.format(commentDetailsDTO.comment.commentDateTime, 'yyyy-MM-dd HH:mm')}">작성
                                     날짜</small>
@@ -153,7 +161,7 @@
 
                                 <a href="javascript:void(0);"
                                    th:data-uri="@{|/comment/delete/${commentDetailsDTO.comment.commentId}|}"
-                                   class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
+                                   class="delete btn btn-sm btn-outline-danger" sec:authorize="isAuthenticated()"
                                    th:if="${commentDetailsDTO.comment.member != null and #authentication.getPrincipal().getUsername() == commentDetailsDTO.comment.member.email}"
                                    th:text="삭제"></a>
                             </div>
@@ -167,24 +175,3 @@
 <!-- 메인 컨텐츠 부분 끝 -->
 </body>
 </html>
-<!--<script>-->
-<!--    $(document).ready(function() {-->
-<!--        $('.bookmark').on('click', function() {-->
-<!--            const postId = $(this).data('post-id');-->
-<!--            $.ajax({-->
-<!--                url: '/posts/bookmark/' + postId,-->
-<!--                type: 'POST',-->
-<!--                success: function(response, textStatus, xhr) {-->
-<!--                    if (xhr.status === 201) {-->
-<!--                        alert('북마크가 추가되었습니다.');-->
-<!--                    } else if (xhr.status === 200) {-->
-<!--                        alert('북마크가 제거되었습니다.');-->
-<!--                    }-->
-<!--                },-->
-<!--                error: function() {-->
-<!--                    alert('북마크 처리 중 오류가 발생했습니다.');-->
-<!--                }-->
-<!--            });-->
-<!--        });-->
-<!--    });-->
-<!--</script>-->
