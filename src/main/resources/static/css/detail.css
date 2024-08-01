@@ -97,3 +97,24 @@ html, body {
     color: white;
 }
 
+/* 해시태그 스타일 */
+.hashtags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px; /* 해시태그 간의 간격 */
+    margin-bottom: 10px; /* 해시태그와 메타 데이터 간의 간격 */
+}
+
+.hashtag {
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    padding: 2px 8px;
+    font-size: 0.875rem;
+    color: #555;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.hashtag:hover {
+    background-color: #e0e0e0;
+}
