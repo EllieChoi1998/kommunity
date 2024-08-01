@@ -118,3 +118,17 @@ html, body {
 .hashtag:hover {
     background-color: #e0e0e0;
 }
+
+.post-meta {
+    display: flex;
+    justify-content: end;
+}
+
+.comment-meta {
+    display: flex;
+    justify-content: end;
+}
+
+.nickname {
+    padding-right: 5px;
+}
