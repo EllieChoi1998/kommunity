@@ -58,7 +58,7 @@ public class ChatController {
 
         Map<String, Object> response = new HashMap<>();
         response.put("chatContents", chatDTOs);
-
+        response.put("currentUserId", currentMember.getMemberId());
         return ResponseEntity.ok(response);
     }
 
@@ -99,9 +99,7 @@ public class ChatController {
     public ChatDTO sendMessage(@Payload ChatDTO chatMessage, Principal principal) throws Exception {
         String username = principal.getName();
         Member member = memberRepository.findByEmail(username).get();
-        System.out.println("===========================================");
-        System.out.println(username);
-        System.out.println("===========================================");
+
         return this.sendChat(chatMessage, member);
     }
 

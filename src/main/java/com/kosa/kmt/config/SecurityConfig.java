@@ -59,7 +59,8 @@ public class SecurityConfig {
                                 "/*.png",
                                 "/*.jpg",
                                 "/*.jpeg",
-                                "/*.svg"
+                                "/*.svg",
+                                "/oauth2/**"
                         ).permitAll()
                         .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
