@@ -24,9 +24,11 @@
 
                         <!-- 해시태그 목록 -->
                         <div class="hashtags">
-                            <a class="hashtag" th:each="hashtag : ${post.hashtags}"
-                               th:href="@{|/posts/search/1?hashtags={hashtagName}|(hashtagName=${hashtag.hashtag.name})}"
-                               th:text="'#' + ${hashtag.hashtag.name}">#해시태그</a>
+                            <a class="hashtag" th:each="postHashtag : ${post.hashtags}"
+                               th:href="@{|/posts/search/{boardId}?hashtags={hashtagName}|(boardId=${post.category.board.boardId}, hashtagName=${postHashtag.hashtag.name})}"
+                               th:text="'#' + ${postHashtag.hashtag.name}">
+                                #해시태그
+                            </a>
                         </div>
 
                         <div class="post-meta">
@@ -104,7 +106,7 @@
                     <div class="btn-group">
                         <button id="sortButton" type="button" class="btn btn-secondary dropdown-toggle"
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                            <span id="sortButtonText">정렬 선택</span>
+                            <span id="sortButtonText">댓글 정렬</span>
                         </button>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" th:href="@{|/comment/sorted?postId=${post.id}&order=newest|}"

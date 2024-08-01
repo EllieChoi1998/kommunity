@@ -86,7 +86,8 @@ public class PostController {
     public String getPostById(@PathVariable Long id, Model model) throws SQLException {
         Post post = postService.getPostById(id);
         Member member = mainController.getCurrentMember(); // 현재 사용자를 가져오는 로직
-        List<PostComment> comments = commentService.getCommentsByPostId(id);
+        // 댓글을 최신순으로 정렬하여 가져옴
+        List<PostComment> comments = commentService.getCommentsByPostIdAndNewest(id);
         String renderedContent = markdownService.renderMarkdownToHtml(post.getContent());
         List<PostHashtag> hashtags = post.getHashtags();
 
