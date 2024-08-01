@@ -75,7 +75,11 @@ public class SecurityConfig {
                         .loginPage("/kommunity/validateName")
                         .successHandler(new CustomOAuth2LoginSuccessHandler())
                         .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
-                                .userService(customOAuth2UserService)));
+                                .userService(customOAuth2UserService)))
+
+                .authorizeRequests()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .anyRequest().authenticated();
 
         return http.build();
     }
@@ -96,7 +100,7 @@ public class SecurityConfig {
             // 권한에 따라 리디렉션 URL 설정
             if (authentication.getAuthorities().stream()
                     .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(UserRole.ADMIN.getValue()))) {
-                response.sendRedirect("/kommunity/admin");
+                response.sendRedirect("/kommunity/main");
             } else if (authentication.getAuthorities().stream()
                     .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(UserRole.USER.getValue()))) {
                 response.sendRedirect("/kommunity/main");

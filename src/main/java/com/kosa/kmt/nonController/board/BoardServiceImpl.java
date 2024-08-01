@@ -49,7 +49,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Long deleteBoardById(Long boardId) {
-        return 0L;
+    public void deleteBoardById(Long boardId) {
+
     }
 }
