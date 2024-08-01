@@ -341,6 +341,7 @@ public class PostController {
         addCommonAttributes(model, boardId);
         model.addAttribute("posts", postForms);
         model.addAttribute("hashtags", hashtags);
+        model.addAttribute("boardId", boardId);
         return "posts/searchPosts";
     }
 }
