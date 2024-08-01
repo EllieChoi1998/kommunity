@@ -59,7 +59,8 @@ public class SecurityConfig {
                                 "/*.png",
                                 "/*.jpg",
                                 "/*.jpeg",
-                                "/*.svg"
+                                "/*.svg",
+                                "/oauth2/**"
                         ).permitAll()
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN") // admin 검사
                         .anyRequest().authenticated())

@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var stompClient = null;
     var isConnected = false; // WebSocket 연결 상태 추적
     var messageIds = new Set(); // 메시지 ID 집합
-
+    var currentUserId = null;
     function connect() {
         if (isConnected) return; // 이미 연결된 경우 반환
 
@@ -22,6 +22,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
             // Load existing messages
             $.get('/kommunity/chat/getAllChats', function(response) {
+                if(currentUserId == null){
+                    currentUserId = response.currentUserId;
+                    console.log('current user: ', currentUserId);
+                }
                 updateChatMessages(response);
             });
 
@@ -33,8 +37,7 @@ document.addEventListener("DOMContentLoaded", function() {
         var messageContent = $('#chat-input').val().trim();
         if (messageContent && stompClient) {
             var chatMessage = {
-                chatContent: messageContent,
-                isCurrentUser: false
+                chatContent: messageContent
             };
             stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
             $('#chat-input').val('');
@@ -46,9 +49,10 @@ document.addEventListener("DOMContentLoaded", function() {
         var chatElement = $('<div>').addClass('chat-message');
         var messageText = message.chatWriterName + ' (' + new Date(message.chatDateTime).toLocaleString() + '): ' + message.chatContent;
 
-        if (message.isCurrentUser) {
+        console.log('whoami : ', message.isCurrentUser)
+        if (message.chatWriterId == currentUserId) {
             chatElement.addClass('current-user'); // 현재 사용자의 메시지
-        } else if (!message.isCurrentUser) {
+        } else {
             chatElement.addClass('other-user'); // 다른 사용자의 메시지
         }
 
