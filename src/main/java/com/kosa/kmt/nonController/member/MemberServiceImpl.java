@@ -200,6 +200,11 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public void registerMember(Member member) {
+        memberRepository.save(member);
+    }
+
+    @Override
     public void save(Member member) {
         memberRepository.save(member);
     }

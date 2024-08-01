@@ -61,7 +61,7 @@ public class Member {
     @Builder
     public Member(String name, String email) {
         this.name = name;
-        this.authEmail = email;
+        this.email = email;
     }
 
     @OneToMany(mappedBy = "member", orphanRemoval = true, fetch = FetchType.LAZY)
