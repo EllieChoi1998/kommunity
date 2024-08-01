@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>관리자 대시보드</title>
+    <link rel="stylesheet" href="/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-4">
+    <h1>관리자 대시보드</h1>
+
+    <div class="mb-4">
+        <h2>보드 관리</h2>
+        <form th:action="@{/admin/boards/add}" method="post">
+            <input type="text" name="name" placeholder="보드 이름" required>
+            <button type="submit" class="btn btn-primary">추가</button>
+        </form>
+        <ul>
+            <li th:each="board : ${boards}">
+                <span th:text="${board.name}"></span>
+                <form th:action="@{/admin/boards/delete/{id}(id=${board.boardId})}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger btn-sm">삭제</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+
+    <div>
+        <h2>카테고리 관리</h2>
+        <form th:action="@{/admin/categories/add}" method="post">
+            <input type="text" name="name" placeholder="카테고리 이름" required>
+            <button type="submit" class="btn btn-primary">추가</button>
+        </form>
+        <ul>
+            <li th:each="category : ${categories}">
+                <span th:text="${category.name}"></span>
+                <form th:action="@{/admin/categories/delete/{id}(id=${category.categoryId})}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger btn-sm">삭제</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script src="/bootstrap.bundle.min.js"></script>
+</body>
+</html>

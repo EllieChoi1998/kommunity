@@ -96,7 +96,7 @@ public class SecurityConfig {
             // 권한에 따라 리디렉션 URL 설정
             if (authentication.getAuthorities().stream()
                     .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(UserRole.ADMIN.getValue()))) {
-                response.sendRedirect("/kommunity/main");
+                response.sendRedirect("/kommunity/admin");
             } else if (authentication.getAuthorities().stream()
                     .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(UserRole.USER.getValue()))) {
                 response.sendRedirect("/kommunity/main");

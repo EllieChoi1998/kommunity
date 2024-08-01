@@ -47,4 +47,9 @@ public class BoardServiceImpl implements BoardService {
     public Optional<Board> findBoardById(Long boardId) {
         return boardRepository.findBoardById(boardId);
     }
+
+    @Override
+    public Long deleteBoardById(Long boardId) {
+        return 0L;
+    }
 }

@@ -19,4 +19,6 @@ public interface CategoryService {
     Category findById(Long categoryId);
 
     Optional<Category> findCategoryByIdAndBoard(Long categoryId, Board board);
+
+    Optional<Category> deleteCategoryById(Long categoryId);
 }

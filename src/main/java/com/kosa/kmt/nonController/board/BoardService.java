@@ -9,4 +9,5 @@ public interface BoardService {
     List<Board> findAllBoards();
 
     Optional<Board> findBoardById(Long boardId);
+    Long deleteBoardById(Long boardId);
 }
