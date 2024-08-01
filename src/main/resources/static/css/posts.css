@@ -86,3 +86,13 @@
     gap: 5px;
     margin-top: 10px;
 }
+
+.searched-hashtags {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+.searched-hashtags span {
+    margin: 0 10px;
+}

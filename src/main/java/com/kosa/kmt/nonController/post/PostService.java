@@ -54,4 +54,6 @@ public interface PostService {
     List<Post> getPostsByCategoryOrderByPostDateAsc(Long categoryId) throws SQLException;
     List<Post> getPostsByCategoryOrderByBookmarksDesc(Long categoryId) throws SQLException;
     List<Post> getPostsByCategoryOrderByCommentsDesc(Long categoryId) throws SQLException;
+
+    List<Post> findPostsByAnyHashtags(Long boardId, List<String> hashtags) throws SQLException;
 }
