@@ -49,4 +49,14 @@ PostLikeOrHateServiceImpl implements PostLikeOrHateService {
             postHateRepository.save(postHate);
         }
     }
+
+    @Override
+    public boolean isPostLikedByMember(Post post, Member member) {
+        return postLikeRepository.findByPost_IdAndMember_MemberId(post.getId(), member.getMemberId()) != null;
+    }
+
+    @Override
+    public boolean isPostHateByMember(Post post, Member member) {
+        return postHateRepository.findByPost_IdAndMember_MemberId(post.getId(), member.getMemberId()) != null;
+    }
 }
