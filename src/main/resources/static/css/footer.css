@@ -1,0 +1,28 @@
+.footer {
+    background-color: #f8f9fa; /* 밝은 배경색 */
+    color: #343a40; /* 어두운 텍스트 색상 */
+    padding: 20px 0; /* 상하 패딩 */
+    text-align: center; /* 가운데 정렬 */
+    border-top: 1px solid #dee2e6; /* 위쪽 테두리 */
+}
+
+.footer .container {
+    max-width: 1200px; /* 최대 너비 설정 */
+    margin: 0 auto; /* 가운데 정렬 */
+    padding: 0 15px; /* 좌우 패딩 설정 */
+}
+
+.footer a {
+    color: #007bff; /* 링크 색상 */
+    text-decoration: none; /* 링크 밑줄 제거 */
+}
+
+.footer a:hover {
+    color: #0056b3; /* 링크 호버 색상 */
+    text-decoration: underline; /* 호버 시 밑줄 추가 */
+}
+
+.footer p {
+    margin: 0; /* 문단 간격 제거 */
+    margin-bottom: 5px; /* 아래 여백 */
+}
