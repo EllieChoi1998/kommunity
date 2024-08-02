@@ -6,6 +6,7 @@ import com.kosa.kmt.nonController.comment.*;
 import com.kosa.kmt.nonController.member.Member;
 import com.kosa.kmt.nonController.member.MemberService;
 import com.kosa.kmt.nonController.post.*;
+import com.kosa.kmt.util.MarkdownUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,7 @@ public class CommentController {
 
     private final CommentLikeRepository commentLikeRepository;
     private final CommentHateRepository commentHateRepository;
-
+    private final MarkdownUtil markdownUtil;
     private final PostLikeRepository postLikeRepository;
     private final PostHateRepository postHateRepository;
     private final BookMarkService bookMarkService;
@@ -150,7 +151,7 @@ public class CommentController {
     public String getSortedComments(@RequestParam Long postId, @RequestParam String order, Model model) throws SQLException {
         Post post = postService.getPostById(postId);
         Member member = mainController.getCurrentMember();
-
+        String renderedContent = markdownUtil.renderMarkdownToHtml(post.getContent());
         List<PostComment> comments;
 
         if ("newest".equals(order)) {
@@ -170,7 +171,7 @@ public class CommentController {
         mainController.addCommonAttributes(model, post.getCategory().getBoard().getBoardId());
 
         model.addAttribute("post", post);
-
+        model.addAttribute("renderedContent", renderedContent);
         model.addAttribute("member", member);
         model.addAttribute("commentForm", new CommentForm());
         return "posts/detail";
