@@ -57,7 +57,7 @@
     padding: 0; /* 컨테이너의 패딩 제거 */
 }
 
-.container {
+.post-container {
     max-width: 100%; /* 컨테이너의 최대 너비를 설정 */
     padding-left: 15px; /* 좌측 패딩을 설정 */
     padding-right: 15px; /* 우측 패딩을 설정 */
