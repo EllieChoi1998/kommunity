@@ -20,8 +20,10 @@
                         <h5 class="card-title" th:text="${postForm.title}">Post Title</h5>
                         <!-- 마크다운으로 작성된 콘텐츠를 HTML로 변환하여 출력 -->
                         <div class="card-text" th:utext="${postForm.renderedContent}">Post Content</div> <!-- 수정: th:text에서 th:utext로 변경하여 HTML로 변환된 콘텐츠 출력 -->
-                        <small class="text-muted post-date" th:text="${postForm.postDate}">Post Date</small>
-                        <div class="hashtag-container">
+                        <div class="post-date">
+                            <small class="text-muted post-date float-right"
+                                   th:text="${#temporals.format(postForm.postDate, 'yyyy-MM-dd HH:mm:ss')}">Post Date</small>
+                        </div>                        <div class="hashtag-container">
                             <span class="hashtag" th:each="hashtag : ${postForm.hashtags}" th:text="'#' + ${hashtag.hashtag.name}"></span>
                         </div>
                     </div>
