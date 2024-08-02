@@ -24,4 +24,5 @@ public interface MemberRepository {
     Member updateAuthEmail(Member member, String authEmail);
 
     Member delete(Member member);
+
 }

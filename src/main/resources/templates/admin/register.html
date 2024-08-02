@@ -6,12 +6,19 @@
     <title>회원 등록</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- CSRF 메타 태그 -->
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
 </head>
 <body>
 <div class="container mt-5">
-    <h1 class="mb-4">회원 등록</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>회원 등록</h1>
+        <!-- 메인 페이지로 이동 버튼 -->
+        <a href="/kommunity/main" class="btn btn-secondary">메인 페이지로 이동</a>
+    </div>
 
-    <form th:action="@{/admin/register}" method="post">
+    <form id="registerForm">
         <div class="form-group">
             <label for="name">이름</label>
             <input type="text" id="name" name="name" class="form-control" placeholder="이름을 입력하세요" required>
@@ -22,26 +29,166 @@
         </div>
         <button type="submit" class="btn btn-primary">등록하기</button>
     </form>
+
+    <h2 class="mt-5">회원 목록</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>이름</th>
+            <th>이메일</th>
+            <th>작업</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="member : ${members}"
+            th:data-id="${member.memberId}"
+            th:data-name="${member.name}"
+            th:data-email="${member.email}"
+            th:data-nickname="${member.nickname}"
+            th:data-logintime="${member.loginTime}"
+            th:data-extendlogin="${member.extendLogin}">
+            <td th:text="${member.name}">이름</td>
+            <td th:text="${member.email}">이메일</td>
+            <td>
+                <button class="btn btn-danger btn-sm delete-btn">삭제</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="memberDetailModal" tabindex="-1" role="dialog" aria-labelledby="memberDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="memberDetailModalLabel">회원 상세 정보</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBodyContent">
+                <!-- 내용은 JavaScript로 동적으로 설정 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-<script th:inline="javascript">
-    /*<![CDATA[*/
-    let successMessage = /*[[${successMessage}]]*/ '';
-    let errorMessage = /*[[${errorMessage}]]*/ '';
+<script>
+    // CSRF 토큰 및 헤더 정보 가져오기
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
-    if (successMessage) {
-        alert(successMessage); // 성공 시 알림창
+    // 날짜 형식 변환 함수
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        return date.toLocaleDateString('ko-KR', options);
     }
 
-    if (errorMessage) {
-        alert(errorMessage); // 실패 시 알림창
+    // 회원 상세 정보 표시
+    function showMemberDetails(row) {
+        const name = row.getAttribute('data-name');
+        const email = row.getAttribute('data-email');
+        const nickname = row.getAttribute('data-nickname');
+        const loginTime = row.getAttribute('data-logintime');
+        const extendLogin = row.getAttribute('data-extendlogin');
+
+        let modalContent = `<p><strong>이름:</strong> ${name}</p>
+                            <p><strong>이메일:</strong> ${email}</p>`;
+
+        if (!nickname || nickname === 'null') {
+            modalContent += '<p>인증하지 않은 회원입니다.</p>';
+        } else {
+            const formattedLoginTime = formatDate(loginTime);
+            modalContent += `<p><strong>닉네임:</strong> ${nickname}</p>
+                             <p><strong>로그인 시간:</strong> ${formattedLoginTime}</p>
+                             <p><strong>확장 로그인:</strong> ${extendLogin}</p>`;
+        }
+
+        document.getElementById('modalBodyContent').innerHTML = modalContent;
+        $('#memberDetailModal').modal('show');
     }
-    /*]]>*/
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const registerForm = document.getElementById('registerForm');
+        registerForm.addEventListener('submit', function (event) {
+            event.preventDefault(); // 기본 폼 제출 방지
+
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value
+            };
+
+            $.ajax({
+                url: '/admin/register',
+                type: 'POST',
+                headers: {
+                    [csrfHeader]: csrfToken,
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(formData),
+                success: function (response) {
+                    alert(response); // 서버 응답을 알림으로 표시
+                    location.reload(); // 페이지 새로고침하여 목록 갱신
+                },
+                error: function (xhr, status, error) {
+                    if (xhr.status === 409) {
+                        alert(xhr.responseText);
+                    } else {
+                        alert('회원 등록 중 오류가 발생했습니다.');
+                    }
+                    console.error(`Error: ${error}, Status: ${status}, Response: ${xhr.responseText}`);
+                }
+            });
+        });
+
+        // 모든 삭제 버튼에 이벤트 리스너 추가
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.stopPropagation(); // 이벤트 전파 중지
+                const row = this.closest('tr');
+                const memberId = parseInt(row.getAttribute('data-id'), 10);
+
+                if (confirm('정말로 이 회원을 삭제하시겠습니까?')) {
+                    $.ajax({
+                        url: `/admin/delete/${memberId}`,
+                        type: 'DELETE',
+                        headers: {
+                            [csrfHeader]: csrfToken,
+                            'Content-Type': 'application/json'
+                        },
+                        success: function(response) {
+                            alert(response);
+                            row.remove(); // 테이블에서 행 제거
+                        },
+                        error: function(xhr, status, error) {
+                            alert('회원 삭제 중 오류가 발생했습니다.');
+                            console.error(`Error: ${error}, Status: ${status}, Response: ${xhr.responseText}`);
+                        }
+                    });
+                }
+            });
+        });
+
+        // 각 테이블 행에 이벤트 리스너 추가
+        const tableRows = document.querySelectorAll('tbody tr');
+        tableRows.forEach(row => {
+            row.addEventListener('click', function() {
+                showMemberDetails(this);
+            });
+        });
+    });
 </script>
 </body>
 </html>

@@ -11,8 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -94,14 +96,14 @@ public class MemberServiceImpl implements MemberService {
     }
     @Override
     public Integer findSameEmail(String email) {
-        Integer foundId = memberRepository.findByEmail(email).get().getMemberId();
-        if(foundId != null) {
-            return foundId;
-        } else {
-            return -1;
-        }
+        Optional<Member> memberOptional = memberRepository.findByEmail(email);
+        return memberOptional.map(Member::getMemberId).orElse(-1);
     }
 
+    @Override
+    public boolean isEmailExists(String email) {
+        return memberRepository.findByEmail(email).isPresent();
+    }
 
     @Override
     public Boolean ExtendLogin(Member member) {
@@ -205,6 +207,24 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public List<Member> findAllMembers() {
+        List<Member> list = memberRepository.findAll()
+                .stream()
+                .filter(member -> !"admin".equals(member.getName()))
+                .collect(Collectors.toList());
+
+        return list;
+    }
+
+    @Transactional
+    public void deleteMemberById(Integer memberId) {
+        memberRepository.findById(memberId).ifPresentOrElse(
+                member -> memberRepository.delete(member),
+                () -> { throw new RuntimeException("회원이 존재하지 않습니다."); }
+        );
+    }
+
+    @Override
     public void save(Member member) {
         memberRepository.save(member);
     }
@@ -216,4 +236,6 @@ public class MemberServiceImpl implements MemberService {
 //    public Boolean verifyPassword(Member member, String password) {
 //        return passwordEncoder.matches(password, member.getPassword());
 //    }
+
+
 }
