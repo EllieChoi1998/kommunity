@@ -45,8 +45,8 @@
                                   th:text="'#' + ${hashtag.hashtag.name}"></span>
                         </div>
                         <div class="post-date">
-                            <small class="text-muted post-date float-right" th:text="${postForm.postDate}">Post
-                                Date</small>
+                            <small class="text-muted post-date float-right"
+                                   th:text="${#temporals.format(postForm.postDate, 'yyyy-MM-dd HH:mm:ss')}">Post Date</small>
                         </div>
                     </div>
                 </div>
@@ -54,5 +54,13 @@
         </div>
     </div>
 </div>
+
+<script>
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        return date.toLocaleDateString('ko-KR', options);
+    }
+</script>
 </body>
 </html>
