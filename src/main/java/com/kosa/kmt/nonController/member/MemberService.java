@@ -1,5 +1,7 @@
 package com.kosa.kmt.nonController.member;
 
+import java.util.List;
+
 public interface MemberService {
     Integer login(String email, String password) throws Exception;
 
@@ -32,4 +34,9 @@ public interface MemberService {
 
     public void registerMember(Member member);
 
+    List<Member> findAllMembers();
+
+    void deleteMemberById(Integer memberId);
+
+    boolean isEmailExists(String email);
 }

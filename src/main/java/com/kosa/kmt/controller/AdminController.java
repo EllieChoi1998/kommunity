@@ -6,7 +6,10 @@ import com.kosa.kmt.nonController.category.Category;
 import com.kosa.kmt.nonController.category.CategoryService;
 import com.kosa.kmt.nonController.member.Member;
 import com.kosa.kmt.nonController.member.MemberService;
+import com.kosa.kmt.nonController.member.signup.MemberDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -73,24 +76,62 @@ public class AdminController {
 
     @GetMapping("/register")
     public String registerForm(Model model) {
+        List<Member> members = memberService.findAllMembers();
         model.addAttribute("member", new Member());
+        model.addAttribute("members", members);
         return "/admin/register";
     }
 
+//    @PostMapping("/register")
+//    public String registerMember(@RequestParam String name, @RequestParam String email, Model model) {
+//        try {
+//            Member member = Member.builder()
+//                    .name(name)
+//                    .email(email)
+//                    .build();
+//
+//            memberService.registerMember(member);
+//            model.addAttribute("successMessage", "회원 정보가 추가되었습니다.");
+//        } catch (Exception e) {
+//            model.addAttribute("errorMessage", "회원 등록 중 오류가 발생했습니다.");
+//        }
+//        return "redirect:/admin/register";
+//    }
+
     @PostMapping("/register")
-    public String registerMember(@RequestParam String name, @RequestParam String email, Model model) {
+    public ResponseEntity<String> registerMember(@RequestBody MemberDTO memberDTO) {
         try {
+            if (memberService.isEmailExists(memberDTO.getEmail())) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 이메일입니다.");
+            }
+
+            // 유효성 검사
+            if (memberDTO.getName() == null || memberDTO.getEmail() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 요청입니다.");
+            }
+
             Member member = Member.builder()
-                    .name(name)
-                    .email(email)
+                    .name(memberDTO.getName())
+                    .email(memberDTO.getEmail())
                     .build();
 
             memberService.registerMember(member);
-
-            model.addAttribute("successMessage", "회원 가입이 완료되었습니다.");
+            return ResponseEntity.ok("회원 정보가 추가되었습니다.");
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "회원 가입에 실패하였습니다. 다시 시도해주세요.");
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 등록 중 오류가 발생했습니다.");
         }
-        return "redirect:/admin/register";
+    }
+
+    // 회원 삭제
+    @DeleteMapping("/delete/{id}")
+    @ResponseBody
+    public ResponseEntity<String> deleteMember(@PathVariable Integer id) {
+        try {
+            memberService.deleteMemberById(id);
+            return ResponseEntity.ok("회원이 삭제되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 삭제 중 오류가 발생했습니다.");
+        }
     }
 }

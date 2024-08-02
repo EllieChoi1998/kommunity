@@ -103,6 +103,7 @@ public class MemberRepositoryImpl implements MemberRepository {
         em.remove(member);
         return member;
     }
+
 }
 
 
