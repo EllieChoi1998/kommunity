@@ -12,20 +12,6 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
     
     private final EntityManager em;
 
-//    @Override
-//    public List<Post> findAllOrderByBookmarksDesc() {
-//        String jpql = "SELECT p FROM Post p LEFT JOIN p.bookMarks b GROUP BY p ORDER BY COUNT(b) DESC";
-//        TypedQuery<Post> query = em.createQuery(jpql, Post.class);
-//        return query.getResultList();
-//    }
-//
-//    @Override
-//    public List<Post> findAllOrderByCommentsDesc() {
-//        String jpql = "SELECT p FROM Post p LEFT JOIN p.comments c GROUP BY p ORDER BY COUNT(c) DESC";
-//        TypedQuery<Post> query = em.createQuery(jpql, Post.class);
-//        return query.getResultList();
-//    }
-
     @Override
     public List<Post> findPostsWithMoreHatesThanLikes() {
         String jpql = "SELECT p FROM Post p " +
