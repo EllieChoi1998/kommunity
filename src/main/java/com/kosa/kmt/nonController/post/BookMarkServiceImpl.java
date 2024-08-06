@@ -40,11 +40,6 @@ public class BookMarkServiceImpl implements BookMarkService {
     }
 
     @Override
-    public List<BookMark> getBookMarksByPost(Post post) {
-        return bookMarkRepository.findAllByPost_Id(post.getId());
-    }
-
-    @Override
     public long countBookMarksByPost(Post post) {
         return bookMarkRepository.countBookMarksByPost(post);
     }

@@ -22,5 +22,5 @@ public class PostForm {
     private String strHashtag;
     private LocalDateTime postDate;
     private List<PostHashtag> hashtags;
-    private Member member; // Member 필드 추가
+    private Member member;
 }

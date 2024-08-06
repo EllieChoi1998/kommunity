@@ -17,25 +17,14 @@ public interface PostService {
 
     public List<Post> getPostsByCategory(Long categoryId) throws SQLException;
 
-    public List<Post> getPostsByBoard(Long boardId) throws SQLException;
-
-    // create normal post
+    // create post
     public Long createPost(String title, String content, Integer memberId, Integer categoryId, String strHashtag) throws SQLException;
-
-    // create non-title post
-    public Long createPostNonTitle(String content, Integer memberId, Integer categoryId, String strHashtag) throws SQLException;
-
+    
     // update post
     Boolean updatePost(Long postId, String title, String content, Integer categoryId, String strHashtag) throws SQLException;
 
     // delete post
     public Boolean deletePost(Long id) throws SQLException;
-
-    // order by date desc post
-    public List<Post> getPostsOrderByPostDateDesc() throws SQLException;
-
-    // order by date asc post
-    public List<Post> getPostsOrderByPostDateAsc() throws SQLException;
 
     // order by bookmarks count desc post
     public List<Post> getPostsOrderByBookmarksDesc() throws SQLException;
@@ -44,7 +33,8 @@ public interface PostService {
     public List<Post> getPostsOrderByCommentsDesc() throws SQLException;
 
     // find all post hates > likes
-    public List<Post> getPostsWithMoreHatesThanLikes();
+    // 확장 가능
+//    public List<Post> getPostsWithMoreHatesThanLikes();
 
 
     List<Post> getPostsByBoardOrderByPostDateDesc(Long boardId) throws SQLException;

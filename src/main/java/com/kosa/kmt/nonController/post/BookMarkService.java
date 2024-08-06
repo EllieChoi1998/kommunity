@@ -12,8 +12,6 @@ public interface BookMarkService {
 
     List<BookMark> getBookMarksByMember(Member member);
 
-    List<BookMark> getBookMarksByPost(Post post);
-
     long countBookMarksByPost(Post post);
 
     boolean isBookMarkedByMember(Post post, Member member);

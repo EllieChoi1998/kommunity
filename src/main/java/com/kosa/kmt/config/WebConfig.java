@@ -14,14 +14,6 @@ import java.util.List;
 @Configuration
 public class WebConfig {
 
-//    @Override
-//    public void addCorsMappings(CorsRegistry registry) {
-//        registry.addMapping("/kommunity/**")
-//                .allowedOrigins("http://localhost:8083") // 모든 도메인 허용
-//                .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD")
-//                .allowedHeaders("*")
-//                .allowCredentials(true);
-//    }
     @Bean
     public CorsConfigurationSource getCorsConfiguration() {
         List<String> originList = new ArrayList<>();
