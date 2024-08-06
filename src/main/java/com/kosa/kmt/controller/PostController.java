@@ -74,13 +74,6 @@ public class PostController {
     @Autowired
     private CommentHateRepository commentHateRepository;
 
-    @GetMapping
-    public String getAllPosts(Model model) throws SQLException {
-        List<Post> posts = postService.getPostsAll();
-        model.addAttribute("posts", posts);
-        return "posts/list";
-    }
-
     @GetMapping("/{id}")
     public String getPostById(@PathVariable Long id, Model model) throws SQLException {
         Post post = postService.getPostById(id);
