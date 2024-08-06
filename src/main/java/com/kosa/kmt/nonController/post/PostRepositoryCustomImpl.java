@@ -24,13 +24,13 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
 
     @Override
     public List<Post> findPostsByAnyHashtags(Long boardId, List<String> hashtags, long size) {
-        // Step 1: 해시태그 이름을 기반으로 해시태그 ID 목록을 조회합니다.
+        // 1. 해시태그 이름을 기반으로 해시태그 ID 목록 조회
         TypedQuery<Long> hashtagQuery = em.createQuery(
                 "SELECT h.id FROM Hashtag h WHERE h.name IN :hashtags", Long.class);
         hashtagQuery.setParameter("hashtags", hashtags);
         List<Long> hashtagIds = hashtagQuery.getResultList();
 
-        // Step 2: 게시물 ID를 조회합니다.
+        // 2. 게시물 ID 조회
         TypedQuery<Long> postIdQuery = em.createQuery(
                 "SELECT DISTINCT p.id " +
                         "FROM Post p " +
@@ -44,7 +44,7 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
         postIdQuery.setParameter("hashtagIds", hashtagIds);
         List<Long> postIds = postIdQuery.getResultList();
 
-        // Step 3: 게시물 데이터를 조회합니다.
+        // 3. 게시물 데이터 조회
         TypedQuery<Post> postQuery = em.createQuery(
                 "SELECT p " +
                         "FROM Post p " +

@@ -8,7 +8,4 @@ public interface PostLikeOrHateService {
 
     public void hatePost(Post post, Member member);
 
-    boolean isPostLikedByMember(Post post, Member member);
-
-    boolean isPostHateByMember(Post post, Member member);
 }

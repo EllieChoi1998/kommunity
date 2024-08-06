@@ -53,49 +53,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getPostsByBoard(Long boardId) {
-        List<Category> categories = categoryRepository.findByBoardId(boardId);
-        List<Post> posts = new ArrayList<>();
-        for (Category category : categories) {
-            posts.addAll(postRepository.findByCategoryCategoryId(category.getCategoryId()));
-        }
-        return posts;
-    }
-
-    @Override
     public Long createPost(String title, String content, Integer memberId, Integer categoryId, String strHashtag) throws SQLException {
 
         Post post = new Post();
         post.setTitle(title);
-        post.setContent(content);
-
-        Optional<Member> optionalMember = memberRepository.findById(memberId);
-        if (optionalMember.isPresent()) {
-            Member member = optionalMember.get();
-            post.setMember(member);
-        } else {
-            throw new EntityNotFoundException("Member not found with id " + memberId);
-        }
-
-        Optional<Category> optionalCategory = categoryRepository.findById(Long.valueOf(categoryId));
-        if (optionalCategory.isPresent()) {
-            Category category = optionalCategory.get();
-            post.setCategory(category);
-        } else {
-            throw new EntityNotFoundException("Category not found with id " + categoryId);
-        }
-
-        Long postId = postRepository.save(post).getId();
-
-        postHashtagService.setHashtag(post, strHashtag);
-
-        return postId;
-    }
-
-    @Override
-    public Long createPostNonTitle(String content, Integer memberId, Integer categoryId, String strHashtag) throws SQLException {
-
-        Post post = new Post();
         post.setContent(content);
 
         Optional<Member> optionalMember = memberRepository.findById(memberId);
@@ -161,16 +122,6 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getPostsOrderByPostDateDesc() throws SQLException {
-        return postRepository.findAllByOrderByPostDateDesc();
-    }
-
-    @Override
-    public List<Post> getPostsOrderByPostDateAsc() throws SQLException {
-        return postRepository.findAllByOrderByPostDateAsc();
-    }
-
-    @Override
     public List<Post> getPostsOrderByBookmarksDesc() throws SQLException {
         List<Post> posts = postRepository.findAll();
         return posts.stream()
@@ -190,10 +141,10 @@ public class PostServiceImpl implements PostService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<Post> getPostsWithMoreHatesThanLikes() {
-        return postRepository.findPostsWithMoreHatesThanLikes();
-    }
+//    @Override
+//    public List<Post> getPostsWithMoreHatesThanLikes() {
+//        return postRepository.findPostsWithMoreHatesThanLikes();
+//    }
 
 
     @Override

@@ -13,7 +13,5 @@ public interface BookMarkRepository extends JpaRepository<BookMark, Long>, BookM
 
     List<BookMark> findAllByMember_MemberId(Integer memberId);
 
-    List<BookMark> findAllByPost_Id(Long id);
-
     void deleteByPost_IdAndMember_MemberId(Long postId, Integer memberId);
 }

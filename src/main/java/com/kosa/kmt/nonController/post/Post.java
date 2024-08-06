@@ -21,12 +21,6 @@ public class Post {
     @Column(name = "POST_ID")
     private Long id;
 
-//    @Column(name = "CATEGORY_ID")
-//    private Integer categoryId;
-
-//    @Column(name = "MEMBER_ID")
-//    private Integer memberId;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "MEMBER_ID", nullable = false)
     private Member member;
