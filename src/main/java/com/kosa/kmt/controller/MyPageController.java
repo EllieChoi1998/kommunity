@@ -5,7 +5,6 @@ import com.kosa.kmt.nonController.board.BoardService;
 import com.kosa.kmt.nonController.category.Category;
 import com.kosa.kmt.nonController.category.CategoryService;
 import com.kosa.kmt.nonController.hashtag.PostHashtagRepository;
-import com.kosa.kmt.nonController.hashtag.PostHashtagService;
 import com.kosa.kmt.nonController.post.*;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

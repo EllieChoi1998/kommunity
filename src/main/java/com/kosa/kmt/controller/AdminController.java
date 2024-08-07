@@ -82,22 +82,6 @@ public class AdminController {
         return "/admin/register";
     }
 
-//    @PostMapping("/register")
-//    public String registerMember(@RequestParam String name, @RequestParam String email, Model model) {
-//        try {
-//            Member member = Member.builder()
-//                    .name(name)
-//                    .email(email)
-//                    .build();
-//
-//            memberService.registerMember(member);
-//            model.addAttribute("successMessage", "회원 정보가 추가되었습니다.");
-//        } catch (Exception e) {
-//            model.addAttribute("errorMessage", "회원 등록 중 오류가 발생했습니다.");
-//        }
-//        return "redirect:/admin/register";
-//    }
-
     @PostMapping("/register")
     public ResponseEntity<String> registerMember(@RequestBody MemberDTO memberDTO) {
         try {

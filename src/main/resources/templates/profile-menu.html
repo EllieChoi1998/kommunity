@@ -112,11 +112,14 @@
     </div>
     <!-- 관리자 전용 대시보드 관리 버튼 -->
     <div class="row" sec:authorize="hasRole('ROLE_ADMIN')">
-        <button id="dashboardButton" class="dashboard-button" onclick="window.location.href='/admin/dashboard'">대시보드 관리</button>
+        <button id="dashboardButton" class="dashboard-button" onclick="window.location.href='/admin/dashboard'">대시보드
+            관리
+        </button>
     </div>
     <!-- 관리자 전용 회원 등록 버튼 -->
     <div class="row" sec:authorize="hasRole('ROLE_ADMIN')">
-        <button id="registerButton" class="dashboard-button" onclick="window.location.href='/admin/register'">회원등록 관리</button>
+        <button id="registerButton" class="dashboard-button" onclick="window.location.href='/admin/register'">회원등록 관리
+        </button>
     </div>
 
 </div>
@@ -188,12 +191,12 @@
     initDragAndDrop();
 
 
-    document.getElementById('bookmarkButton').addEventListener('click', function() {
+    document.getElementById('bookmarkButton').addEventListener('click', function () {
         // 페이지를 /mypage/bookmark.html로 이동
         window.location.href = '/kommunity/mypage/bookmark';
     });
 
-    document.getElementById('mypostButton').addEventListener('click', function() {
+    document.getElementById('mypostButton').addEventListener('click', function () {
         // 페이지를 /mypage/myposts.html로 이동
         window.location.href = '/kommunity/mypage/myposts';
     });
