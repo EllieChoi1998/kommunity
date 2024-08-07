@@ -26,41 +26,41 @@ public class AdminCreateNewUserTest {
 //        }
     }
 
-    @Test
-    public void testwon() {
-//        Optional<Member> memberls = memberRepository.findByName("admin");
-//        if (memberls.isPresent() == false) {
-        Member member = new Member();
-        member.setEmail("onestone1380@email.com");
-        member.setName("장원석");
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String encodedPassword = encoder.encode("1234");
-        member.setPassword(encodedPassword);
-        memberRepository.save(member);
-//        }
-    }
-
-    @Test
-    public void test2() {
-//        Optional<Member> memberls = memberRepository.findByName("admin");
-//        if (memberls.isPresent() == false) {
-        Member member = new Member();
-        member.setEmail("onestone1380@gmail.com");
-        member.setName("장원석");
-
-        memberRepository.save(member);
-//        }
-    }
-
-    @Test
-    public void test3() {
-//        Optional<Member> memberls = memberRepository.findByName("admin");
-//        if (memberls.isPresent() == false) {
-        Member member = new Member();
-        member.setEmail("teamkom2024@gmail.com");
-        member.setName("최혜령");
-
-        memberRepository.save(member);
-//        }
-    }
+//    @Test
+//    public void testwon() {
+////        Optional<Member> memberls = memberRepository.findByName("admin");
+////        if (memberls.isPresent() == false) {
+//        Member member = new Member();
+//        member.setEmail("onestone1380@email.com");
+//        member.setName("장원석");
+//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//        String encodedPassword = encoder.encode("1234");
+//        member.setPassword(encodedPassword);
+//        memberRepository.save(member);
+////        }
+//    }
+//
+//    @Test
+//    public void test2() {
+////        Optional<Member> memberls = memberRepository.findByName("admin");
+////        if (memberls.isPresent() == false) {
+//        Member member = new Member();
+//        member.setEmail("onestone1380@gmail.com");
+//        member.setName("장원석");
+//
+//        memberRepository.save(member);
+////        }
+//    }
+//
+//    @Test
+//    public void test3() {
+////        Optional<Member> memberls = memberRepository.findByName("admin");
+////        if (memberls.isPresent() == false) {
+//        Member member = new Member();
+//        member.setEmail("teamkom2024@gmail.com");
+//        member.setName("최혜령");
+//
+//        memberRepository.save(member);
+////        }
+//    }
 }
