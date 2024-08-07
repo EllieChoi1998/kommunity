@@ -1,5 +1,6 @@
-package com.kosa.kmt.nonController.post;
+package com.kosa.kmt.nonController.post.bookmark;
 
+import com.kosa.kmt.nonController.post.Post;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 

@@ -2,7 +2,8 @@ package com.kosa.kmt.nonController.post;
 
 import com.kosa.kmt.nonController.member.Member;
 import com.kosa.kmt.nonController.member.MemberRepository;
-import com.kosa.kmt.nonController.post.*;
+import com.kosa.kmt.nonController.post.bookmark.BookMark;
+import com.kosa.kmt.nonController.post.bookmark.BookMarkRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

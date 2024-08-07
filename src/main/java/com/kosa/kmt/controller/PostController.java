@@ -12,6 +12,11 @@ import com.kosa.kmt.nonController.comment.CommentService;
 import com.kosa.kmt.nonController.comment.PostComment;
 
 import com.kosa.kmt.nonController.hashtag.*;
+import com.kosa.kmt.nonController.post.bookmark.BookMarkRepository;
+import com.kosa.kmt.nonController.post.bookmark.BookMarkService;
+import com.kosa.kmt.nonController.post.hateOrLike.PostHateRepository;
+import com.kosa.kmt.nonController.post.hateOrLike.PostLikeOrHateService;
+import com.kosa.kmt.nonController.post.hateOrLike.PostLikeRepository;
 import com.kosa.kmt.util.MarkdownUtil;
 import com.kosa.kmt.nonController.member.Member;
 import com.kosa.kmt.nonController.post.*;

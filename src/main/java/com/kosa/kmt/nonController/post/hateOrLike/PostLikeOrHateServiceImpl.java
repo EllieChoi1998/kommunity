@@ -1,6 +1,7 @@
-package com.kosa.kmt.nonController.post;
+package com.kosa.kmt.nonController.post.hateOrLike;
 
 import com.kosa.kmt.nonController.member.Member;
+import com.kosa.kmt.nonController.post.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

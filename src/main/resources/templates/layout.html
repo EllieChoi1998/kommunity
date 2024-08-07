@@ -10,9 +10,9 @@
     <meta name="_csrf" th:content="${_csrf.token}">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
     <!-- CSS -->
-    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
     <link rel="stylesheet" href="/css/footer.css">
     <title>Hello, Kommunity!</title>
 </head>
@@ -53,23 +53,23 @@
 <!-- 푸터 추가 -->
 <footer th:replace="footer :: footerFragment"></footer>
 
-<script th:src="@{/jquery-3.7.1.min.js}"></script>
-<script th:src="@{/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/sortable.min.js}"></script>
-<script th:src="@{/popper.min.js}"></script>
+<script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/sortable.min.js}"></script>
+<script th:src="@{/js/popper.min.js}"></script>
 
 <!-- layout JS -->
-<script th:src="@{/layout.js}"></script>
+<script th:src="@{/js/layout.js}"></script>
 
 <!--chat JS-->
-<script th:src="@{/stomp.min.js}"></script>
-<script th:src="@{/sockjs.min.js}"></script>
-<script th:src="@{/chat.js}"></script>
-<script th:src="@{/detail.js}"></script>
-<script th:src="@{/axios.min.js}"></script>
-<script th:src="@{/hashtagSearch.js}"></script>
-<script th:src="@{/sort.js}"></script>
-<script th:src="@{/addSharpToStr.js}"></script>
+<script th:src="@{/js/stomp.min.js}"></script>
+<script th:src="@{/js/sockjs.min.js}"></script>
+<script th:src="@{/js/chat.js}"></script>
+<script th:src="@{/js/detail.js}"></script>
+<script th:src="@{/js/axios.min.js}"></script>
+<script th:src="@{/js/hashtagSearch.js}"></script>
+<script th:src="@{/js/sort.js}"></script>
+<script th:src="@{/js/addSharpToStr.js}"></script>
 
 </body>
 </html>

@@ -2,10 +2,10 @@ package com.kosa.kmt.nonController.member;
 
 import com.kosa.kmt.nonController.chat.Chat;
 import com.kosa.kmt.nonController.comment.PostComment;
-import com.kosa.kmt.nonController.post.BookMark;
+import com.kosa.kmt.nonController.post.bookmark.BookMark;
 import com.kosa.kmt.nonController.post.Post;
-import com.kosa.kmt.nonController.post.PostHate;
-import com.kosa.kmt.nonController.post.PostLike;
+import com.kosa.kmt.nonController.post.hateOrLike.PostHate;
+import com.kosa.kmt.nonController.post.hateOrLike.PostLike;
 import jakarta.persistence.*;
 
 import lombok.Builder;

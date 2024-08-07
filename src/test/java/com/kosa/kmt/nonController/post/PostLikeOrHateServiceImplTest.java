@@ -2,7 +2,9 @@ package com.kosa.kmt.nonController.post;
 
 import com.kosa.kmt.nonController.member.Member;
 import com.kosa.kmt.nonController.member.MemberRepository;
-import com.kosa.kmt.nonController.post.*;
+import com.kosa.kmt.nonController.post.hateOrLike.PostHateRepository;
+import com.kosa.kmt.nonController.post.hateOrLike.PostLikeOrHateServiceImpl;
+import com.kosa.kmt.nonController.post.hateOrLike.PostLikeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,7 @@
-package com.kosa.kmt.nonController.post;
+package com.kosa.kmt.nonController.post.bookmark;
 
 import com.kosa.kmt.nonController.member.Member;
+import com.kosa.kmt.nonController.post.Post;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,9 +11,10 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "POSTLIKE")
+@Table(name = "BOOKMARK")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostLike {
+public class BookMark {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,4 +26,5 @@ public class PostLike {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "MEMBER_ID", nullable = false)
     private Member member;
+
 }

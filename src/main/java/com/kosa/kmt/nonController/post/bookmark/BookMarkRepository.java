@@ -1,4 +1,4 @@
-package com.kosa.kmt.nonController.post;
+package com.kosa.kmt.nonController.post.bookmark;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

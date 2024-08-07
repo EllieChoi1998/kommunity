@@ -1,6 +1,7 @@
-package com.kosa.kmt.nonController.post;
+package com.kosa.kmt.nonController.post.bookmark;
 
 import com.kosa.kmt.nonController.member.Member;
+import com.kosa.kmt.nonController.post.Post;
 
 import java.util.List;
 

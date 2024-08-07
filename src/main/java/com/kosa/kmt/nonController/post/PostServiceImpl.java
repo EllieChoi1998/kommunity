@@ -1,6 +1,5 @@
 package com.kosa.kmt.nonController.post;
 
-import com.kosa.kmt.nonController.board.Board;
 import com.kosa.kmt.nonController.category.Category;
 import com.kosa.kmt.nonController.category.CategoryRepository;
 import com.kosa.kmt.nonController.category.CategoryService;
@@ -8,12 +7,13 @@ import com.kosa.kmt.nonController.comment.PostCommentRepository;
 import com.kosa.kmt.nonController.hashtag.PostHashtagService;
 import com.kosa.kmt.nonController.member.Member;
 import com.kosa.kmt.nonController.member.MemberRepository;
+import com.kosa.kmt.nonController.post.bookmark.BookMarkRepository;
+import com.kosa.kmt.nonController.post.bookmark.PostBookmarkCountDTO;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;

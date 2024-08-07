@@ -6,6 +6,8 @@ import com.kosa.kmt.nonController.category.Category;
 import com.kosa.kmt.nonController.category.CategoryService;
 import com.kosa.kmt.nonController.hashtag.PostHashtagRepository;
 import com.kosa.kmt.nonController.post.*;
+import com.kosa.kmt.nonController.post.bookmark.BookMark;
+import com.kosa.kmt.nonController.post.bookmark.BookMarkService;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;

@@ -1,6 +1,7 @@
-package com.kosa.kmt.nonController.post;
+package com.kosa.kmt.nonController.post.hateOrLike;
 
 import com.kosa.kmt.nonController.member.Member;
+import com.kosa.kmt.nonController.post.Post;
 
 public interface PostLikeOrHateService {
 

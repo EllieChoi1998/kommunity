@@ -4,6 +4,9 @@ import com.kosa.kmt.nonController.category.Category;
 import com.kosa.kmt.nonController.comment.PostComment;
 import com.kosa.kmt.nonController.hashtag.PostHashtag;
 import com.kosa.kmt.nonController.member.Member;
+import com.kosa.kmt.nonController.post.bookmark.BookMark;
+import com.kosa.kmt.nonController.post.hateOrLike.PostHate;
+import com.kosa.kmt.nonController.post.hateOrLike.PostLike;
 import jakarta.persistence.*;
 import lombok.*;
 
