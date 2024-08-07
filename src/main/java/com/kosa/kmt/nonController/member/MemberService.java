@@ -30,8 +30,6 @@ public interface MemberService {
     void save(Member member);
     Member findByEmail(String email);
 
-//    Boolean verifyPassword(Member member, String password);
-
     public void registerMember(Member member);
 
     List<Member> findAllMembers();

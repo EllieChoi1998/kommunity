@@ -3,7 +3,6 @@ package com.kosa.kmt.nonController.post;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 

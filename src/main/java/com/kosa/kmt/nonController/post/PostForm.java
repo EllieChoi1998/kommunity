@@ -1,6 +1,5 @@
 package com.kosa.kmt.nonController.post;
 
-import com.kosa.kmt.nonController.hashtag.Hashtag;
 import com.kosa.kmt.nonController.hashtag.PostHashtag;
 import com.kosa.kmt.nonController.member.Member;
 import lombok.Data;

@@ -2,7 +2,6 @@ package com.kosa.kmt.nonController.hashtag;
 
 import com.kosa.kmt.nonController.post.Post;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

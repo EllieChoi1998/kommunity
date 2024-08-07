@@ -1,10 +1,10 @@
 package com.kosa.kmt.nonController.member.signup.oAuth;
 
 import com.kosa.kmt.nonController.member.Member;
-import com.kosa.kmt.nonController.member.signup.MemberDTO;
-import com.kosa.kmt.nonController.member.signup.UserRole;
 import com.kosa.kmt.nonController.member.MemberRepository;
 import com.kosa.kmt.nonController.member.MemberService;
+import com.kosa.kmt.nonController.member.signup.MemberDTO;
+import com.kosa.kmt.nonController.member.signup.UserRole;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

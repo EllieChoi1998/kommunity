@@ -2,19 +2,12 @@ package com.kosa.kmt.nonController.member;
 
 import com.kosa.kmt.nonController.chat.Chat;
 import com.kosa.kmt.nonController.comment.PostComment;
-import com.kosa.kmt.nonController.post.bookmark.BookMark;
 import com.kosa.kmt.nonController.post.Post;
+import com.kosa.kmt.nonController.post.bookmark.BookMark;
 import com.kosa.kmt.nonController.post.hateOrLike.PostHate;
 import com.kosa.kmt.nonController.post.hateOrLike.PostLike;
 import jakarta.persistence.*;
-
-import lombok.Builder;
-
-import lombok.AllArgsConstructor;
-
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
