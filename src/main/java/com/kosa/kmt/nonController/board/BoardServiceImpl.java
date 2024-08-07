@@ -2,8 +2,6 @@ package com.kosa.kmt.nonController.board;
 
 import com.kosa.kmt.nonController.category.Category;
 import com.kosa.kmt.nonController.category.CategoryRepository;
-import com.kosa.kmt.nonController.category.CategoryService;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

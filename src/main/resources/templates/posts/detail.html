@@ -65,7 +65,8 @@
                             </a>
 
                             <!-- 게시물 수정 버튼 -->
-                            <a th:href="@{'/posts/' + ${post.id} + '/edit'}" class="btn btn-sm btn-outline-secondary float-right"
+                            <a th:href="@{'/posts/' + ${post.id} + '/edit'}"
+                               class="btn btn-sm btn-outline-secondary float-right"
                                sec:authorize="isAuthenticated()"
                                th:if="${post.member != null and #authentication.getPrincipal().getUsername() == post.member.email}"
                                th:text="수정"></a>

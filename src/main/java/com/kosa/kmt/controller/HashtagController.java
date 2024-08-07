@@ -1,5 +1,4 @@
 package com.kosa.kmt.controller;
-import com.kosa.kmt.controller.PostController;
 import com.kosa.kmt.nonController.hashtag.HashtagDTO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

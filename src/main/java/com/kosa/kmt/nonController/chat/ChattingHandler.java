@@ -1,7 +1,6 @@
 package com.kosa.kmt.nonController.chat;
 
 import lombok.extern.java.Log;
-import lombok.extern.log4j.Log4j;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
